@@ -626,6 +626,15 @@ html.lite .bs,html.lite .scrim{transition:none}
 .scuse{border:1px solid var(--line);border-radius:10px;padding:6px 10px;margin:8px 0;background:var(--paper)}
 .scuse summary{font-weight:700;font-size:12.5px;cursor:pointer}.scuse ol{margin:6px 0 2px;padding-left:1.3em;font-size:12px;line-height:1.6}
 .htab{width:100%;border-collapse:collapse;font-size:11.5px;margin:8px 0}.htab th,.htab td{border:1px solid var(--line);padding:4px 5px;vertical-align:top;text-align:left}.htab th{background:var(--soft)}
+.lk{font-style:normal;font-size:8.5px;font-weight:700;background:#e0b341;color:#1a1400;border-radius:4px;padding:0 3px;margin-left:3px;vertical-align:1px}
+.keepc{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:2px 0 8px}
+.keepc .chipb{height:34px}
+.keepc .chipb.k[aria-pressed=true]{background:#e0b341;border-color:#e0b341;color:#1a1400}
+.keepc small{flex-basis:100%;color:var(--mute);font-size:11px;line-height:1.5}
+.tabb{position:relative}.tabb.now{border-color:var(--mc);box-shadow:0 0 0 1px var(--mc)}
+.tabb .tabn{font-size:10px;color:var(--mute);font-weight:700;margin-right:6px}
+.tabw{position:relative;display:inline-block;font:12px/1.25 ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace}
+.tabpos{position:absolute;top:0;bottom:0;width:2px;background:var(--mc);opacity:.8;pointer-events:none}
 </style>
 </head>
 <body>
@@ -655,7 +664,7 @@ html.lite .bs,html.lite .scrim{transition:none}
   <div class="tempo"><button class="pm" id="bpmDn" aria-label="テンポを下げる">−</button><button class="num" id="bpmNum" aria-label="続けてタップでテンポ入力"><b id="bpmVal">140</b><span class="dots" id="dots"></span></button><button class="pm" id="bpmUp" aria-label="テンポを上げる">＋</button></div>
   <button class="dk" id="rhyBtn"><small>伴奏</small><b id="rhyName">ジャズ 4ビート</b></button>
   <button class="dk" id="melBtn"><small>メロディ</small><b id="melName">なし</b></button>
-  <button class="dk" id="adlBtn"><small>アドリブ</small><b id="adlName">スケール時</b></button>
+  <button class="dk" id="adlBtn"><small>アドリブ<i class="lk" id="adlLock" hidden>固定</i></small><b id="adlName">スケール時</b></button>
 </nav>
 </div>
 
@@ -700,6 +709,8 @@ html.lite .bs,html.lite .scrim{transition:none}
   <div class="lbl">鳴らすとき</div><div class="chips" id="adMode"></div>
   <div class="lbl">音色</div><div class="chips" id="adTone"></div>
   <div class="lbl">音数</div><div class="chips" id="adDens"></div>
+  <div class="lbl">もう一度再生したとき</div><div class="seg lv" id="adKeep"><button data-keep="0">毎回ちがうアドリブ</button><button data-keep="1">同じアドリブ（固定）</button></div>
+  <div class="trow2"><span class="note" id="adKeepInfo"></span><button class="chipb" id="adNew">新しく作り直す</button></div>
   <div class="tg"><span>選んだスケールの音だけで弾く<small class="sub">スケール画面で自分で選んだコードでは、経過音や「外し」を使わず、そのスケールの音だけでアドリブします</small></span><button class="sw" id="adStrict"></button></div>
   <div class="lbl">音量</div>
   <div class="vrow"><span id="adVolV">80</span><input type="range" id="adVol" min="0" max="1" step=".01" aria-label="アドリブの音量"><button class="btn ghost" id="adTry">試し弾き</button></div>
@@ -2397,7 +2408,7 @@ function renderDock() {
   $('#melBtn').classList.toggle('dim', !S.mel);
   if ($('#stPlay')) $('#stPlay').innerHTML = P.ui ? ICON.stop : ICON.play;
   recDock();
-  $('#adlBtn').classList.toggle('pro', S.solo.lv === 'pro');
+  $('#adlBtn').classList.toggle('pro', S.solo.lv === 'pro'); $('#adlLock').hidden = !ADL.keep;
   $('#adlBtn').classList.toggle('on', P.ui ? soloOn() : S.solo.mode === 'always' || (S.solo.mode === 'scale' && (S.pan === 'scale' || S.pan === 'tab')));
 }
 /* ---------- stage (performance) view ---------- */
@@ -2819,6 +2830,8 @@ function soloBar(tick0) {
   for (const k of [...P.solo.keys()]) if (k >= tick0 && k < tick0 + span) P.solo.delete(k);
   setVols();
   if (!soloOn()) return;
+  if (adlReplay(tick0)) return;
+  adlBegin(tick0);
   if (PRO.solo()) { soloBarPro(tick0); return; }
   if (SO.rest > 0) { SO.rest--; return; }
   if (SO.left <= 0) {
@@ -3058,7 +3071,7 @@ function doTick(tick, t) {
   t += grooveShift(tick, r);
   if (P.fx && P.fx.size) secFX(tick, t);
   const beat = tick / TPB, seg = segAt(beat), chg = Math.abs(seg.start * TPB - tick) < .5;
-  if (tick % TPB === 0) P.vis.push({time:t, beat:Math.round(beat) % n, i:seg.i, abs:Math.round(beat)});
+  if (tick % TPB === 0) P.vis.push({time:t, beat:Math.round(beat) % n, i:seg.i, abs:Math.round(beat), ln:P.loopN || 0});
   if (tick % (n * TPB) === 0) soloBar(tick);
   const mm = S.melOn && P.melMap ? P.melMap.get(tick) : null;
   if (mm) { const spt = 60 / S.bpm / TPB; for (const n of mm) { melNote(n.m, t, n.dT * spt * .95, n.v); P.vis.push({time:t, note:n.m, dur:n.dT * spt}); } }
@@ -3068,6 +3081,7 @@ function doTick(tick, t) {
     lead(sn.m, t + (pro ? .006 : 0), sn.dT * spt * (sn.ex && sn.ex.gh ? .6 : .94) + (sn.end ? .25 : 0), sn.v, sn.ex);
     P.vis.push({time:t, note:sn.m, dur:sn.dT * spt});
     if (sn.tech) P.vis.push({time:t, tech:sn.tech});
+    adlRec(tick, sn);
   }
   const evs = P.map.get(tick % (r.bars * n * TPB)) || [];
   let g = false, b = false;
@@ -3134,7 +3148,7 @@ function frame() {
     if (v.note != null) { hitNote(v.note, v.dur); continue; }
     if (v.i !== P.curI) setPlaying(v.i);
     setDot(v.beat);
-    if (v.abs != null) setBarNow(v.abs);
+    if (v.abs != null) { setBarNow(v.abs); P.nowLn = v.ln; }
   }
   if (P.ui) requestAnimationFrame(frame);
 }
@@ -3151,12 +3165,13 @@ function play(fromTick = 0) {
   P.lpA = lp && lp.b > lp.a ? lp.a : null; P.lpB = P.lpA != null ? lp.b : null; P.lpN = 0; P.lpPending = null;
   if (P.lpA != null && (P.tick < P.lpA || P.tick >= P.lpB)) P.tick = P.lpA;
   P.next = ctx.currentTime + (P.lead || .1) + Math.max(0, (cb ? .9 : .25) - warm); P.t0 = P.next + cb * bpb() * 60 / S.bpm; P.vis = []; P.last = 40; P.dir = 1;
-  P.on = true; P.ui = true; soloReset(); setVols();
+  P.on = true; P.ui = true; soloReset(); adlStart(); setVols();
   clockOn(true); sched();
   requestAnimationFrame(frame); renderDock();
   if (S.pan === 'scale') renderPan();
 }
 function stop() {
+  if (ADL.on) { ADL.on = false; adlSave(); }
   P.on = false; P.ui = false; clockOn(false); P.vis = []; P.solo = new Map();
   if (A.ctx) {
     if (!REC.on && !(REC.stems && REC.stems.length)) swapBuses();
@@ -3276,6 +3291,51 @@ function tabPush(m, t, dur) {
   TAB.buf.push({bar, lp:P.loopN || 0, pos:(tk % (n * TPB)) / TPB, m, d:dur * S.bpm / 60, ch:(segAt(tk / TPB) || {}).ch});
   if (TAB.buf.length > 160) TAB.buf.splice(0, TAB.buf.length - 160);
 }
+
+/* ===== アドリブの固定（同じアドリブをもう一度） ===== */
+// bars: 'loopN:小節の頭のtick' → [[小節内のtick, 音], …]。毎回の再生で記録し、固定中は記録したものをそのまま鳴らす
+const ADL = (() => { const o = {keep:false, sig:'', base:0, bars:new Map(), live:new Set(), on:false};
+  try { const d = JSON.parse(localStorage.getItem('chordnavi-adl') || 'null'); if (d && Array.isArray(d.bars)) { o.keep = !!d.keep; o.sig = d.sig || ''; o.base = d.base || 0; o.bars = new Map(d.bars); } } catch (e) {}
+  return o; })();
+function adlSig() {
+  const b = S.chart.length ? S.chart[0].root : 0, rel = x => x == null ? '' : mod(x - b);
+  return JSON.stringify([S.chart.map(c => [rel(c.root), c.q, rel(c.bass), c.dur, c.sc || '', c.scAuto === false ? rel(c.scr ?? c.root) : '']), S.style, bpb(), S.solo.lv, S.solo.strict !== false]);
+}
+function adlSave() { try { localStorage.setItem('chordnavi-adl', JSON.stringify({keep:ADL.keep, sig:ADL.sig, base:ADL.base, bars:[...ADL.bars].slice(0, 400)})); } catch (e) {} }
+function adlBars() { return [...ADL.bars.values()].filter(a => a.length).length; }
+// 譜面が同じなら記録を使う。全体を移調しただけなら、アドリブも同じだけ移調する
+function adlCheck() {
+  const sig = adlSig(), base = S.chart.length ? S.chart[0].root : 0;
+  if (sig !== ADL.sig) { ADL.sig = sig; ADL.base = base; ADL.bars = new Map(); return false; }
+  if (base !== ADL.base) { const d = ((base - ADL.base) % 12 + 18) % 12 - 6; for (const a of ADL.bars.values()) for (const x of a) x[1].m += d; ADL.base = base; }
+  return true;
+}
+function adlStart() {
+  ADL.on = !DM.cur; ADL.live = new Set(); if (!ADL.on) return;
+  const had = adlBars(), ok = adlCheck();
+  if (ADL.keep && had && !ok) toast('譜面が変わったので、新しいアドリブを作って固定します');
+  if (!ADL.keep) ADL.bars = new Map();
+}
+function adlKey(tick0) { return (P.loopN || 0) + ':' + tick0; }
+// 小節の頭：固定中（またはMIDI書き出し）で記録があれば、それを並べて true
+function adlReplay(tick0) {
+  if (MC.on ? !MC.adl : !(ADL.on && ADL.keep)) return false;
+  const a = ADL.bars.get(adlKey(tick0)); if (!a) return false;
+  for (const [off, sn] of a) P.solo.set(tick0 + off, {...sn, ex:sn.ex ? {...sn.ex} : sn.ex});
+  return true;
+}
+function adlBegin(tick0) { if (!ADL.on || MC.on) return; const k = adlKey(tick0); ADL.bars.set(k, []); ADL.live.add(k); }
+function adlRec(tick, sn) {
+  if (!ADL.on || MC.on) return; const span = bpb() * TPB, t0 = tick - tick % span, k = adlKey(t0);
+  if (ADL.live.has(k)) ADL.bars.get(k).push([tick - t0, {m:sn.m, dT:sn.dT, v:sn.v, end:sn.end, ex:sn.ex || undefined, tech:sn.tech || undefined}]);
+}
+function adlSetKeep(on) {
+  ADL.keep = on;
+  if (on) { const ok = adlCheck(), n = adlBars(); toast(n && ok ? `いま聴いたアドリブ（${n}小節）を固定しました。もう一度再生すると同じフレーズが鳴ります` : '次の再生のアドリブを固定します'); }
+  else toast('再生するたびに新しいアドリブを弾きます');
+  adlSave(); renderDock(); if (S.pan === 'tab' || S.pan === 'practice') renderPan();
+}
+function adlNew() { ADL.bars = new Map(); ADL.sig = adlSig(); adlSave(); toast(ADL.keep ? '次の再生で新しいアドリブを作って、それを固定します' : '次の再生で新しいアドリブを弾きます'); if (P.ui && !DM.cur) { stop(); setTimeout(() => play(PR.on && PR.a != null ? PR.a * bpb() * TPB : 0), 450); } else if (S.pan === 'tab') renderPan(); }
 /* ===== 高度モード：伴奏のリハーモナイズ／アドリブのジャズ語法と表現／鳴った技の表示／お手本 ===== */
 const PRO = {
   solo:() => DM.cur ? !!DM.cur.solo : S.solo.lv === 'pro',
@@ -3887,7 +3947,7 @@ function demoEnd() {
   Object.assign(S, DM.saved); DM.cur = null; DM.saved = null;
   renderGuideBtns(); const g = $('#gdNow'); if (g) g.textContent = '';
 }
-if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) window.__pro = {drum, drumSyn, DRB, prepDrums, sched, LOOK, A, SMP, smpNote, loadInst, pluck, ac, soloBar, rebuildTL, SP, S, P, TH, scaleInfo, segAt, segNextReal, planHarm, devBody, spanCtx, DEVS, TECH, DM, demoStart, soloBarPro, get x() { return {SYNB, applyTone, yin, f2m, MC, PR, TAB, MY, LS, QZ, TN, MODES, setMode, midiBuild, chartPages, pdfFrom, backupMake, analyzeChart, similarSongs, humChords, secList, gdTx, openSections, openModulate, openIntroEnd, openHum, openMy, openDisp, coach, REC, RP, play, stop, renderPan, refresh, setVols, mixGain:A.gG}; }};
+if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) window.__pro = {drum, drumSyn, DRB, prepDrums, sched, LOOK, A, SMP, smpNote, loadInst, pluck, ac, soloBar, rebuildTL, SP, S, P, TH, scaleInfo, segAt, segNextReal, planHarm, devBody, spanCtx, DEVS, TECH, DM, demoStart, soloBarPro, get x() { return {ADL, adlSig, takeBars, SYNB, applyTone, yin, f2m, MC, PR, TAB, MY, LS, QZ, TN, MODES, setMode, midiBuild, chartPages, pdfFrom, backupMake, analyzeChart, similarSongs, humChords, secList, gdTx, openSections, openModulate, openIntroEnd, openHum, openMy, openDisp, coach, REC, RP, play, stop, renderPan, refresh, setVols, mixGain:A.gG}; }};
 /* ===== 解説ページ：アドリブの技・表現・伴奏の技・コード進行の技（お手本つき） ===== */
 const GD = {open:false, tab:'solo', sel:null, ci:0, cv:'a', cache:{}, shift:0, rate:1, loop:false, live:[]};
 const S1 = (prog, solo, o = {}) => ({a:{prog, solo, cmp:'easy', bpm:o.bpm || 132, rid:o.rid || 'swing', key:o.key}});
@@ -4373,7 +4433,8 @@ const HELP = [
   {id:'adlib', t:'アドリブと「かんたん／高度」', h:`${HF('h_adl', 'アドリブの設定')}<ul>
     <li>下の${HK('アドリブ')}で、自動のソロを鳴らすとき（スケール画面のとき／いつも／鳴らさない）・音色・音数・音量を選べます。</li>
     <li><b>アドリブのかんたん／高度</b>：かんたんはスケールの音でなめらかに、高度はジャズの技や表現を入れて弾きます。使った技は右下に出て、タップすると解説が開きます。</li>
-    <li><b>コードの技のかんたん／高度</b>：高度にすると、次の候補に上級の技が並び、伴奏もテンションや裏コードを使います。</li></ul>
+    <li><b>コードの技のかんたん／高度</b>：高度にすると、次の候補に上級の技が並び、伴奏もテンションや裏コードを使います。</li>
+    <li><b>もう一度再生したとき</b>：「毎回ちがうアドリブ」か「同じアドリブ（固定）」を選べます。固定にすると、直前に聴いたアドリブがそのまま再生され、MIDIの書き出しにも入ります。</li></ul>
     ${HF('h_guide', '音楽の技・解説', 'tall')}<ul>
     <li><b>音楽の技・解説</b>（メニュー）：技をタップすると、その技だけの画面になり、解説・お手本・コード譜・スケールを表示します。再生中は鳴っているコードを追いかけます。</li></ul>`, go:[['adl', 'アドリブの設定'], ['guide', '音楽の技・解説']]},
   {id:'practice', t:'ひく：練習の道具', h:`${HF('h_prac', '練習パネル', 'tall')}<ul>
@@ -4381,6 +4442,7 @@ const HELP = [
     <li><b>スピードトレーナー</b>：くり返すたびに少しずつテンポを上げ、目標のテンポで止まります。</li>
     <li><b>ミュート・ソロ</b>：M でそのパートを消す、S でそのパートだけを聴く。</li>
     <li><b>TAB</b>：再生中の自動アドリブを TAB 譜で表示。気に入った2小節は保存して、あとで ▶ で聴けます。</li>
+    <li><b>アドリブの固定</b>：ふだんは再生するたびに新しいアドリブを弾きます。気に入ったら「固定する」を押すと、いま聴いたアドリブがもう一度そのまま鳴ります。固定中は TAB に最初から最後まで先に表示され、今の小節が光るので、見ながら一緒に弾けます。テンポを落としても同じフレーズ。全体を移調すると、アドリブも同じだけ移調します（コードを変えたときは作り直し）。「新しく作り直す」で別のアドリブに。</li>
     <li><b>チューナー</b>：マイクで音程を測ります。弦のボタンで基準の音も鳴らせます。</li>
     <li><b>音色とノリ</b>：伴奏の設定で、ギターの音色（エレキ・エレピ・オルガンなど）、スウィングの量、もたり、揺れを変えられます。</li></ul>
     ${HF('h_tuner', 'チューナー')}`, go:[['m-play', 'ひくモードへ'], ['set', '伴奏・音の設定']]},
@@ -5642,6 +5704,7 @@ function renderPractice() {
     <div class="chips"><span class="clb">上げ幅</span>${[2, 5, 10].map(v => `<button data-pst="${v}" aria-pressed="${T.step === v}">+${v}%</button>`).join('')}</div>
     <div class="vrow"><span class="clb">目標 ♩=<b id="prTo">${T.to}</b></span><input type="range" min="40" max="260" value="${T.to}" data-pto aria-label="目標テンポ"></div>
     <div class="trow2"><span>いま ♩=<b>${S.bpm}</b>${T.b0 ? `（はじめ ${T.b0}）` : ''}</span>${T.b0 ? '<button class="chipb" data-prs>はじめのテンポに戻す</button>' : ''}</div></div>
+  <div class="pcard"><div class="ph"><b>アドリブ</b><span class="sub">もう一度再生したときの動き</span></div>${keepCard()}</div>
   <div class="pcard"><div class="ph"><b>パートごとのミュート・ソロ</b><span class="sub">M＝消す／S＝それだけ聞く</span></div>
     <div class="mxs">${parts.map(([k, l]) => { const x = M[k] || {}; return `<div class="mxr"><span>${l}</span><button class="ms" data-mxm="${k}" aria-pressed="${!!x.m}">M</button><button class="ms s" data-mxs="${k}" aria-pressed="${!!x.s}">S</button></div>`; }).join('')}</div>
     <p class="note">ギターの音色やノリ（スウィング・もたり）は「伴奏・音の設定」で変えられます。</p></div>`;
@@ -5662,6 +5725,8 @@ function onPractice(e) {
   else if (x.pev) { PR.tr.every = +x.pev; savePR(); renderPan(); }
   else if (x.pst) { PR.tr.step = +x.pst; savePR(); renderPan(); }
   else if (x.prs != null) { setBpm(PR.tr.b0); PR.tr.b0 = null; PR.tr.on = false; renderPan(); }
+  else if (x.akeep != null) adlSetKeep(!ADL.keep);
+  else if (x.anew != null) adlNew();
   else if (x.mxm || x.mxs) { const k = x.mxm || x.mxs, f = x.mxm ? 'm' : 's'; S.mix[k] = S.mix[k] || {m:false, s:false}; S.mix[k][f] = !S.mix[k][f]; setVols(); save(); renderPan(); }
   else return false;
   return true;
@@ -5712,29 +5777,62 @@ function tabFrets(notes) {
   });
 }
 function tabText(bars, n) {
-  const L = ['e', 'B', 'G', 'D', 'A', 'E'];
+  const L = ['e', 'B', 'G', 'D', 'A', 'E'], sw = !!R().sw;
   return bars.map(B => { const cols = n * 4, g = L.map(() => Array(cols).fill('---'));
-    tabFrets(B.notes).forEach(x => { const c = Math.max(0, Math.min(cols - 1, Math.round(x.pos * 4))); g[x.s][c] = (String(x.f) + '--').slice(0, 3); });
-    return `<div class="tabb"><div class="tabc">${esc(B.ch || '')}</div><pre>${L.map((l, s) => l + '|' + g[s].join('') + '|').join('\n')}</pre></div>`; }).join('');
+    tabFrets(B.notes.map(x => { let pos = x.pos; const fr = pos % 1; if (sw && fr > .54 && fr < .76) pos = Math.floor(pos) + .5; return {...x, pos}; })).forEach(x => { const c = Math.max(0, Math.min(cols - 1, Math.round(x.pos * 4))); g[x.s][c] = (String(x.f) + '--').slice(0, 3); });
+    return `<div class="tabb${B.now ? ' now' : ''}"${B.bar != null ? ` data-tb="${B.bar}"` : ''}><div class="tabc">${B.bar != null ? `<span class="tabn">${B.bar + 1}小節</span>` : ''}${esc(B.ch || '')}</div><div class="tabw"><pre>${L.map((l, s) => l + '|' + g[s].join('') + '|').join('\n')}</pre><i class="tabpos" hidden></i></div></div>`; }).join('');
 }
 function tabBars(k) {
   const key = x => x.lp + ':' + x.bar, order = []; for (const x of TAB.buf) if (!order.includes(key(x))) order.push(key(x));
   return order.slice(-k).map(id => { const ns = TAB.buf.filter(x => key(x) === id); return {ch:ns[0] && ns[0].ch ? nm(ns[0].ch) : '', notes:ns.map(x => ({pos:x.pos, m:x.m, d:x.d}))}; });
 }
-let TABT = null;
+// 覚えているアドリブ（ADL）を小節ごとに：再生中はそのループ、止まっているときは1周目
+function chordsInBar(bar) {
+  const n = bpb(), a = bar * n, b = a + n, out = []; let pos = 0;
+  for (const c of S.chart) { if (pos < b && pos + c.dur > a) out.push(nm(c)); pos += c.dur; }
+  if (!out.length && S.chart.length) { const tot = pos; return chordsInBar(Math.floor((bar * n % tot) / n)); }
+  return out.join(' / ');
+}
+function takeBars() {
+  if (!adlBars() || !adlCheck()) return null;
+  const span = bpb() * TPB, ln = P.ui ? (P.nowLn || 0) : 0;
+  let pre = ln + ':'; if (![...ADL.bars.keys()].some(k => k.startsWith(pre))) pre = '0:';
+  return [...ADL.bars.entries()].filter(([k]) => k.startsWith(pre)).map(([k, a]) => ({t0:+k.split(':')[1], a})).sort((x, y) => x.t0 - y.t0)
+    .map(({t0, a}) => ({bar:t0 / span, ch:chordsInBar(t0 / span), notes:a.map(([off, sn]) => ({pos:off / TPB, m:sn.m, d:sn.dT / TPB}))}));
+}
+function keepCard() {
+  const nb = adlCheck() ? adlBars() : 0;
+  return `<div class="keepc"><button class="chipb k" data-akeep aria-pressed="${ADL.keep}">${ADL.keep ? '固定中：同じアドリブ' : '固定する（同じアドリブをもう一度）'}</button><button class="chipb" data-anew>新しく作り直す</button>
+    <small>${ADL.keep ? (nb ? `固定中のアドリブ ${nb}小節。何度再生しても同じフレーズで、TABも先まで見られます。` : '次の再生のアドリブを固定します。') : '今は再生するたびに新しいアドリブです。気に入ったら「固定する」で、いま聴いたフレーズをもう一度再生できます。'}</small></div>`;
+}
+let TABT = null, TABK = '', TABNOW = -1;
+function tabTick() {
+  const v = $('#tabView'); if (S.pan !== 'tab' || !v) { clearInterval(TABT); TABT = null; return; }
+  const tb = takeBars(), n = bpb(), k = tb ? 'T' + tb.length + ':' + tb.reduce((s, b) => s + b.notes.length, 0) + ':' + (P.nowLn || 0) : 'B' + TAB.buf.length;
+  if (k !== TABK) { TABK = k; TABNOW = -1; const bars = tb || tabBars(4); v.innerHTML = bars.length ? tabText(bars, n) : TABEMPTY; }
+  if (!P.ui || P.nowAbs == null) { v.querySelectorAll('.tabpos').forEach(x => x.hidden = true); return; }
+  const tot = Math.max(1, Math.ceil(S.chart.reduce((s, c) => s + c.dur, 0) / n)), bar = Math.floor(P.nowAbs / n) % tot, fr = (P.nowAbs % n) / n;
+  const el = v.querySelector(`.tabb[data-tb="${bar}"]`);
+  if (bar !== TABNOW) { TABNOW = bar; v.querySelectorAll('.tabb.now').forEach(x => x.classList.remove('now')); v.querySelectorAll('.tabpos').forEach(x => x.hidden = true); if (el) { el.classList.add('now'); el.scrollIntoView({block:'nearest', behavior:'smooth'}); } }
+  if (el) { const m = el.querySelector('.tabpos'); m.hidden = false; m.style.left = `calc(2ch + ${fr * n * 4 * 3}ch)`; }
+}
+const TABEMPTY = '<p class="note">再生すると、ここにアドリブのフレーズが TAB 譜で出ます。気に入ったら「固定する」を押すと、同じアドリブをもう一度再生でき、TAB も最初から最後まで先に見られます。</p>';
 function renderTab() {
-  const on = S.solo.mode !== 'off', bars = tabBars(4), n = bpb();
-  if (!TABT) TABT = setInterval(() => { if (S.pan !== 'tab' || !$('#tabView')) { clearInterval(TABT); TABT = null; return; } if (TAB.n !== TAB.buf.length) { TAB.n = TAB.buf.length; $('#tabView').innerHTML = tabBars(4).length ? tabText(tabBars(4), n) : ''; } }, 350);
-  TAB.n = TAB.buf.length;
-  return `<div class="cap"><b>アドリブのTAB譜</b><span class="hint">・再生すると自動アドリブを TAB で表示</span><span class="gap"></span><button class="chipb" data-tbsave${bars.length ? '' : ' disabled'}>直前の2小節を保存</button></div>
+  const on = S.solo.mode !== 'off', tb = takeBars(), bars = tb || tabBars(4), n = bpb();
+  if (!TABT) TABT = setInterval(tabTick, 140);
+  TABK = tb ? 'T' + tb.length + ':' + tb.reduce((s, b) => s + b.notes.length, 0) + ':' + (P.nowLn || 0) : 'B' + TAB.buf.length; TABNOW = -1;
+  return `<div class="cap"><b>アドリブのTAB譜</b><span class="hint">${ADL.keep && tb ? '・固定中のアドリブ全体' : '・再生中のアドリブ'}</span><span class="gap"></span><button class="chipb" data-tbsave${bars.length ? '' : ' disabled'}>2小節を保存</button></div>
+    ${keepCard()}
     ${on ? '' : '<p class="note">アドリブが「鳴らさない」になっています。<button class="chipb" data-tbon>アドリブをオンにする</button></p>'}
-    <div id="tabView" class="tabv">${bars.length ? tabText(bars, n) : '<p class="note">再生ボタンを押すと、ここにアドリブのフレーズが TAB 譜で流れます。気に入ったフレーズは保存して、あとでゆっくり練習できます。</p>'}</div>
+    <div id="tabView" class="tabv">${bars.length ? tabText(bars, n) : TABEMPTY}</div>
     ${LICKS.length ? `<div class="lbl">保存したフレーズ（${LICKS.length}）</div>${LICKS.map((L, k) => `<details class="lick"><summary><b>${esc(L.name)}</b><small>♩=${L.bpm}・${esc(L.key || '')}</small><button class="chipb" data-lkp="${k}">▶</button><button class="chipb" data-lkd="${k}" aria-label="削除">✕</button></summary>${tabText(L.bars, L.n || 4)}</details>`).join('')}` : ''}`;
 }
 function onTab(e) {
   if (e.type !== 'click') return false; const b = e.target.closest('button'); if (!b) return false; const d = b.dataset;
   if (d.tbon != null) { S.solo.mode = 'scale'; save(); renderPan(); renderDock(); return true; }
-  if (d.tbsave != null) { const bars = tabBars(2); if (!bars.length) return true; LICKS.unshift({name:bars.map(x => x.ch).filter(Boolean).join(' → ') || 'フレーズ', bpm:S.bpm, n:bpb(), key:TH.keyName(S.key), bars}); saveLicks(); renderPan(); toast('フレーズを保存しました'); return true; }
+  if (d.akeep != null) { adlSetKeep(!ADL.keep); return true; }
+  if (d.anew != null) { adlNew(); return true; }
+  if (d.tbsave != null) { const tb = takeBars(); let bars = tabBars(2); if (tb) { const cb = P.ui && P.nowAbs != null ? Math.floor(P.nowAbs / bpb()) : tb[0].bar, k = Math.max(0, tb.findIndex(x => x.bar >= cb - 1)); bars = tb.slice(k, k + 2).map(x => ({ch:x.ch, notes:x.notes})); } if (!bars.length) return true; LICKS.unshift({name:bars.map(x => x.ch).filter(Boolean).join(' → ') || 'フレーズ', bpm:S.bpm, n:bpb(), key:TH.keyName(S.key), bars}); saveLicks(); renderPan(); toast('フレーズを保存しました'); return true; }
   if (d.lkp != null) { e.preventDefault(); const L = LICKS[+d.lkp]; if (!L || !ac()) return true; const spb = 60 / L.bpm, t0 = A.ctx.currentTime + .08; L.bars.forEach((B, k) => B.notes.forEach(x => lead(x.m, t0 + (k * L.n + x.pos) * spb, Math.max(.08, x.d * .95), .75))); return true; }
   if (d.lkd != null) { e.preventDefault(); LICKS.splice(+d.lkd, 1); saveLicks(); renderPan(); return true; }
   return false;
@@ -5840,7 +5938,7 @@ const XP = {loops:1, solo:false};
 function midiBuild(loops, withSolo) {
   if (P.ui) stop(); if (!ac() || !S.chart.length) return null; applyTone();
   const keep = {on:P.on, hl:P.hl, tl:P.tl, map:P.map, melMap:P.melMap, vis:P.vis, loopN:P.loopN, noG:P.noG, solo:P.solo, sx:P.sx, fx:P.fx};
-  MC.on = true; MC.ev = []; MC.solo = withSolo;
+  MC.on = true; MC.ev = []; MC.solo = withSolo; MC.adl = withSolo && adlCheck() && adlBars() > 0;
   try {
     P.loopN = 0; P.noG = -1; rebuildTL(); P.map = compile(R()); P.melMap = buildMel(); P.vis = []; soloReset();
     const end = P.tl.total * TPB, spt = 60 / S.bpm / TPB;
@@ -6626,6 +6724,8 @@ function renderAdl() {
   $('#adDens').innerHTML = ch([[0, '少なめ'], [1, 'ふつう'], [2, '多め']], S.solo.dens, 'data-sd');
   $('#adVol').value = S.solo.vol; $('#adVolV').textContent = Math.round(S.solo.vol * 100);
   $('#adStrict').setAttribute('aria-pressed', S.solo.strict !== false);
+  document.querySelectorAll('#adKeep button').forEach(b => b.setAttribute('aria-pressed', (b.dataset.keep === '1') === ADL.keep));
+  const nb = adlCheck() ? adlBars() : 0; $('#adKeepInfo').textContent = ADL.keep ? (nb ? `固定中：${nb}小節分のアドリブ` : '次の再生のアドリブを固定します') : (nb ? `いま覚えているアドリブ：${nb}小節（固定にすると、これがもう一度鳴ります）` : '再生するたびに新しいフレーズを弾きます');
 }
 function adlDemo() {
   if (P.ui || !ac()) return;
@@ -6638,6 +6738,8 @@ $('#bsAdl').addEventListener('click', e => {
   if (b.dataset.sm) { S.solo.mode = b.dataset.sm; renderDock(); setVols(); save(); }
   if (b.dataset.st) { S.solo.tone = b.dataset.st; if (A.ctx) applyTone(); save(); adlDemo(); }
   if (b.dataset.sd != null) { S.solo.dens = +b.dataset.sd; save(); }
+  if (b.dataset.keep != null) { adlSetKeep(b.dataset.keep === '1'); renderAdl(); }
+  if (b.id === 'adNew') { adlNew(); renderAdl(); }
   if (b.id === 'adStrict') { S.solo.strict = S.solo.strict === false; save(); if (P.ui) rebuildTL(); }
   if (b.id === 'adTry') adlDemo();
   if (b.dataset.lv) { if (S.solo.lv !== b.dataset.lv) setSoloLv(b.dataset.lv); return; }
