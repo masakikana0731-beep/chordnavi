@@ -375,7 +375,18 @@ body.haswall #wall{display:block}
 body.haswall .app{position:relative;z-index:1}
 body.haswall .tb,body.haswall .pan{background:rgba(11,17,29,var(--wpan,.38));-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 body.haswall .segbar .seg,body.haswall .hd .seg{background:rgba(11,17,29,.7)}
-body.haswall .stage{background:rgba(5,9,16,.55)}
+/* 演奏モード：後ろの画面は透けさせず、壁紙だけを背景にする */
+.stwall{position:absolute;inset:-24px;z-index:0;pointer-events:none;display:none;background:center/cover no-repeat}
+.stwall::after{content:"";position:absolute;inset:0;background:rgba(4,7,13,var(--sdim,.55))}
+.stage.wl{overflow:hidden}.stage.wl .stwall{display:block}
+.stage>*:not(.stwall){position:relative;z-index:1}
+.stage.wl .st-big,.stage.wl .st-lbl,.stage.wl .st-hd{text-shadow:0 2px 6px #000c,0 0 2px #000}
+/* バナー：パネル下の空いたところに好きな画像 */
+#banner{flex:1 1 0;min-height:0;margin:0 10px 8px;border-radius:12px;overflow:hidden;display:none;background:#05080e center/cover no-repeat;border:1px solid var(--line)}
+body.hasbanner #banner{display:block}
+body.hasbanner .pan{flex:0 1 auto}
+#banner.tiny{visibility:hidden;margin-bottom:0}
+#bnPrev{height:90px;border-radius:10px;border:1px solid var(--line);background:#05080e center/cover no-repeat;margin:4px 0 6px}
 .wtiles{display:flex;gap:6px;margin:4px -12px 6px;padding:2px 12px 4px;overflow-x:auto;scrollbar-width:none}.wtiles::-webkit-scrollbar{display:none}
 .wtiles button{flex:none;width:62px}
 .wadj{display:grid;grid-template-columns:96px minmax(0,1fr);gap:10px;align-items:start}
@@ -424,6 +435,7 @@ body.haswall .stage{background:rgba(5,9,16,.55)}
   <button class="fol" id="folBtn" aria-label="再生中のコードに追従">追従</button>
 </div>
 <section class="pan" id="pan"></section>
+<div id="banner" aria-hidden="true"></div>
 <nav class="dock" aria-label="再生">
   <button class="play" id="playBtn" aria-label="再生"></button>
   <button class="recb" id="recBtn" aria-label="録音"><i></i></button>
@@ -445,6 +457,7 @@ body.haswall .stage{background:rgba(5,9,16,.55)}
   <div class="gd-body" id="hpBody"></div>
 </section>
 <section class="stage" id="stage" hidden aria-label="演奏モード">
+  <div class="stwall" id="stWall" aria-hidden="true"></div>
   <div class="st-hd"><span id="stInfo"></span><button class="x" id="stClose" aria-label="閉じる">×</button></div>
   <div class="st-main">
     <div class="st-now" id="stNowBox">
@@ -484,9 +497,10 @@ body.haswall .stage{background:rgba(5,9,16,.55)}
   <div class="bs-hd"><h4 id="recH">スキャット録音</h4><button class="x" data-close aria-label="閉じる">×</button></div>
   <div id="recBody"></div>
 </section>
-<section class="bs" id="bsWall" aria-label="壁紙">
+<section class="bs" id="bsWall" aria-label="壁紙・バナー">
   <div class="grab"></div>
-  <div class="bs-hd"><h4>壁紙</h4><button class="x" data-close aria-label="閉じる">×</button></div>
+  <div class="bs-hd"><h4>壁紙・バナー</h4><button class="x" data-close aria-label="閉じる">×</button></div>
+  <div class="lbl" style="margin-top:0">演奏モードの壁紙</div>
   <div class="wtiles" id="wTiles"></div>
   <input type="file" accept="image/*" id="wFile" class="wfile" tabindex="-1" aria-hidden="true">
   <div id="wAdj" hidden>
@@ -504,7 +518,18 @@ body.haswall .stage{background:rgba(5,9,16,.55)}
   <div class="lbl">ぼかし</div>
   <div class="vrow"><span id="wBlurV">0</span><input type="range" id="wBlur" min="0" max="16" step="1" aria-label="壁紙のぼかし"></div>
   <p class="note">壁紙は<b>このスマホのこのアプリ（ブラウザ）の中だけ</b>に保存されます。写真がGitHubやほかの人に送られることはなく、同じアドレスを開いた人には見えません。ブラウザのデータを消すと壁紙も消えます。</p>
+  <div class="tg"><span>ふだんの画面にも壁紙を出す<small class="sub">OFFなら演奏モードだけ。ONだと文字の後ろにも写真が出ます</small></span><button class="sw" id="wMain" aria-label="ふだんの画面にも壁紙"></button></div>
   <button class="btn ghost wide" id="wDel" hidden>選んだ写真を削除</button>
+  <div class="lbl">バナー（ふだんの画面の下の空いたところ）</div>
+  <div id="bnPrev"></div>
+  <input type="file" accept="image/*" id="bnFile" class="wfile" tabindex="-1" aria-hidden="true">
+  <div class="rgo"><button class="btn ghost" id="bnDel">外す</button><button class="btn red big" id="bnPick">バナー画像を選ぶ</button></div>
+  <div id="bnAdj" hidden>
+    <div class="seg lv" id="bnFit" style="margin-top:8px"><button data-fit="cover">いっぱいに表示</button><button data-fit="contain">画像全体を表示</button></div>
+    <div class="vrow"><span>上下</span><input type="range" id="bnPy" min="0" max="100" step="1" aria-label="バナーの上下の位置"></div>
+    <div class="vrow"><span>左右</span><input type="range" id="bnPx" min="0" max="100" step="1" aria-label="バナーの左右の位置"></div>
+  </div>
+  <p class="note">パネルの下に空きがあるときだけ表示されます（候補が多くて埋まっているときは隠れます）。</p>
 </section>
 <section class="bs" id="bsKey" aria-label="キー">
   <div class="grab"></div>
@@ -3552,7 +3577,7 @@ $('#gdBody').addEventListener('click', e => {
 });
 $('#techTick').addEventListener('click', () => openGuide($('#techTick').dataset.id || 'solo'));
 /* ---------- wallpaper: kept only in this browser on this device (IndexedDB → localStorage fallback) ---------- */
-const WP = {k:'chordnavi-wall', st:{id:'', dim:.42, blur:0, fit:'cover', zoom:1, px:50, py:50}, img:null, iw:0, ih:0};
+const WP = {k:'chordnavi-wall', st:{id:'', dim:.42, blur:0, fit:'cover', zoom:1, px:50, py:50, main:false, bfit:'cover', bpx:50, bpy:50}, img:null, iw:0, ih:0, bn:null};
 const WPRE = [
   {id:'night', n:'夜空', css:'radial-gradient(circle at 20% 15%, #fff 0 1px, transparent 1.6px) 0 0/90px 90px, radial-gradient(circle at 65% 55%, #ffffffaa 0 1px, transparent 1.6px) 0 0/130px 130px, radial-gradient(ellipse at 70% 0%, #5468c4 0%, #1e2a63 45%, #070a18 100%)'},
   {id:'dusk', n:'夕焼け', css:'linear-gradient(170deg, #ff9a6b 0%, #c4497a 35%, #3a1f5c 66%, #0b1020 100%)'},
@@ -3565,18 +3590,19 @@ const wdb = () => new Promise((res, rej) => {
   try { const r = indexedDB.open('chordnavi', 1); r.onupgradeneeded = () => r.result.createObjectStore('kv'); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }
   catch (e) { rej(e); }
 });
-async function wGet() {
-  try { const db = await wdb(); const v = await new Promise((res, rej) => { const q = db.transaction('kv').objectStore('kv').get('wall'); q.onsuccess = () => res(q.result || null); q.onerror = () => rej(q.error); }); if (v) return v; } catch (e) {}
-  try { return localStorage.getItem(WP.k + '-img'); } catch (e) { return null; }
+async function wGet(key = 'wall') {
+  try { const db = await wdb(); const v = await new Promise((res, rej) => { const q = db.transaction('kv').objectStore('kv').get(key); q.onsuccess = () => res(q.result || null); q.onerror = () => rej(q.error); }); if (v) return v; } catch (e) {}
+  try { return localStorage.getItem(WP.k + '-' + (key === 'wall' ? 'img' : key)); } catch (e) { return null; }
 }
-async function wPut(v) {
+async function wPut(v, key = 'wall') {
+  const lk = WP.k + '-' + (key === 'wall' ? 'img' : key);
   try {
     const db = await wdb();
-    await new Promise((res, rej) => { const tx = db.transaction('kv', 'readwrite'), os = tx.objectStore('kv'); v == null ? os.delete('wall') : os.put(v, 'wall'); tx.oncomplete = res; tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error); });
-    try { localStorage.removeItem(WP.k + '-img'); } catch (e) {}
+    await new Promise((res, rej) => { const tx = db.transaction('kv', 'readwrite'), os = tx.objectStore('kv'); v == null ? os.delete(key) : os.put(v, key); tx.oncomplete = res; tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error); });
+    try { localStorage.removeItem(lk); } catch (e) {}
     return true;
   } catch (e) {
-    try { v == null ? localStorage.removeItem(WP.k + '-img') : localStorage.setItem(WP.k + '-img', v); return true; } catch (x) { return false; }
+    try { v == null ? localStorage.removeItem(lk) : localStorage.setItem(lk, v); return true; } catch (x) { return false; }
   }
 }
 function wSave() { try { localStorage.setItem(WP.k, JSON.stringify(WP.st)); } catch (e) {} }
@@ -3606,8 +3632,12 @@ function wDims(src) { return new Promise(res => { const im = new Image(); im.onl
 function wApply() {
   const el = $('#wall'), s = WP.st, pre = WPRE.find(p => p.id === s.id);
   const css = s.id === 'photo' && WP.img ? `${s.px}% ${s.py}%/${wSize()} no-repeat url("${WP.img}") #05080e` : pre ? pre.css : '';
-  document.body.classList.toggle('haswall', !!css);
-  el.style.background = css;
+  document.body.classList.toggle('haswall', !!css && !!s.main);
+  el.style.background = s.main ? css : '';
+  const sw = $('#stWall'); $('#stage').classList.toggle('wl', !!css);
+  sw.style.background = s.id === 'photo' && WP.img ? `${s.px}% ${s.py}%/${wSize(sw)} no-repeat url("${WP.img}") #05080e` : css;
+  sw.style.setProperty('--sdim', Math.max(.45, s.dim)); sw.style.filter = s.blur ? `blur(${s.blur}px)` : '';
+  bnApply();
   el.style.setProperty('--wdim', s.dim);
   el.style.filter = s.blur ? `blur(${s.blur}px)` : '';
   const pv = $('#wPrev');
@@ -3626,6 +3656,9 @@ function renderWall() {
   $('#wDim').value = s.dim; $('#wDimV').textContent = Math.round(s.dim * 100);
   $('#wBlur').value = s.blur; $('#wBlurV').textContent = s.blur;
   $('#wDel').hidden = !WP.img;
+  $('#wMain').setAttribute('aria-pressed', !!s.main);
+  $('#bnAdj').hidden = !WP.bn; $('#bnDel').disabled = !WP.bn;
+  if (WP.bn) { document.querySelectorAll('#bnFit button').forEach(b => b.setAttribute('aria-pressed', b.dataset.fit === s.bfit)); $('#bnPx').value = s.bpx; $('#bnPy').value = s.bpy; }
   const ph = s.id === 'photo' && !!WP.img;
   $('#wAdj').hidden = !ph; if (ph) wApply();
   if (ph) {
@@ -3658,13 +3691,35 @@ $('#wZoom').addEventListener('input', e => { WP.st.zoom = +e.target.value; $('#w
 $('#wPx').addEventListener('input', e => { WP.st.px = +e.target.value; wApply(); wSave(); });
 $('#wPy').addEventListener('input', e => { WP.st.py = +e.target.value; wApply(); wSave(); });
 $('#wReset').addEventListener('click', () => { Object.assign(WP.st, {fit:'cover', zoom:1, px:50, py:50}); wApply(); wSave(); renderWall(); });
-addEventListener('resize', () => { if (WP.st.id === 'photo') wApply(); });
+addEventListener('resize', () => { wApply(); });
+$('#wMain').addEventListener('click', () => { WP.st.main = !WP.st.main; wSave(); wApply(); renderWall(); });
+// ---- banner ----
+function bnApply() {
+  const s = WP.st, on = !!WP.bn, css = on ? `${s.bpx}% ${s.bpy}%/${s.bfit} no-repeat url("${WP.bn}") #05080e` : '';
+  document.body.classList.toggle('hasbanner', on);
+  $('#banner').style.background = css; $('#bnPrev').style.background = css || '';
+  bnFit();
+}
+function bnFit() { const b = $('#banner'); if (b) b.classList.toggle('tiny', b.clientHeight < 46); }
+try { new ResizeObserver(bnFit).observe($('#banner')); } catch (e) {}
+$('#bnPick').addEventListener('click', () => { $('#bnFile').value = ''; $('#bnFile').click(); });
+$('#bnFile').addEventListener('change', async e => {
+  const f = e.target.files && e.target.files[0]; if (!f) return;
+  let d; try { d = await wResize(f); } catch (x) { toast('この画像は読み込めませんでした（JPEGかPNGで試してください）'); return; }
+  const ok = await wPut(d, 'banner'); WP.bn = d; Object.assign(WP.st, {bfit:'cover', bpx:50, bpy:50}); wSave(); bnApply(); renderWall();
+  toast(ok ? 'バナーにしました（このスマホの中だけに保存）' : 'バナーにしました（保存できなかったので、閉じると消えます）');
+});
+$('#bnDel').addEventListener('click', async () => { await wPut(null, 'banner'); WP.bn = null; wSave(); bnApply(); renderWall(); });
+$('#bnFit').addEventListener('click', e => { const b = e.target.closest('[data-fit]'); if (!b) return; WP.st.bfit = b.dataset.fit; wSave(); bnApply(); renderWall(); });
+$('#bnPx').addEventListener('input', e => { WP.st.bpx = +e.target.value; wSave(); bnApply(); });
+$('#bnPy').addEventListener('input', e => { WP.st.bpy = +e.target.value; wSave(); bnApply(); });
 $('#wDel').addEventListener('click', async () => { await wPut(null); WP.img = null; if (WP.st.id === 'photo') WP.st.id = ''; wSave(); wApply(); renderWall(); toast('写真を削除しました'); });
 (async () => {
   try { const v = JSON.parse(localStorage.getItem(WP.k) || 'null'); if (v) Object.assign(WP.st, v); } catch (e) {}
   if (WP.st.id === 'photo') { WP.img = await wGet(); if (!WP.img) WP.st.id = ''; }
   else WP.img = await wGet();
   if (WP.img) [WP.iw, WP.ih] = await wDims(WP.img);
+  WP.bn = await wGet('banner');
   wApply();
 })();
 /* ---------- how-to page ---------- */
@@ -3717,8 +3772,8 @@ const HELP = [
     <p>イヤホン（ヘッドホン）を使うと、伴奏がマイクに入らずきれいに録れます。楽器はスマホを30cmくらい離して置くのがおすすめです。</p>`, go:[['rec', '録音を開く']]},
   {id:'app', t:'アプリとして使う・壁紙', h:`<ul>
     <li><b>ホーム画面に追加</b>：iPhone は Safari の共有ボタン（□↑）→「ホーム画面に追加」。Android は Chrome のメニュー（︙）→「ホーム画面に追加」または「アプリをインストール」。一度開けば、電波がなくても使えます。</li>
-    <li><b>壁紙</b>：メニューの「壁紙」で、自分の写真や用意した柄を選べます。暗さ・ぼかしも調整できます。</li>
-    <li>壁紙や進行は<b>このスマホのこのアプリ（ブラウザ）の中だけ</b>に保存されます。同じアドレスを開いたほかの人には見えません。Safari とホーム画面のアプリでは保存場所が別なので、使う方で設定してください。</li></ul>`, go:[['wall', '壁紙を設定する']]},
+    <li><b>壁紙・バナー</b>：メニューの「壁紙」で、演奏モードの背景に自分の写真や柄を選べます（ふだんの画面にも出すかは切り替え可）。<b>バナー</b>はふだんの画面の下の空いたところに好きな画像を表示します。</li>
+    <li>壁紙や進行は<b>このスマホのこのアプリ（ブラウザ）の中だけ</b>に保存されます。同じアドレスを開いたほかの人には見えません。Safari とホーム画面のアプリでは保存場所が別なので、使う方で設定してください。</li></ul>`, go:[['wall', '壁紙・バナーを設定']]},
   {id:'trouble', t:'困ったとき', h:`<ul>
     <li><b>音が出ない</b>：iPhone はマナーモード（消音スイッチ）を解除して、音量を上げてください。</li>
     <li><b>音の高さや鳴り方がおかしい</b>：録音のあとなどに起きたら、アプリを閉じて開き直してください。</li>
@@ -4730,7 +4785,7 @@ $('#trDn').addEventListener('click', () => transpose(-1)); $('#trUp').addEventLi
 
 /* menu */
 const MENU = [
-  ['help', ICON.help, '使い方'], ['wall', ICON.image, '壁紙'],
+  ['help', ICON.help, '使い方'], ['wall', ICON.image, '壁紙・バナー'],
   ['copy', ICON.copy, 'コード進行をコピー'], ['key', ICON.key, 'キーを推定'],
   ['up', ICON.up, '半音上げる'], ['down', ICON.down, '半音下げる'],
   ['showsc', ICON.eye, ''], ['scall', ICON.reset, 'スケールを全部おすすめに'],
