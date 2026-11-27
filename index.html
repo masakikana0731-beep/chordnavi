@@ -370,6 +370,14 @@ body.recording .sheet{pointer-events:none}
 .gtext{font-size:15px;line-height:1.9;color:#eef2f8;margin:12px 0;letter-spacing:.01em}
 .gdt .gx{font-size:14px;line-height:1.7;background:var(--paper);border-radius:10px;padding:9px 11px;color:var(--ink)}.gdt .gx b{color:var(--red);margin-right:6px}
 .gsec{border-top:1px solid var(--line);padding-top:10px;margin-top:12px}
+.glive{min-height:220px;margin:12px 0 4px;padding:12px 14px;border-radius:12px;border:2px solid var(--red);background:color-mix(in srgb,var(--red) 12%,var(--card))}
+.gl-h{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;color:var(--red);letter-spacing:.04em;margin-bottom:6px}
+.gl-h span{font-size:11px;color:#fff;background:var(--red);border-radius:5px;padding:1px 7px;letter-spacing:0}
+.gl-wait{margin:0;font-size:14px;line-height:1.7;color:var(--pearl)}
+.gl-now{animation:glin .35s ease-out}.gl-now b{display:block;font-size:22px;line-height:1.3;color:#fff}.gl-now p{margin:4px 0 0;font-size:17px;line-height:1.6;color:#ffe2b8;font-weight:700}
+@keyframes glin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.gl-log{list-style:none;margin:10px 0 0;padding:8px 0 0;border-top:1px solid var(--line)}.gl-log li{font-size:13.5px;line-height:1.6;color:var(--mute);margin:2px 0}.gl-log b{color:var(--pearl)}
+#guide .gd-now{display:none}
 .gctl{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin:10px 0 4px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--paper)}
 .gctl>div{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--mute)}
 .gseg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}.gseg button{border:0;background:var(--card);color:var(--mute);font-size:12px;font-weight:700;padding:6px 9px}.gseg button[aria-pressed=true]{background:var(--sel);color:#fff}
@@ -3446,7 +3454,7 @@ function techShow(e) {
   TECH.log.unshift({...e, at:now}); if (TECH.log.length > 40) TECH.log.length = 40;
   if (GD.open && GD.tab === 'log') renderGuide();
   const st = $('#stTech'); if (st) st.textContent = (e.kind === 'solo' ? 'アドリブ：' : '伴奏：') + e.txt;
-  if (DM.cur) { const g = $('#gdNow'); if (g) g.textContent = (e.kind === 'solo' ? 'アドリブ：' : '伴奏：') + e.txt; return; }
+  if (DM.cur) { const g = $('#gdNow'); if (g) g.textContent = (e.kind === 'solo' ? 'アドリブ：' : '伴奏：') + e.txt; gdLiveShow(e); return; }
   if (now - TECH.lastAt < 700 && e.kind === 'solo') return;
   TECH.lastAt = now;
   const el = $('#techTick'); if (!el || !$('#stage').hidden) return;
@@ -3478,7 +3486,7 @@ function demoEnd() {
 }
 if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) window.__pro = {drum, drumSyn, DRB, prepDrums, sched, LOOK, A, SMP, smpNote, loadInst, pluck, ac, soloBar, rebuildTL, SP, S, P, TH, scaleInfo, segAt, segNextReal, planHarm, devBody, spanCtx, DEVS, TECH, DM, demoStart, soloBarPro};
 /* ===== 解説ページ：アドリブの技・表現・伴奏の技・コード進行の技（お手本つき） ===== */
-const GD = {open:false, tab:'solo', sel:null, ci:0, cv:'a', cache:{}, shift:0, rate:1, loop:false};
+const GD = {open:false, tab:'solo', sel:null, ci:0, cv:'a', cache:{}, shift:0, rate:1, loop:false, live:[]};
 const S1 = (prog, solo, o = {}) => ({a:{prog, solo, cmp:'easy', bpm:o.bpm || 132, rid:o.rid || 'swing', key:o.key}});
 const AB = (b, a, o = {}) => ({b:{prog:b, cmp:'easy', bpm:o.bpm || 120, rid:o.rid || 'swing', key:o.key}, a:{prog:a, cmp:'easy', bpm:o.bpm || 120, rid:o.rid || 'swing', key:o.key}});
 const CF = (prog, cf, o = {}) => ({b:{prog, cmp:'easy', bpm:o.bpm || 120, rid:o.rid || 'comp', key:o.key}, a:{prog, cmp:'pro', cforce:cf, bpm:o.bpm || 120, rid:o.rid || 'comp', key:o.key}, bl:'かんたん', al:'この技'});
@@ -3602,6 +3610,7 @@ function gdDetail(it) {
     <div class="gctl"><div><span>速さ</span><span class="gseg">${[[1, '100%'], [.75, '75%'], [.5, '50%']].map(([r, l]) => `<button data-rate="${r}" aria-pressed="${GD.rate === r}">${l}</button>`).join('')}</span></div>
       <div><span>キー</span><span class="gkey"><button data-kshift="-1" aria-label="キーを下げる">‹</button><b>${esc(TH.keyName(DKEY((d.a.key), GD.shift)))}</b><button data-kshift="1" aria-label="キーを上げる">›</button></span></div>
       <div><span>くり返し</span><button class="sw" data-gloop aria-pressed="${GD.loop}" aria-label="くり返し"></button></div></div>` : ''}
+    ${d ? `<div class="glive" id="gdLive" aria-live="polite">${gdLiveHTML()}</div>` : ''}
     ${pc ? `<div class="gsec"><div class="glbl">コード譜${d.b ? `<span class="gcv"><button data-cv="b" aria-pressed="${GD.cv === 'b'}">${esc(d.bl || '元の進行')}</button><button data-cv="a" aria-pressed="${GD.cv === 'a'}">${esc(d.al || 'この技')}</button></span>` : ''}</div>
       <div id="gdChart">${gdChart(pc, GD.ci)}</div>
       <p class="gnote">${pc.list.some(x => x.tech) ? '<i class="tqm"></i>は技で入れ替わったコード。' : ''}コードをタップすると、そのスケールを表示します（再生中は自動で追いかけます）。</p></div>
@@ -3627,7 +3636,20 @@ function gdFollow() {
   }
   requestAnimationFrame(gdFollow);
 }
+// いま鳴っている技の説明：画面の真ん中に大きく出し、直前の3つも残す
+function gdLiveHTML() {
+  const L = GD.live, split = x => { const i = x.txt.indexOf('：'); return i > 0 ? [x.txt.slice(0, i), x.txt.slice(i + 1)] : [x.txt, '']; };
+  if (!L.length) return '<div class="gl-h">いま鳴っている技</div><p class="gl-wait">お手本を鳴らすと、鳴った瞬間の技と、どの音をどう使ったかをここに大きく出します。</p>';
+  const [t, d] = split(L[0]);
+  return `<div class="gl-h">いま鳴っている技<span>${L[0].kind === 'solo' ? 'アドリブ' : '伴奏'}</span></div><div class="gl-now" data-k="${GD.liveN}"><b>${esc(t)}</b>${d ? `<p>${esc(d)}</p>` : ''}</div>`
+    + (L.length > 1 ? `<ul class="gl-log">${L.slice(1).map(x => { const [a, b] = split(x); return `<li><b>${esc(a)}</b>${b ? '：' + esc(b) : ''}</li>`; }).join('')}</ul>` : '');
+}
+function gdLiveShow(e) {
+  GD.live.unshift(e); GD.live.length = Math.min(GD.live.length, 4); GD.liveN = (GD.liveN || 0) + 1;
+  const el = $('#gdLive'); if (el) el.innerHTML = gdLiveHTML();
+}
 function gdPlay(it, v) {
+  GD.live = []; const el = $('#gdLive'); if (el) el.innerHTML = gdLiveHTML();
   const base = v === 'b' ? it.demo.b : it.demo.a;
   demoStart({...base, gid:it.id, gv:v, shift:GD.shift, loop:GD.loop, bpm:Math.round((base.bpm || 126) * GD.rate)});
 }
