@@ -271,7 +271,7 @@ body.recording .recb{background:var(--red);border-color:var(--red)}body.recordin
 body.recording .hd,body.recording .segbar,body.recording .tb,body.recording .pan,body.recording .dock .tempo,body.recording .dock .dk,body.recording .st-ctl .ib{pointer-events:none;opacity:.38}
 body.recording .sheet{pointer-events:none}
 .sub{display:block;font-size:10.5px;color:var(--mute);font-weight:400;margin-top:2px;line-height:1.35}
-.tg>span:first-child{min-width:0;flex:1}
+.tg>span:first-child{min-width:0;flex:1;white-space:normal}.tg .sub{white-space:normal}
 .rlead{font-size:12.5px;color:var(--ink);margin:0 0 2px}
 .rgo{display:grid;grid-template-columns:1fr 1.5fr;gap:8px;margin-top:14px}.rgo.three{grid-template-columns:1fr 1fr 1.3fr}.rgo.one{grid-template-columns:1fr}
 .btn.big{height:48px;font-size:14px}
@@ -282,13 +282,27 @@ body.recording .sheet{pointer-events:none}
 .wave i{position:absolute;top:0;bottom:0;left:0;width:2px;margin-left:-1px;background:#fff;pointer-events:none}
 .rvctl{display:flex;align-items:center;gap:12px;margin:8px 0 2px}.rvctl .play{width:46px;height:46px}.rvctl .play svg{width:18px;height:18px}
 .rvsl{flex:1;display:grid;gap:0}
-.rvsl label{display:grid;grid-template-columns:32px minmax(0,1fr);align-items:center;font-size:11px;color:var(--mute);font-weight:700}
+.rvsl label{white-space:nowrap;letter-spacing:-.03em;display:grid;grid-template-columns:46px minmax(0,1fr);align-items:center;font-size:11px;color:var(--mute);font-weight:700}
 .nud{display:flex;align-items:center;gap:6px;flex:none}.nud b{min-width:50px;text-align:center;font-variant-numeric:tabular-nums;font-size:13px}.nud .rnd{width:36px;height:36px;font-size:18px}
 .seg.fmt{width:100%}.seg.fmt button{flex:1;height:40px;padding:0 4px}
 .prog{height:10px;border-radius:5px;background:var(--card);overflow:hidden;margin:16px 0 8px}.prog i{display:block;height:100%;width:0;background:var(--red);transition:width .2s}
 .done{display:flex;flex-direction:column;gap:3px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin:4px 0 2px}
 .done b{font-size:13px;word-break:break-all}.done span{font-size:12px;color:var(--mute)}
 .rconf{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.rconf span{grid-column:1/-1;font-size:12.5px}
+.rcount{position:fixed;z-index:69;left:50%;top:42%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:4px;pointer-events:none;background:#0c1320d9;border:1px solid #ff7a6666;border-radius:24px;padding:14px 30px 12px;box-shadow:0 10px 40px #000a}
+.rcount[hidden]{display:none}.rcount b{font-family:Kalam,'Zen Kaku Gothic New',cursive;font-size:88px;font-weight:700;line-height:1;color:var(--red)}.rcount span{font-size:13px;color:var(--ink);white-space:nowrap}
+.vrow{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:10px;margin:6px 0 2px;font-size:12px;color:var(--mute);font-weight:700}
+.vrow span{min-width:28px;font-variant-numeric:tabular-nums}.vrow .btn{height:38px;padding:0 12px;font-size:12px}
+.rvsl.two{grid-template-columns:1fr 1fr;column-gap:14px;margin-top:2px}
+.fxc{margin:6px 0 6px}.fxc button{flex:1}
+.btn.wide{width:100%;margin-top:10px;height:42px}
+#bsRec .btn .rdot,#bsRec .btn svg{vertical-align:-2px}#bsRec .btn svg{width:13px;height:13px;margin-right:4px}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(54px,1fr));gap:4px;max-height:38vh;overflow-y:auto;margin:8px 0 4px;padding:2px}
+.pc{position:relative;height:40px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:12px 3px 2px;min-width:0;overflow:hidden}
+.pc i{position:absolute;left:4px;top:2px;font-style:normal;font-size:9px;color:var(--mute)}
+.pc b{display:block;font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc.on{background:var(--sel);border-color:#ff7a6688}.pc.edge{border-color:var(--red);box-shadow:inset 0 0 0 1px var(--red)}
+.pinfo{font-size:12.5px;margin:4px 0 0;color:var(--ink)}
 body:has(.bs.on) .toast{bottom:auto;top:calc(12px + env(safe-area-inset-top))}
 @media (max-width:380px){.recb{width:32px;height:32px}.dock{gap:3px;padding-left:8px;padding-right:8px}.rgo.three{grid-template-columns:1fr 1fr 1.2fr}.rgo.three .btn{font-size:12px;padding:0 6px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
@@ -342,8 +356,19 @@ body:has(.bs.on) .toast{bottom:auto;top:calc(12px + env(safe-area-inset-top))}
   </div>
   <div class="st-ctl"><button class="ib" id="stPrev" aria-label="前のコード"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg></button><button class="play" id="stPlay" aria-label="再生"></button><button class="ib" id="stNextBtn" aria-label="次のコード"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg></button></div>
 </section>
+<div class="rcount" id="recCount" hidden aria-hidden="true"><b></b><span></span></div>
 <div class="recbar" id="recBar" hidden role="status"><i class="rdot"></i><b id="recT">0:00</b><span id="recInfo"></span><span class="lv" aria-hidden="true"><i id="recLv"></i></span><button id="recStop">停止</button></div>
 <div class="scrim" id="scrim"></div>
+<section class="bs" id="bsAdl" aria-label="アドリブ">
+  <div class="grab"></div>
+  <div class="bs-hd"><h4>アドリブ（自動ソロ）</h4><button class="x" data-close aria-label="閉じる">×</button></div>
+  <div class="lbl">鳴らすとき</div><div class="chips" id="adMode"></div>
+  <div class="lbl">音色</div><div class="chips" id="adTone"></div>
+  <div class="lbl">音数</div><div class="chips" id="adDens"></div>
+  <div class="lbl">音量</div>
+  <div class="vrow"><span id="adVolV">80</span><input type="range" id="adVol" min="0" max="1" step=".01" aria-label="アドリブの音量"><button class="btn ghost" id="adTry">試し弾き</button></div>
+  <p class="note">再生中に動かすと、その場で音量が変わります。録音中に鳴らしたアドリブは、録ったあとにも音量を変えられます。</p>
+</section>
 <section class="bs" id="bsRec" aria-label="スキャット録音">
   <div class="grab"></div>
   <div class="bs-hd"><h4 id="recH">スキャット録音</h4><button class="x" data-close aria-label="閉じる">×</button></div>
@@ -1227,6 +1252,7 @@ const ICON = {
   prev: svgI('<path d="m15 18-6-6 6-6"/>'), next: svgI('<path d="m9 18 6-6-6-6"/>'),
   trash: svgI('<path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/>'),
   pin: svgI('<path d="M12 17v5M9 3h6l-1 6 3 3v2H7v-2l3-3z"/>'),
+  from: svgI('<path d="M5 4.5v15" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M9 4.5v15l12-7.5z"/>', 1),
   mic: svgI('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>'),
   copy: svgI('<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/>'),
   key: svgI('<circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M17 6l3 3"/>'),
@@ -1459,7 +1485,7 @@ function renderTb() {
     <div class="tbn"><span class="nm hand">${chordHTML(ch)}</span><small>${esc(TH.roman(ch, S.key))}${ch.sc ? ' ・ ' + esc(SCJ[ch.sc]) : ''} ・ ${i + 1}/${S.chart.length}</small></div>
     <button class="ib" data-tb="next" aria-label="次のコード"${i >= S.chart.length - 1 ? ' disabled' : ''}>${ICON.next}</button>
     <div class="dur"><button data-tb="dm" aria-label="短く">−</button><span>${durLabel(ch.dur)}</span><button data-tb="dp" aria-label="長く">＋</button></div>
-    <button class="ib" data-tb="play" aria-label="鳴らす">${ICON.play}</button>
+    <button class="ib" data-tb="play" aria-label="ここから再生" title="ここから再生">${ICON.from}</button>
     <button class="ib" data-tb="del" aria-label="削除">${ICON.trash}</button>`;
 }
 function renderSeg() {
@@ -1631,8 +1657,9 @@ function ac() {
   if (!A.ctx) {
     const C = window.AudioContext || window.webkitAudioContext;
     if (!C) return null;
-    const ctx = A.ctx = new C({latencyHint:'interactive'});
-    try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
+    let ctx; try { ctx = new C(Object.assign({latencyHint:'interactive'}, A.opt || {})); } catch (e) { ctx = new C(); }
+    A.ctx = ctx;
+    try { if (navigator.audioSession) navigator.audioSession.type = A.sess || 'playback'; } catch (e) {}
     const comp = ctx.createDynamicsCompressor();
     comp.threshold.value = -14; comp.knee.value = 10; comp.ratio.value = 4; comp.attack.value = .004; comp.release.value = .2;
     comp.connect(ctx.destination);
@@ -1643,7 +1670,7 @@ function ac() {
     A.gD = ctx.createGain(); A.gD.connect(A.master);
     // solo bus: lowpass → master, + dotted-8th delay + reverb send
     A.gS = ctx.createGain();
-    const sl = ctx.createBiquadFilter(); sl.type = 'lowpass'; sl.frequency.value = 5200; A.gS.connect(sl); sl.connect(A.master);
+    const sl = ctx.createBiquadFilter(); sl.type = 'lowpass'; sl.frequency.value = 5200; A.gS.connect(sl); sl.connect(A.master); A.sl = sl;
     A.gM = ctx.createGain(); A.gM.connect(sl);
     A.dl = ctx.createDelay(1.5);
     const dlf = ctx.createBiquadFilter(), fb = ctx.createGain(), dw = ctx.createGain();
@@ -1663,6 +1690,12 @@ function ac() {
   }
   if (A.ctx.state !== 'running') A.ctx.resume().catch(() => {});
   return A.ctx;
+}
+// マイクを開くと端末側の周波数が変わることがあり（主にiPhone）、作り済みの音声エンジンのままだと声がプチプチ途切れる → 作り直す
+function rebuildAudio(opt) {
+  const old = A.ctx; A.ctx = null; A.opt = opt || null;
+  try { if (old) old.close(); } catch (e) {}
+  return ac();
 }
 function silentUnlock() {
   try {
@@ -2132,9 +2165,20 @@ function bass(e, seg, beat, t) {
   if (!keep) P.last = m;
   bassNote(m, t, Math.min(e.len, rem > 0 ? rem : e.len) * spb * .92, e.v);
 }
+// カウント：ドラム音量に関係なく、はっきり聞こえる木魚系のクリック（1拍目は高く強く）
+function countClick(t, acc) {
+  const ctx = A.ctx, g = ctx.createGain(), o = ctx.createOscillator(), o2 = ctx.createOscillator(), bp = ctx.createBiquadFilter();
+  o.type = 'triangle'; o.frequency.setValueAtTime(acc ? 1760 : 1320, t); o2.type = 'sine'; o2.frequency.setValueAtTime(acc ? 880 : 660, t);
+  bp.type = 'bandpass'; bp.frequency.value = acc ? 1500 : 1100; bp.Q.value = .7;
+  g.gain.setValueAtTime(acc ? .95 : .7, t); g.gain.exponentialRampToValueAtTime(.0008, t + .11);
+  o.connect(bp); o2.connect(g); bp.connect(g); g.connect(A.master); o.start(t); o2.start(t); o.stop(t + .13); o2.stop(t + .13);
+}
+function doCount(k, t) {
+  const n = bpb();
+  if (k % TPB === 0) { const b = ((k / TPB) % n + n) % n; countClick(t, b === 0); P.vis.push({time:t, beat:b, i:-1}); }
+}
 function doTick(tick, t) {
   const r = R(), n = r.bpb;
-  if (tick < 0) { if (tick % TPB === 0) { const b = tick / TPB + n; drum('click', t, b === 0 ? 1 : .6); P.vis.push({time:t, beat:b, i:-1}); } return; }
   const beat = tick / TPB, seg = segAt(beat), chg = Math.abs(seg.start * TPB - tick) < .5;
   if (tick % TPB === 0) P.vis.push({time:t, beat:Math.round(beat) % n, i:seg.i, abs:Math.round(beat)});
   if (tick % (n * TPB) === 0) soloBar(tick);
@@ -2159,6 +2203,7 @@ function sched() {
   const spt = 60 / S.bpm / TPB, end = P.tl.total * TPB;
   while (P.next < A.ctx.currentTime + .12) {
     if (P.endAt && P.next >= P.endAt - 1e-4) { P.on = false; clearInterval(P.timer); return; }
+    if (P.cnt > 0) { doCount(-P.cnt, P.next); P.cnt--; P.next += spt; continue; }
     if (P.tick >= end) {
       if (S.loop) P.tick = 0;
       else { P.vis.push({time:P.next, stop:true}); P.on = false; clearInterval(P.timer); return; }
@@ -2191,13 +2236,15 @@ function frame() {
   }
   if (P.ui) requestAnimationFrame(frame);
 }
-function play() {
+function play(fromTick = 0) {
   const ctx = ac();
   if (!ctx) { toast('このブラウザは音の再生に対応していません'); return; }
   if (!S.chart.length) { toast('先にコードを追加してください'); return; }
   applyTone();
   P.tl = timeline(); P.map = compile(R()); P.melMap = buildMel();
-  P.tick = S.cin ? -bpb() * TPB : 0; P.next = ctx.currentTime + .1; P.t0 = P.next + (S.cin ? bpb() * 60 / S.bpm : 0); P.vis = []; P.last = 40; P.dir = 1;
+  const cb = P.cinBars != null ? P.cinBars : S.cin ? 1 : 0, end = P.tl.total * TPB;
+  P.tick = fromTick > 0 && fromTick < end ? Math.round(fromTick) : 0; P.cnt = cb * bpb() * TPB;
+  P.next = ctx.currentTime + (P.lead || .1); P.t0 = P.next + cb * bpb() * 60 / S.bpm; P.vis = []; P.last = 40; P.dir = 1;
   P.on = true; P.ui = true; soloReset(); setVols();
   clearInterval(P.timer); P.timer = setInterval(sched, 25); sched();
   requestAnimationFrame(frame); renderDock();
@@ -2228,13 +2275,16 @@ function playScale(row, ch) {
   for (const m of seq) { pluck(m, t, step * 1.6, .75); t += step; }
 }
 
-/* ===== スキャット録音：収録 → 試聴 → 保存（動画MP4／音声MP4／MP3） ===== */
-const REC = {on:false, take:null, adl:false, cap:null, stream:null, timer:0, view:'', out:null, busy:null, saved:{}, pv:null, pvPos:0, conf:false};
-const RP = (() => { let o = {}; try { o = JSON.parse(localStorage.getItem('chordnavi-rec') || '{}') || {}; } catch (e) {} return {
-  loops:[0, 1, 2, 4].includes(o.loops) ? o.loops : 2, ec:o.ec !== false, fx:o.fx !== false, fmt:['video', 'audio', 'mp3'].includes(o.fmt) ? o.fmt : 'video'}; })();
+/* ===== スキャット録音：収録 → 試聴 → 保存（動画MP4／音声MP4／MP3）・区間の録り直し ===== */
+const REC = {on:false, mode:'', take:null, adl:false, cap:null, stream:null, stems:[], timer:0, view:'', out:null, busy:null, saved:{}, pv:null, pvPos:0, pr:null, pu:null, undo:null};
+const RP = (() => { let o = {}; try { o = JSON.parse(localStorage.getItem('chordnavi-rec') || '{}') || {}; } catch (e) {}
+  const num = (v, d) => typeof v === 'number' && v >= 0 && v <= 1 ? v : d;
+  return {loops:[0, 1, 2, 4].includes(o.loops) ? o.loops : 2, cnt:[1, 2, 4].includes(o.cnt) ? o.cnt : 1, ec:o.ec !== false,
+    fmt:['video', 'audio', 'mp3'].includes(o.fmt) ? o.fmt : 'video', rev:num(o.rev, .5), echo:num(o.echo, 0), bright:o.bright !== false, dbl:!!o.dbl, gate:!!o.gate}; })();
 const saveRP = () => { try { localStorage.setItem('chordnavi-rec', JSON.stringify(RP)); } catch (e) {} };
 const MAXSEC = 180, TAIL = 1.6, VW = 720, VH = 1280;
 const inFrame = (() => { try { return window.self !== window.top; } catch (e) { return true; } })();
+const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 const IN_CLAUDE = !!(window.claude && typeof window.claude.use === 'function');
 const DLP = IN_CLAUDE ? window.claude.use('downloads').catch(() => null) : Promise.resolve('anchor');
 let DLV; DLP.then(v => { DLV = v; });
@@ -2245,35 +2295,94 @@ const yieldT = () => new Promise(r => setTimeout(r, 0));
 const FMTS = {video:['動画 MP4', 'コード譜が動く縦長動画（720×1280）。写真アプリに保存でき、SNSにもそのまま使えます。'],
   audio:['音声 MP4', 'AAC音声（m4aと同じ中身）。iPhone・Androidの標準プレーヤーで再生できます。'],
   mp3:['MP3', IN_CLAUDE ? 'この画面からはMP3を直接保存できないため、ZIPに入れて保存します。ファイルアプリでZIPを開くとMP3が出てきます。' : 'MP3（192kbps）。ほとんどのプレーヤーや作曲アプリでそのまま使えます。']};
-
-/* --- 収録グラフ：伴奏（コンプ後）L/R ＋ 同期パルス ＋ マイク を1つのプロセッサで同時に取る --- */
 function f2s(x) { const y = new Int16Array(x.length); for (let i = 0; i < x.length; i++) { const v = x[i] < -1 ? -1 : x[i] > 1 ? 1 : x[i]; y[i] = v * 32767; } return y; }
 function s2f(ch, len) { const y = new Float32Array(len); let o = 0; for (const c of ch) { for (let i = 0; i < c.length && o < len; i++) y[o++] = c[i] / 32767; } return y; }
-function capOpen(stream) {
-  const ctx = A.ctx, n = stream ? 4 : 3;
-  const mg = ctx.createChannelMerger(n), sp = ctx.createChannelSplitter(2);
-  A.comp.connect(sp); sp.connect(mg, 0, 0); sp.connect(mg, 1, 1);
-  const sy = ctx.createConstantSource(); sy.offset.value = 0; sy.start(); sy.connect(mg, 0, 2);
-  let ms = null, mono = null;
-  if (stream) { ms = ctx.createMediaStreamSource(stream); mono = ctx.createGain(); mono.channelCount = 1; mono.channelCountMode = 'explicit'; ms.connect(mono); mono.connect(mg, 0, 3); }
-  const pr = ctx.createScriptProcessor(4096, n, 1), z = ctx.createGain(); z.gain.value = 0;
-  mg.connect(pr); pr.connect(z); z.connect(ctx.destination);
-  const C = {n, sr:ctx.sampleRate, acc:[[], []], vo:[], len:0, i0:-1, on:false, lvl:0, sy, nodes:[sp, mg, sy, ms, mono, pr, z], pr};
-  pr.onaudioprocess = e => {
-    if (!C.on) return;
-    const ib = e.inputBuffer, L = ib.length;
-    if (C.i0 < 0) { const s = ib.getChannelData(2); for (let i = 0; i < L; i++) if (s[i] > .5) { C.i0 = C.len + i; break; } }
-    C.acc[0].push(f2s(ib.getChannelData(0))); C.acc[1].push(f2s(ib.getChannelData(1)));
-    if (n === 4) { const v = ib.getChannelData(3); C.vo.push(f2s(v)); let p = 0; for (let i = 0; i < L; i += 4) { const a = Math.abs(v[i]); if (a > p) p = a; } C.lvl = Math.max(p, C.lvl * .7); }
-    C.len += L;
-  };
+
+/* --- 取り込み：AudioWorklet（音声スレッド）で取るので画面が重くても欠けない。使えない環境だけ ScriptProcessor --- */
+function wkReady(ctx) {
+  if (!ctx.audioWorklet || !window.AudioWorkletNode) return Promise.resolve(false);
+  if (!ctx.__cnwk) ctx.__cnwk = ctx.audioWorklet.addModule('vendor/rec-worklet.js').then(() => true, () => false);
+  return ctx.__cnwk;
+}
+async function capOpen(stream, stems, withAcc) {
+  const ctx = A.ctx, names = withAcc ? ['L', 'R', 'sync'] : ['sync'];
+  if (stream) names.push('voice');
+  stems.forEach(s => names.push(s.name));
+  const n = names.length, mg = ctx.createChannelMerger(n), nodes = [mg];
+  const C = {n, names, sr:ctx.sampleRate, ch:names.map(() => []), len:0, i0:-1, lvl:0, on:false, si:names.indexOf('sync'), vi:names.indexOf('voice'), nodes, done:null, sp:null};
+  if (withAcc) { const sp = C.sp = ctx.createChannelSplitter(2); A.comp.connect(sp); sp.connect(mg, 0, 0); sp.connect(mg, 1, 1); nodes.push(sp); }
+  const sy = C.sy = ctx.createConstantSource(); sy.offset.value = 0; sy.start(); sy.connect(mg, 0, C.si); nodes.push(sy);
+  const mono = src => { const g = ctx.createGain(); g.channelCount = 1; g.channelCountMode = 'explicit'; g.channelInterpretation = 'speakers'; src.connect(g); nodes.push(g); return g; };
+  if (stream) { const ms = ctx.createMediaStreamSource(stream); nodes.push(ms); mono(ms).connect(mg, 0, C.vi); }
+  for (const s of stems) mono(s.out).connect(mg, 0, names.indexOf(s.name));
+  const z = ctx.createGain(); z.gain.value = 0; z.connect(ctx.destination); nodes.push(z);
+  if (await wkReady(ctx)) {
+    const wk = C.wk = new AudioWorkletNode(ctx, 'cn-cap', {numberOfInputs:1, numberOfOutputs:1, outputChannelCount:[1], channelCount:n, channelCountMode:'explicit', channelInterpretation:'discrete', processorOptions:{n, si:C.si, vi:C.vi}});
+    wk.port.onmessage = e => capMsg(C, e.data);
+    mg.connect(wk); wk.connect(z); nodes.push(wk);
+  } else {
+    const pr = C.pr = ctx.createScriptProcessor(4096, n, 1);
+    pr.onaudioprocess = e => {
+      if (!C.on) return;
+      const ib = e.inputBuffer, L = ib.length;
+      if (C.i0 < 0) { const s = ib.getChannelData(C.si); for (let i = 0; i < L; i++) if (s[i] > .5) { C.i0 = C.len + i; break; } }
+      for (let k = 0; k < n; k++) C.ch[k].push(f2s(ib.getChannelData(k)));
+      if (C.vi >= 0) { const v = ib.getChannelData(C.vi); let p = 0; for (let i = 0; i < L; i += 4) { const a = Math.abs(v[i]); if (a > p) p = a; } C.lvl = Math.max(p, C.lvl * .6); }
+      C.len += L;
+    };
+    mg.connect(pr); pr.connect(z); nodes.push(pr);
+  }
   return C;
 }
+function capMsg(C, d) {
+  if (d.ch) { d.ch.forEach((a, k) => C.ch[k].push(a)); C.len += d.ch[0].length; if (d.lv != null) C.lvl = Math.max(d.lv, C.lvl * .6); }
+  if (d.i0 != null && d.i0 >= 0 && C.i0 < 0) C.i0 = d.i0;
+  if (d.done && C.done) C.done();
+}
+function capStart(C) { C.on = true; if (C.wk) C.wk.port.postMessage('start'); }
+function capStop(C) {
+  return new Promise(res => { if (!C.wk) return res(); const to = setTimeout(res, 1500); C.done = () => { clearTimeout(to); res(); }; C.wk.port.postMessage('stop'); }).then(() => { C.on = false; });
+}
 function capClose(C) {
-  C.pr.onaudioprocess = null;
-  for (const nd of C.nodes) if (nd) { try { nd.disconnect(); } catch (e) {} }
+  if (C.pr) C.pr.onaudioprocess = null;
+  if (C.wk) C.wk.port.onmessage = null;
+  for (const nd of C.nodes) { try { nd.disconnect(); } catch (e) {} }
   try { C.sy.stop(); } catch (e) {}
-  try { A.comp.disconnect(C.nodes[0]); } catch (e) {}
+  if (C.sp) { try { A.comp.disconnect(C.sp); } catch (e) {} }
+}
+// アドリブ・メロディを伴奏から分けて録る（あとで音量を変えられるように）。聞こえ方は普段と同じ。
+function stemOpen(name, src) {
+  const ctx = A.ctx;
+  try { src.disconnect(); } catch (e) {}
+  const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 5200; src.connect(lp);
+  const out = ctx.createGain(); lp.connect(out);
+  const dl = ctx.createDelay(1.5), dlf = ctx.createBiquadFilter(), fb = ctx.createGain(), dw = ctx.createGain();
+  dl.delayTime.value = Math.min(1.4, 60 / S.bpm * .75); dlf.type = 'lowpass'; dlf.frequency.value = 2300; fb.gain.value = .3; dw.gain.value = .17;
+  lp.connect(dl); dl.connect(dlf); dlf.connect(fb); fb.connect(dl); dlf.connect(dw); dw.connect(out);
+  const rv = ctx.createConvolver(), rs = ctx.createGain(); rv.buffer = A.rv.buffer; rs.gain.value = .13; lp.connect(rs); rs.connect(rv); rv.connect(out);
+  const mon = ctx.createGain(); mon.gain.value = .9; out.connect(mon); mon.connect(ctx.destination);
+  return {name, src, out, nodes:[lp, out, dl, dlf, fb, dw, rv, rs, mon]};
+}
+function stemClose(s) {
+  for (const nd of s.nodes) { try { nd.disconnect(); } catch (e) {} }
+  try { s.src.disconnect(); } catch (e) {}
+  try { s.src.connect(A.sl); } catch (e) {}
+}
+async function micOpen() {
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { recView('nomic', inFrame ? 'frame' : 'none'); bs('#bsRec'); return null; }
+  A.sess = 'play-and-record'; try { if (navigator.audioSession) navigator.audioSession.type = 'play-and-record'; } catch (e) {}
+  let stream;
+  try { stream = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:RP.ec, noiseSuppression:false, autoGainControl:false, channelCount:1}}); }
+  catch (e) {
+    A.sess = 'playback'; try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (x) {}
+    const n = e && e.name;
+    recView('nomic', inFrame && n !== 'NotFoundError' ? 'frame' : n === 'NotAllowedError' || n === 'SecurityError' ? 'denied' : n === 'NotFoundError' || n === 'OverconstrainedError' ? 'nodev' : n === 'NotReadableError' ? 'busy' : 'none');
+    bs('#bsRec'); return null;
+  }
+  let msr = 0; try { msr = stream.getAudioTracks()[0].getSettings().sampleRate || 0; } catch (e) {}
+  const ctx = ac();
+  if (ctx && ((msr && Math.abs(msr - ctx.sampleRate) > 1) || (!msr && IS_IOS))) { if (P.ui) stop(); rebuildAudio(msr ? {sampleRate:msr} : null); }
+  return stream;
 }
 function estLat(stream) {
   const c = A.ctx; let l = (c.outputLatency > 0 ? c.outputLatency : .03) + (c.baseLatency || 0);
@@ -2289,93 +2398,138 @@ function snapTake() {
   });
   return {title:S.title || 'マイ進行', key:TH.keyName(S.key), bpm:S.bpm, rhy:R().n, bpb:n, total:P.tl.total, segs, bars};
 }
+function countUI(big, small) {
+  const el = $('#recCount'); if (!el) return;
+  if (big == null) { el.hidden = true; return; }
+  el.hidden = false; el.firstElementChild.textContent = big; el.lastElementChild.textContent = small;
+}
 
-/* --- 録音の開始・停止 --- */
+/* --- テイクの録音 --- */
 async function recStart(withMic) {
-  const ctx = ac();
-  if (!ctx) { toast('このブラウザは音の再生に対応していません'); return; }
-  if (!S.chart.length) { toast('先にコードを追加してください'); return; }
-  try { if (ctx.state !== 'running') await ctx.resume(); } catch (e) {}
-  let stream = null;
-  if (withMic) {
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { recView('nomic', inFrame ? 'frame' : 'none'); return; }
-    try { if (navigator.audioSession) navigator.audioSession.type = 'play-and-record'; } catch (e) {}
-    try { stream = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:RP.ec, noiseSuppression:false, autoGainControl:false}}); }
-    catch (e) { try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (x) {} const n = e && e.name; recView('nomic', inFrame && n !== 'NotFoundError' ? 'frame' : n === 'NotAllowedError' || n === 'SecurityError' ? 'denied' : n === 'NotFoundError' || n === 'OverconstrainedError' ? 'nodev' : n === 'NotReadableError' ? 'busy' : 'none'); return; }
-  }
-  closeBS();
-  if (P.ui) { stop(); await sleep(560); }
-  REC.take = null; REC.out = null; REC.saved = {};
-  const C = REC.cap = capOpen(stream); REC.stream = stream;
-  const cin = S.cin; REC.loopWas = S.loop; S.cin = true; S.loop = true;
-  REC.on = true; document.body.classList.add('recording'); C.on = true;
-  play(); S.cin = cin;
-  if (!P.on) { recCleanup(); toast('録音を始められませんでした'); return; }
-  C.sy.offset.setValueAtTime(1, P.t0);
-  const spb = 60 / S.bpm, loopSec = P.tl.total * spb, barSec = bpb() * spb;
-  REC.t0 = P.t0; REC.spb = spb; REC.loopSec = loopSec;
-  REC.endT = P.t0 + Math.min(RP.loops ? RP.loops * loopSec : Infinity, Math.max(1, Math.floor(MAXSEC / barSec)) * barSec);
-  P.endAt = REC.endT; REC.fin = 0;
-  REC.snap = snapTake(); REC.lat = stream ? estLat(stream) : 0;
-  clearInterval(REC.timer); REC.timer = setInterval(recTick, 80);
-  $('#recBar').hidden = false; recTick(); renderDock();
+  if (REC.on || REC.starting) return;
+  REC.starting = true;
+  try {
+    if (!ac()) { toast('このブラウザは音の再生に対応していません'); return; }
+    if (!S.chart.length) { toast('先にコードを追加してください'); return; }
+    const stream = withMic ? await micOpen() : null;
+    if (withMic && !stream) return;
+    closeBS();
+    if (P.ui) { stop(); await sleep(560); }
+    const ctx = A.ctx; try { if (ctx.state !== 'running') await ctx.resume(); } catch (e) {}
+    if (stream) await sleep(500);
+    REC.take = null; REC.out = null; REC.saved = {}; REC.undo = null; REC.pr = null; recDock();
+    const stems = [];
+    if (REC.adl) stems.push(stemOpen('adl', A.gS));
+    if (S.mel && S.melOn) stems.push(stemOpen('mel', A.gM));
+    REC.stems = stems; REC.mode = 'take'; REC.cntAt = RP.cnt;
+    const C = REC.cap = await capOpen(stream, stems, true); REC.stream = stream;
+    REC.loopWas = S.loop; S.loop = true;
+    REC.on = true; document.body.classList.add('recording'); capStart(C);
+    P.cinBars = RP.cnt; P.lead = .3; play(0); P.cinBars = null; P.lead = null;
+    if (!P.on) { recCleanup(); toast('録音を始められませんでした'); return; }
+    C.sy.offset.setValueAtTime(1, P.t0);
+    const spb = 60 / S.bpm, loopSec = P.tl.total * spb, barSec = bpb() * spb;
+    REC.t0 = P.t0; REC.spb = spb; REC.loopSec = loopSec; REC.cinSec = RP.cnt * barSec;
+    REC.endT = P.t0 + Math.min(RP.loops ? RP.loops * loopSec : Infinity, Math.max(1, Math.floor(MAXSEC / barSec)) * barSec);
+    P.endAt = REC.endT; REC.fin = 0;
+    REC.snap = snapTake(); REC.lat = stream ? estLat(stream) : 0;
+    clearInterval(REC.timer); REC.timer = setInterval(recTick, 60);
+    $('#recBar').hidden = false; recTick(); renderDock();
+  } finally { REC.starting = false; }
 }
 function recTick() {
   if (!REC.on) return;
-  const now = A.ctx.currentTime, el = now - REC.t0, C = REC.cap;
-  if (el < 0) { $('#recT').textContent = 'カウント'; $('#recInfo').textContent = String(Math.min(bpb(), Math.floor((el + bpb() * REC.spb) / REC.spb) + 1)); }
-  else {
+  if (REC.mode === 'punch') { punchTick(); return; }
+  const now = A.ctx.currentTime, el = now - REC.t0, C = REC.cap, n = bpb();
+  if (el < 0) {
+    const eb = Math.max(0, (el + REC.cinSec) / REC.spb), bt = Math.floor(eb + 1e-6), left = Math.ceil((REC.cinSec - eb * REC.spb) / (n * REC.spb) - 1e-6);
+    countUI(String(bt % n + 1), left > 1 ? `カウント あと${left}小節` : '次の1拍目から録音');
+    $('#recT').textContent = 'カウント'; $('#recInfo').textContent = `${bt % n + 1}`;
+  } else {
+    countUI(null);
     $('#recT').textContent = fmtT(Math.min(el, REC.endT - REC.t0));
     const nL = Math.ceil((REC.endT - REC.t0) / REC.loopSec - 1e-6), cur = Math.min(nL, Math.floor(el / REC.loopSec) + 1);
     $('#recInfo').textContent = REC.fin ? '仕上げ中' : RP.loops ? `${cur}/${nL}周` : `${cur}周目`;
   }
-  $('#recLv').style.transform = `scaleX(${C.n === 4 ? Math.min(1, C.lvl * 1.5) : 0})`;
+  $('#recLv').style.transform = `scaleX(${C && C.vi >= 0 ? Math.min(1, C.lvl * 1.5) : 0})`;
   if (!REC.fin && now >= REC.endT) REC.fin = now + TAIL;
   if (REC.fin && now >= REC.fin) recFinish();
 }
 function recStopNow() {
   if (!REC.on) return;
   const now = A.ctx.currentTime;
+  if (REC.mode === 'punch') { punchStopNow(now); return; }
   if (now < REC.t0 + .5) { recCleanup(); toast('録音を中止しました'); return; }
   if (!REC.fin) { REC.endT = Math.min(REC.endT, now); P.endAt = REC.endT; REC.fin = now + 1; }
 }
 function recCleanup() {
   clearInterval(REC.timer);
-  if (REC.cap) { REC.cap.on = false; capClose(REC.cap); }
+  if (REC.cap) { REC.cap.on = false; capClose(REC.cap); REC.cap = null; }
+  REC.stems.forEach(stemClose); REC.stems = [];
+  if (REC.pu && REC.pu.g) { REC.pu.g.stop(); REC.pu.g = null; }
   if (REC.stream) REC.stream.getTracks().forEach(t => t.stop());
-  try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
-  REC.stream = null; REC.on = false; P.endAt = null; S.loop = REC.loopWas ?? S.loop;
-  document.body.classList.remove('recording'); $('#recBar').hidden = true;
-  stop();
+  REC.stream = null;
+  A.sess = 'playback'; try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
+  REC.on = false; REC.mode = ''; P.endAt = null;
+  if (REC.loopWas != null) { S.loop = REC.loopWas; REC.loopWas = null; }
+  document.body.classList.remove('recording'); $('#recBar').hidden = true; countUI(null);
+  if (P.ui) stop();
+  renderDock();
 }
-function recFinish() {
-  const C = REC.cap; REC.musicSec = REC.endT - REC.t0;
-  recCleanup(); REC.cap = null;
-  if (C.i0 < 0 || C.len < C.sr) { toast('うまく録れませんでした。もう一度お試しください'); return; }
-  REC.take = buildTake(C);
-  recView('review'); bs('#bsRec');
+async function recFinish() {
+  if (REC.finishing) return;
+  REC.finishing = true; clearInterval(REC.timer);
+  const C = REC.cap;
+  try {
+    await capStop(C);
+    REC.musicSec = REC.endT - REC.t0;
+    recCleanup();
+    if (C.i0 < 0 || C.len < C.sr) { toast('うまく録れませんでした。もう一度お試しください'); return; }
+    REC.take = buildTake(C); REC.pvPos = 0;
+    recView('review'); bs('#bsRec'); recDock();
+  } finally { REC.finishing = false; }
 }
 function buildTake(C) {
-  const ctx = A.ctx, sr = C.sr, len = C.len;
+  const ctx = A.ctx, sr = C.sr, len = C.len, k = nm => C.names.indexOf(nm);
   const acc = ctx.createBuffer(2, len, sr);
-  acc.copyToChannel(s2f(C.acc[0], len), 0); acc.copyToChannel(s2f(C.acc[1], len), 1);
-  let voice = null, vnorm = 1, quiet = false;
-  if (C.vo.length) {
-    const v = s2f(C.vo, len); voice = ctx.createBuffer(1, len, sr); voice.copyToChannel(v, 0);
-    const hist = new Uint32Array(1000); let cnt = 0;
-    for (let i = 0; i < len; i += 4) { hist[Math.min(999, Math.floor(Math.abs(v[i]) * 1000))]++; cnt++; }
-    let acc2 = 0, pk = 0; for (let b = 999; b >= 0; b--) { acc2 += hist[b]; if (acc2 > cnt * .0005) { pk = (b + 1) / 1000; break; } }
-    quiet = pk < .004; vnorm = pk > 1e-3 ? Math.min(10, .5 / pk) : 1;
-  }
-  C.acc = C.vo = null;
-  return {sr, len, acc, voice, vnorm, quiet, i0:C.i0, cinS:REC.snap.bpb * REC.spb, musicSec:REC.musicSec, snap:REC.snap,
-    o:{voice:1, acc:.8, lat:REC.lat, fx:RP.fx, cin:false},
+  acc.copyToChannel(s2f(C.ch[k('L')], len), 0); acc.copyToChannel(s2f(C.ch[k('R')], len), 1);
+  const mono = nm => { const i = k(nm); if (i < 0) return null; const b = ctx.createBuffer(1, len, sr); b.copyToChannel(s2f(C.ch[i], len), 0); return b; };
+  const barSec = REC.snap.bpb * REC.spb;
+  const tk = {sr, len, acc, voice:mono('voice'), st:{adl:mono('adl'), mel:mono('mel')}, i0:C.i0, snap:REC.snap, musicSec:REC.musicSec,
+    barSec, cinS:REC.cntAt * barSec, bars:Math.max(1, Math.ceil(REC.musicSec / barSec - .01)),
+    o:{voice:1, acc:.8, adl:1, mel:1, lat:REC.lat, rev:RP.rev, echo:RP.echo, bright:RP.bright, dbl:RP.dbl, gate:RP.gate, cin:false},
     s0() { return Math.max(0, this.i0 - (this.o.cin ? Math.round(this.cinS * this.sr) : 0)) / this.sr; },
     pre() { return this.i0 / this.sr - this.s0(); },
     dur() { return this.len / this.sr - this.s0(); }};
+  C.ch = null;
+  voiceStats(tk);
+  return tk;
+}
+function voiceStats(tk) {
+  tk.vgate = null; tk.vnorm = 1; tk.quiet = false;
+  if (!tk.voice) return;
+  const v = tk.voice.getChannelData(0), hist = new Uint32Array(1000); let cnt = 0;
+  for (let i = 0; i < v.length; i += 4) { hist[Math.min(999, Math.floor(Math.abs(v[i]) * 1000))]++; cnt++; }
+  let a = 0, pk = 0; for (let b = 999; b >= 0; b--) { a += hist[b]; if (a > cnt * .0005) { pk = (b + 1) / 1000; break; } }
+  tk.quiet = pk < .004; tk.vnorm = pk > 1e-3 ? Math.min(10, .5 / pk) : 1;
+}
+// ノイズ除去：声のない所の「サー」「ブーン」を下げる（10ms単位のゲート、子音が切れないよう少し早めに開く）
+function gated(tk) {
+  if (tk.vgate) return tk.vgate;
+  const x = tk.voice.getChannelData(0), sr = tk.sr, W = Math.max(64, Math.round(sr * .01)), nw = Math.ceil(x.length / W), rms = new Float32Array(nw);
+  for (let w = 0; w < nw; w++) { let s = 0; const a = w * W, b = Math.min(x.length, a + W); for (let i = a; i < b; i++) s += x[i] * x[i]; rms[w] = Math.sqrt(s / Math.max(1, b - a)); }
+  const so = Float32Array.from(rms).sort(), floor = so[Math.floor(nw * .15)] || 0, peak = so[Math.floor(nw * .995)] || 0;
+  const thr = Math.max(floor * 3.2, peak * .035, 1e-4), g = new Float32Array(nw + 1);
+  let hold = 0, cur = 0;
+  for (let w = 0; w < nw; w++) { let tg; if (rms[w] > thr) { tg = 1; hold = 9; } else if (hold > 0) { hold--; tg = 1; } else tg = .06; cur += (tg - cur) * (tg > cur ? .75 : .1); g[w] = cur; }
+  for (let w = nw - 2; w >= 0; w--) if (g[w + 1] > g[w]) g[w] = Math.max(g[w], g[w + 1] * .85);
+  g[nw] = g[nw - 1] || 0;
+  const out = A.ctx.createBuffer(1, x.length, sr), y = out.getChannelData(0);
+  for (let i = 0; i < x.length; i++) { const p = i / W, w = Math.floor(p), f = p - w; y[i] = x[i] * (g[w] + (g[w + 1] - g[w]) * f); }
+  tk.vgate = out; return out;
 }
 
-/* --- ミックス（試聴・書き出し共通） --- */
+/* --- ミックス（試聴・区間録り直し中のモニター・書き出しで共通） --- */
 function mkIR(c, sec) {
   const sr = c.sampleRate, b = c.createBuffer(2, Math.floor(sr * sec), sr);
   for (let ch = 0; ch < 2; ch++) { const x = b.getChannelData(ch); for (let i = 0; i < x.length; i++) x[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / x.length, 3.5); }
@@ -2385,22 +2539,45 @@ function mixGraph(c, dst, tk, o) {
   const bus = c.createGain(), lim = c.createDynamicsCompressor();
   lim.threshold.value = -3; lim.knee.value = 2; lim.ratio.value = 12; lim.attack.value = .003; lim.release.value = .15;
   bus.connect(lim); lim.connect(dst);
-  const as = c.createBufferSource(); as.buffer = tk.acc;
-  const ag = c.createGain(); ag.gain.value = o.acc; as.connect(ag); ag.connect(bus);
-  let vs = null, vg = null;
+  const srcs = [], lfos = [], all = [bus, lim];
+  const add = (buf, gain, off = 0) => { const s = c.createBufferSource(), g = c.createGain(); s.buffer = buf; g.gain.value = gain; s.connect(g); srcs.push({s, off}); all.push(g); return g; };
+  const ag = add(tk.acc, o.acc); ag.connect(bus);
+  const sg = {};
+  for (const k of ['adl', 'mel']) if (tk.st && tk.st[k]) { sg[k] = add(tk.st[k], o[k]); sg[k].connect(bus); }
+  let vg = null; const fx = {};
   if (tk.voice) {
-    vs = c.createBufferSource(); vs.buffer = tk.voice;
-    const pre = c.createGain(); pre.gain.value = tk.vnorm;
-    const hp = c.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 85; hp.Q.value = .7;
-    const pz = c.createBiquadFilter(); pz.type = 'peaking'; pz.frequency.value = 3200; pz.gain.value = 2.5; pz.Q.value = .8;
+    const pre = add(o.gate ? gated(tk) : tk.voice, tk.vnorm, o.lat);
+    const hp = c.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = o.bright ? 110 : 85; hp.Q.value = .7;
+    pre.connect(hp); let last = hp;
+    const eq = (type, f, gain, q) => { const b = c.createBiquadFilter(); b.type = type; b.frequency.value = f; b.gain.value = gain; if (q) b.Q.value = q; last.connect(b); last = b; all.push(b); };
+    if (o.bright) { eq('lowshelf', 220, -2.5); eq('peaking', 3000, 3.5, .9); eq('highshelf', 8500, 4); } else eq('peaking', 3200, 2, .8);
     const cp = c.createDynamicsCompressor(); cp.threshold.value = -20; cp.knee.value = 10; cp.ratio.value = 3.5; cp.attack.value = .006; cp.release.value = .18;
     vg = c.createGain(); vg.gain.value = o.voice * 1.25;
-    vs.connect(pre); pre.connect(hp); hp.connect(pz); pz.connect(cp); cp.connect(vg); vg.connect(bus);
-    if (o.fx) { const pd = c.createDelay(.1), rv = c.createConvolver(), rg = c.createGain(); pd.delayTime.value = .025; rv.buffer = mkIR(c, 1.8); rg.gain.value = .25; vg.connect(pd); pd.connect(rv); rv.connect(rg); rg.connect(bus); }
+    last.connect(cp); cp.connect(vg); vg.connect(bus); all.push(hp, cp, vg);
+    if (o.dbl) for (const [d, rate, pan] of [[.017, .31, -.75], [.027, .47, .75]]) {
+      const dl = c.createDelay(.1), lfo = c.createOscillator(), lg = c.createGain(), g = c.createGain();
+      dl.delayTime.value = d; lfo.frequency.value = rate; lg.gain.value = .0018; g.gain.value = .34;
+      lfo.connect(lg); lg.connect(dl.delayTime); vg.connect(dl); dl.connect(g); lfos.push(lfo); all.push(dl, lg, g);
+      if (c.createStereoPanner) { const pn = c.createStereoPanner(); pn.pan.value = pan; g.connect(pn); pn.connect(bus); all.push(pn); } else g.connect(bus);
+    }
+    const ed = c.createDelay(2), ef = c.createBiquadFilter(), efb = c.createGain(); fx.eg = c.createGain();
+    ed.delayTime.value = Math.min(1.9, 60 / tk.snap.bpm * .75); ef.type = 'lowpass'; ef.frequency.value = 3200; efb.gain.value = .33; fx.eg.gain.value = o.echo * .55;
+    vg.connect(ed); ed.connect(ef); ef.connect(efb); efb.connect(ed); ef.connect(fx.eg); fx.eg.connect(bus); all.push(ed, ef, efb, fx.eg);
+    const pd = c.createDelay(.1), rv = c.createConvolver(); fx.rg = c.createGain();
+    pd.delayTime.value = .025; rv.buffer = mkIR(c, 2); fx.rg.gain.value = o.rev * .5;
+    vg.connect(pd); pd.connect(rv); rv.connect(fx.rg); fx.rg.connect(bus); all.push(pd, rv, fx.rg);
   }
-  return {ag, vg,
-    start(when, pos) { const s0 = tk.s0(); as.start(when, s0 + pos); if (vs) { const off = s0 + pos + o.lat; if (off >= 0) vs.start(when, off); else vs.start(when - off, 0); } },
-    stop() { try { as.stop(); } catch (e) {} try { if (vs) vs.stop(); } catch (e) {} try { bus.disconnect(); lim.disconnect(); } catch (e) {} }};
+  return {ag, vg, sg, fx,
+    start(when, pos) {
+      const s0 = tk.s0();
+      for (const {s, off} of srcs) { const x = s0 + pos + off; if (x >= 0) s.start(when, x); else s.start(when - x, 0); }
+      for (const l of lfos) l.start(when);
+    },
+    stop() {
+      for (const {s} of srcs) { try { s.stop(); } catch (e) {} }
+      for (const l of lfos) { try { l.stop(); } catch (e) {} }
+      for (const nd of all) { try { nd.disconnect(); } catch (e) {} }
+    }};
 }
 async function mixdown(tk) {
   const SR = 48000, OC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
@@ -2410,14 +2587,15 @@ async function mixdown(tk) {
 }
 
 /* --- 試聴 --- */
-function pvStop() { if (REC.pv) { REC.pvPos = Math.min(REC.take ? REC.take.dur() : 0, REC.pvPos); REC.pv.g.stop(); REC.pv = null; } const b = $('#rvPlay'); if (b) b.innerHTML = ICON.play; }
-function pvPlay(from) {
+function pvStop() { if (REC.pv) { REC.pvPos = Math.min(REC.take ? REC.take.dur() : 0, REC.pvPos); REC.pv.g.stop(); REC.pv = null; } for (const id of ['#rvPlay', '#puPv']) { const b = $(id); if (b) b.innerHTML = id === '#puPv' ? `${ICON.play}区間を試聴` : ICON.play; } }
+function pvPlay(from, to) {
   const tk = REC.take, ctx = ac(); if (!tk || !ctx) return;
   pvStop(); if (ctx.state !== 'running') ctx.resume();
   if (from >= tk.dur() - .05) from = 0;
+  const end = Math.min(tk.dur(), to || Infinity);
   const g = mixGraph(ctx, ctx.destination, tk, tk.o), t = ctx.currentTime + .05;
-  g.start(t, from); REC.pv = {g, t, from}; $('#rvPlay').innerHTML = ICON.stop;
-  const step = () => { if (!REC.pv || REC.pv.g !== g) return; REC.pvPos = REC.pv.from + Math.max(0, ctx.currentTime - REC.pv.t); if (REC.pvPos >= tk.dur()) { REC.pvPos = 0; pvStop(); rvHead(); return; } rvHead(); requestAnimationFrame(step); };
+  g.start(t, from); REC.pv = {g, t, from}; const b = $(to ? '#puPv' : '#rvPlay'); if (b) b.innerHTML = to ? `${ICON.stop}止める` : ICON.stop;
+  const step = () => { if (!REC.pv || REC.pv.g !== g) return; REC.pvPos = REC.pv.from + Math.max(0, ctx.currentTime - REC.pv.t); if (REC.pvPos >= end) { REC.pvPos = to ? from : 0; pvStop(); rvHead(); return; } rvHead(); requestAnimationFrame(step); };
   requestAnimationFrame(step);
 }
 function rvHead() {
@@ -2448,19 +2626,118 @@ function rvWave() {
   const cin = tk.pre(); if (cin > 0) { g.fillStyle = '#0c132099'; g.fillRect(0, 0, W * cin / dur, H); }
 }
 
+/* --- 区間の録り直し（パンチイン） --- */
+const barPos = (tk, k) => tk.pre() + k * tk.barSec;   // 試聴の位置（秒）
+async function punchStart() {
+  const tk = REC.take, pr = REC.pr; if (!tk || !pr || REC.on || REC.starting) return;
+  REC.starting = true;
+  try {
+    const a = Math.min(pr.a, pr.b), b = Math.max(pr.a, pr.b);
+    pvStop();
+    const stream = await micOpen(); if (!stream) return;
+    closeBS();
+    if (P.ui) { stop(); await sleep(560); }
+    const ctx = A.ctx; try { if (ctx.state !== 'running') await ctx.resume(); } catch (e) {}
+    await sleep(500);
+    const sr = tk.sr, bar = tk.barSec, spb = bar / tk.snap.bpb;
+    const tIn = tk.i0 / sr + a * bar, tOut = Math.min(tk.len / sr, tk.i0 / sr + (b + 1) * bar);
+    const pre = Math.min(RP.cnt * bar, tIn), tStart = tIn - pre, tEnd = Math.min(tk.len / sr, tOut + Math.min(bar, 1.5));
+    const C = REC.cap = await capOpen(stream, [], false); REC.stream = stream;
+    const g = mixGraph(ctx, ctx.destination, tk, Object.assign({}, tk.o, {gate:false}));
+    const when = ctx.currentTime + .3;
+    g.start(when, tStart - tk.s0());
+    if (g.vg) { const v = tk.o.voice * 1.25; g.vg.gain.setValueAtTime(v, when + pre - .03); g.vg.gain.linearRampToValueAtTime(0, when + pre); g.vg.gain.setValueAtTime(0, when + (tOut - tStart)); g.vg.gain.linearRampToValueAtTime(v, when + (tOut - tStart) + .03); }
+    if (a > 0) { const nb = Math.round(pre / spb); for (let i = 0; i < nb; i++) countClick(when + pre - (nb - i) * spb, (nb - i) % tk.snap.bpb === 0); }
+    C.sy.offset.setValueAtTime(1, when);
+    REC.pu = {a, b, tIn, tOut, tStart, tEnd, when, pre, spb, g, lat:tk.o.lat};
+    REC.mode = 'punch'; REC.on = true; document.body.classList.add('recording'); capStart(C);
+    clearInterval(REC.timer); REC.timer = setInterval(recTick, 60);
+    $('#recBar').hidden = false; recTick(); renderDock();
+  } finally { REC.starting = false; }
+}
+function punchTick() {
+  const u = REC.pu, now = A.ctx.currentTime, rel = now - u.when, C = REC.cap;
+  const pIn = u.pre, pOut = u.tOut - u.tStart, pEnd = u.tEnd - u.tStart;
+  if (rel < pIn) {
+    const left = Math.ceil((pIn - Math.max(0, rel)) / u.spb - 1e-6);
+    countUI(String(left), `${u.a + 1}小節目から録り直し`);
+    $('#recT').textContent = '待機'; $('#recInfo').textContent = `${u.a + 1}〜${u.b + 1}小節`;
+  } else {
+    countUI(null);
+    $('#recT').textContent = rel < pOut ? fmtT(rel - pIn) : '終了';
+    $('#recInfo').textContent = rel < pOut ? `${u.a + 1}〜${u.b + 1}小節を録音中` : '仕上げ中';
+  }
+  $('#recLv').style.transform = `scaleX(${C && C.vi >= 0 ? Math.min(1, C.lvl * 1.5) : 0})`;
+  if (rel >= pEnd + .2) punchFinish();
+}
+function punchStopNow(now) {
+  const u = REC.pu, rel = now - u.when;
+  if (rel < u.pre + .3) { recCleanup(); REC.pu = null; recView('punch'); bs('#bsRec'); toast('録り直しを中止しました'); return; }
+  u.tOut = Math.min(u.tOut, u.tStart + rel); u.tEnd = Math.min(u.tEnd, u.tStart + rel + .2);
+}
+async function punchFinish() {
+  if (REC.finishing) return;
+  REC.finishing = true; clearInterval(REC.timer);
+  const C = REC.cap, u = REC.pu, tk = REC.take;
+  try {
+    await capStop(C);
+    recCleanup(); REC.pu = null;
+    if (C.i0 < 0) { toast('うまく録れませんでした。もう一度お試しください'); recView('punch'); bs('#bsRec'); return; }
+    let mic = s2f(C.ch[C.vi], C.len).subarray(C.i0);
+    if (Math.abs(C.sr - tk.sr) > 1) { const r = C.sr / tk.sr, n = Math.floor(mic.length / r), y = new Float32Array(n); for (let i = 0; i < n; i++) { const p = i * r, k = Math.floor(p), f = p - k; y[i] = mic[k] + ((mic[k + 1] ?? mic[k]) - mic[k]) * f; } mic = y; }
+    C.ch = null;
+    const sr = tk.sr, base = Math.round(u.tStart * sr), rA = Math.max(0, Math.round((u.tIn + u.lat) * sr)), rB = Math.min(tk.len, Math.round((u.tOut + u.lat) * sr), base + mic.length);
+    if (rB - rA < sr * .2) { toast('録り直す時間が短すぎました'); recView('punch'); bs('#bsRec'); return; }
+    if (!tk.voice) { tk.voice = A.ctx.createBuffer(1, tk.len, sr); tk.noVoiceBefore = true; }
+    const v = tk.voice.getChannelData(0), F = Math.min(Math.round(sr * .012), Math.floor((rB - rA) / 4));
+    REC.undo = {rA, rB, old:v.slice(rA, rB), hadVoice:!tk.noVoiceBefore, a:u.a, b:u.b};
+    for (let r = rA; r < rB; r++) {
+      const nv = mic[r - base] || 0, i = r - rA, j = rB - 1 - r;
+      const w = i < F ? i / F : j < F ? j / F : 1;
+      v[r] = v[r] * (1 - w) + nv * w;
+    }
+    tk.noVoiceBefore = false;
+    voiceStats(tk); REC.out = null; REC.saved = {};
+    REC.pvPos = Math.max(0, barPos(tk, u.a) - .5);
+    recView('review'); bs('#bsRec'); recDock();
+    toast(`${u.a + 1}〜${u.b + 1}小節を録り直しました`, '取り消す', punchUndo);
+  } finally { REC.finishing = false; }
+}
+function punchUndo() {
+  const tk = REC.take, u = REC.undo; if (!tk || !u || !tk.voice) return;
+  if (!u.hadVoice) tk.voice = null; else tk.voice.getChannelData(0).set(u.old, u.rA);
+  REC.undo = null; voiceStats(tk); REC.out = null;
+  if (REC.view === 'review' || REC.view === 'punch') recView(REC.view);
+  toast(`${u.a + 1}〜${u.b + 1}小節を元に戻しました`);
+}
+function punchGrid() {
+  const tk = REC.take, pr = REC.pr, sn = tk.snap, lo = Math.min(pr.a, pr.b), hi = Math.max(pr.a, pr.b);
+  return Array.from({length:tk.bars}, (_, k) => {
+    const it = sn.bars[k % sn.bars.length], s = it.cont ? '%' : it.names.join(' ');
+    return `<button class="pc${k >= lo && k <= hi ? ' on' : ''}${k === pr.a || k === pr.b ? ' edge' : ''}" data-bar="${k}"><i>${k + 1}</i><b class="hand">${esc(s)}</b></button>`;
+  }).join('');
+}
+function punchInfo() {
+  const tk = REC.take, pr = REC.pr, lo = Math.min(pr.a, pr.b), hi = Math.max(pr.a, pr.b);
+  return pr.pend ? `${lo + 1}小節目から。終わりの小節をタップ（この小節だけならそのまま）` : `${lo + 1}〜${hi + 1}小節（約${((hi - lo + 1) * tk.barSec).toFixed(1)}秒）を録り直します`;
+}
+
 /* --- 画面 --- */
 function recView(v, arg) {
-  REC.view = v; REC.conf = false; pvStop();
+  REC.view = v; pvStop();
   const H = $('#recH'), B = $('#recBody'), tk = REC.take;
   if (v === 'ready') {
     H.textContent = 'スキャット録音';
     const bars = Math.ceil(S.chart.reduce((a, c) => a + c.dur, 0) / bpb()), sec = bars * bpb() * 60 / S.bpm;
     const over = RP.loops === 0 || RP.loops * sec > MAXSEC;
-    B.innerHTML = `<p class="note rlead">今のコード進行・テンポ・伴奏で、1小節カウントしてから声を録ります。録り終えたら試聴して、保存するか決められます。</p>
+    B.innerHTML = `<p class="note rlead">今のコード進行・テンポ・伴奏で、カウントのあと声を録ります。録り終えたら試聴して、保存するか決められます。</p>
       <div class="lbl">長さ（1周 ${bars}小節・約${fmtT(sec)}）</div>
       <div class="chips" id="recLoops">${[[1, '1周'], [2, '2周'], [4, '4周'], [0, '止めるまで']].map(([k, l]) => `<button data-loops="${k}" aria-pressed="${RP.loops === k}">${l}</button>`).join('')}</div>
       ${over ? '<p class="note">最長3分で自動的に止まります。</p>' : ''}
+      <div class="lbl">カウント</div>
+      <div class="chips" id="recCnt">${[1, 2, 4].map(k => `<button data-cnt="${k}" aria-pressed="${RP.cnt === k}">${k}小節</button>`).join('')}</div>
       <div class="tg">アドリブも一緒に鳴らす<button class="sw" id="recAdl" aria-pressed="${REC.adl}" aria-label="アドリブも鳴らす"></button></div>
+      ${REC.adl ? `<div class="vrow"><span>アドリブ音量</span><input type="range" id="recAdV" min="0" max="1" step=".01" value="${S.solo.vol}" aria-label="アドリブの音量"></div>` : ''}
       ${S.mel ? `<div class="tg">メロディも一緒に鳴らす<button class="sw" id="recMel" aria-pressed="${S.melOn}" aria-label="メロディも鳴らす"></button></div>` : ''}
       <div class="tg"><span>エコー除去<small class="sub">スピーカーで録るならON、ヘッドホンならOFFのほうが声がきれい</small></span><button class="sw" id="recEc" aria-pressed="${RP.ec}" aria-label="エコー除去"></button></div>
       <div class="rgo"><button class="btn ghost" id="recAcc">伴奏だけ録る</button><button class="btn red big" id="recGo"><i class="rdot"></i>録音スタート</button></div>`;
@@ -2475,19 +2752,32 @@ function recView(v, arg) {
       <div class="rgo"><button class="btn ghost" id="recStage">演奏モードを開く</button><button class="btn red big" id="recAcc">伴奏だけ録る</button></div>`;
   } else if (v === 'review') {
     H.textContent = 'テイクを確認';
+    const o = tk.o, sl = (id, l, val, max = 1.6) => `<label>${l}<input type="range" id="${id}" min="0" max="${max}" step=".01" value="${val}" aria-label="${l}"></label>`;
     B.innerHTML = `<div class="rvhd"><b>${tk.voice ? '声＋伴奏' : '伴奏のみ'}${tk.quiet ? '<em>声がほとんど入っていません</em>' : ''}</b><span id="rvT"></span></div>
       <div class="wave" id="rvWave"><canvas></canvas><i id="rvHead"></i></div>
       <div class="rvctl"><button class="play" id="rvPlay" aria-label="試聴">${ICON.play}</button><div class="rvsl">
-        ${tk.voice ? `<label>声<input type="range" id="rvVo" min="0" max="1.6" step=".01" value="${tk.o.voice}" aria-label="声の音量"></label>` : ''}
-        <label>伴奏<input type="range" id="rvAc" min="0" max="1.6" step=".01" value="${tk.o.acc}" aria-label="伴奏の音量"></label></div></div>
-      ${tk.voice ? `<div class="tg"><span>声のタイミング<small class="sub">声が伴奏より遅れて聞こえたら＋、早ければ−</small></span><span class="nud"><button class="rnd" id="rvLm" aria-label="声を遅らせる">−</button><b id="rvLat">${Math.round(tk.o.lat * 1000)}ms</b><button class="rnd" id="rvLp" aria-label="声を早める">＋</button></span></div>
-      <div class="tg">声にリバーブ<button class="sw" id="rvFx" aria-pressed="${tk.o.fx}" aria-label="声にリバーブ"></button></div>` : ''}
-      <div class="tg">カウントの1小節も残す<button class="sw" id="rvCin" aria-pressed="${tk.o.cin}" aria-label="カウントも残す"></button></div>
+        ${tk.voice ? sl('rvVo', '声', o.voice) : ''}${sl('rvAc', '伴奏', o.acc)}${tk.st.adl ? sl('rvAd', 'アドリブ', o.adl) : ''}${tk.st.mel ? sl('rvMe', 'メロディ', o.mel) : ''}</div></div>
+      ${tk.voice ? `<div class="lbl">声のエフェクト</div>
+      <div class="rvsl two">${sl('rvRv', 'リバーブ', o.rev, 1)}${sl('rvEc', 'エコー', o.echo, 1)}</div>
+      <div class="chips fxc" id="rvFxc"><button data-fx="bright" aria-pressed="${o.bright}">くっきり</button><button data-fx="dbl" aria-pressed="${o.dbl}">ダブリング</button><button data-fx="gate" aria-pressed="${o.gate}">ノイズ除去</button></div>
+      <div class="tg"><span>声のタイミング<small class="sub">声が伴奏より遅れて聞こえたら＋、早ければ−</small></span><span class="nud"><button class="rnd" id="rvLm" aria-label="声を遅らせる">−</button><b id="rvLat">${Math.round(o.lat * 1000)}ms</b><button class="rnd" id="rvLp" aria-label="声を早める">＋</button></span></div>` : ''}
+      <div class="tg">カウントの小節も残す<button class="sw" id="rvCin" aria-pressed="${o.cin}" aria-label="カウントも残す"></button></div>
+      <button class="btn ghost wide" id="rvPunch">${tk.voice ? '区間を決めて録り直す' : '区間を決めて声を入れる'}</button>
       <div class="lbl">保存形式</div>
       <div class="seg fmt" id="rvFmt">${Object.entries(FMTS).map(([k, [l]]) => `<button data-fmt="${k}" aria-pressed="${RP.fmt === k}">${REC.saved[k] ? '✓ ' : ''}${l}</button>`).join('')}</div>
       <p class="note" id="rvNote">${FMTS[RP.fmt][1]}</p>
-      <div class="rgo three" id="rvAct"><button class="btn ghost" id="rvDrop">保存しない</button><button class="btn ghost" id="rvAgain">録り直す</button><button class="btn red big" id="rvSave">保存する</button></div>`;
+      <div class="rgo three" id="rvAct"><button class="btn ghost" id="rvDrop">保存しない</button><button class="btn ghost" id="rvAgain">全部録り直す</button><button class="btn red big" id="rvSave">保存する</button></div>`;
     REC.pvPos = Math.min(REC.pvPos, tk.dur()); rvHead(); requestAnimationFrame(rvWave); rvPlanNote();
+  } else if (v === 'punch') {
+    H.textContent = '区間を録り直す';
+    if (!REC.pr || REC.pr.b >= tk.bars) REC.pr = {a:0, b:Math.min(3, tk.bars - 1), pend:false};
+    B.innerHTML = `<p class="note rlead">録り直したい小節をタップ（1回目で開始、2回目で終了）。選んだ区間の${RP.cnt}小節前から伴奏とテイクが流れ、その区間の声だけ差し替えます。</p>
+      <div class="pgrid" id="pgGrid">${punchGrid()}</div>
+      <p class="pinfo" id="pgInfo">${punchInfo()}</p>
+      <div class="lbl">入る前のカウント</div>
+      <div class="chips" id="puCnt">${[1, 2, 4].map(k => `<button data-cnt="${k}" aria-pressed="${RP.cnt === k}">${k}小節前から</button>`).join('')}</div>
+      <div class="rgo three"><button class="btn ghost" id="puBack">戻る</button><button class="btn ghost" id="puPv">${ICON.play}区間を試聴</button><button class="btn red big" id="puGo"><i class="rdot"></i>録り直す</button></div>
+      ${REC.undo ? `<button class="btn ghost wide" id="puUndo">${REC.undo.a + 1}〜${REC.undo.b + 1}小節の録り直しを取り消す</button>` : ''}`;
   } else if (v === 'busy') {
     H.textContent = '書き出し中';
     B.innerHTML = `<div class="prog"><i id="pgBar"></i></div><p class="note" id="pgTxt">準備しています…</p><div class="rgo one"><button class="btn ghost" id="pgCancel">中止</button></div>`;
@@ -2517,7 +2807,7 @@ async function rvPlanNote() {
 function recOnClose() { pvStop(); }
 function recOpen() {
   if (REC.on) { recStopNow(); return; }
-  recView(REC.busy ? 'busy' : REC.view === 'done' && REC.out ? 'done' : REC.take ? 'review' : 'ready');
+  recView(REC.busy ? 'busy' : REC.view === 'done' && REC.out ? 'done' : REC.view === 'punch' && REC.take ? 'punch' : REC.take ? 'review' : 'ready');
   bs('#bsRec');
 }
 function recDock() {
@@ -2775,9 +3065,15 @@ $('#recBtn').addEventListener('click', recOpen);
 $('#recStop').addEventListener('click', recStopNow);
 document.addEventListener('visibilitychange', () => { if (document.hidden && REC.on) recStopNow(); });
 $('#bsRec').addEventListener('input', e => {
-  const tk = REC.take; if (!tk) return;
-  if (e.target.id === 'rvVo') { tk.o.voice = +e.target.value; if (REC.pv && REC.pv.g.vg) REC.pv.g.vg.gain.value = tk.o.voice * 1.25; }
-  if (e.target.id === 'rvAc') { tk.o.acc = +e.target.value; if (REC.pv) REC.pv.g.ag.gain.value = tk.o.acc; }
+  const id = e.target.id, val = +e.target.value, tk = REC.take, g = REC.pv && REC.pv.g;
+  if (id === 'recAdV') { S.solo.vol = val; setVols(); save(); return; }
+  if (!tk) return;
+  if (id === 'rvVo') { tk.o.voice = val; if (g && g.vg) g.vg.gain.value = val * 1.25; }
+  if (id === 'rvAc') { tk.o.acc = val; if (g) g.ag.gain.value = val; }
+  if (id === 'rvAd') { tk.o.adl = val; if (g && g.sg.adl) g.sg.adl.gain.value = val; }
+  if (id === 'rvMe') { tk.o.mel = val; if (g && g.sg.mel) g.sg.mel.gain.value = val; }
+  if (id === 'rvRv') { tk.o.rev = RP.rev = val; saveRP(); if (g && g.fx.rg) g.fx.rg.gain.value = val * .5; }
+  if (id === 'rvEc') { tk.o.echo = RP.echo = val; saveRP(); if (g && g.fx.eg) g.fx.eg.gain.value = val * .55; }
 });
 $('#bsRec').addEventListener('click', e => {
   const b = e.target.closest('button'), tk = REC.take;
@@ -2786,8 +3082,15 @@ $('#bsRec').addEventListener('click', e => {
   if (!b) return;
   const id = b.id;
   if (b.dataset.loops != null) { RP.loops = +b.dataset.loops; saveRP(); recView('ready'); return; }
+  if (b.dataset.cnt != null) { RP.cnt = +b.dataset.cnt; saveRP(); recView(REC.view); return; }
   if (b.dataset.fmt) { RP.fmt = b.dataset.fmt; saveRP(); document.querySelectorAll('#rvFmt button').forEach(x => x.setAttribute('aria-pressed', x === b)); $('#rvNote').textContent = FMTS[RP.fmt][1]; rvPlanNote(); return; }
-  if (id === 'recAdl') { REC.adl = !REC.adl; b.setAttribute('aria-pressed', REC.adl); }
+  if (b.dataset.fx && tk) { const k = b.dataset.fx; tk.o[k] = !tk.o[k]; RP[k] = tk.o[k]; saveRP(); b.setAttribute('aria-pressed', tk.o[k]); if (REC.pv) pvPlay(REC.pvPos); return; }
+  if (b.dataset.bar != null && tk) {
+    const k = +b.dataset.bar, pr = REC.pr;
+    if (pr.pend) { pr.b = k; pr.pend = false; } else { pr.a = pr.b = k; pr.pend = true; }
+    $('#pgGrid').innerHTML = punchGrid(); $('#pgInfo').textContent = punchInfo(); return;
+  }
+  if (id === 'recAdl') { REC.adl = !REC.adl; recView('ready'); return; }
   if (id === 'recMel') { S.melOn = !S.melOn; b.setAttribute('aria-pressed', S.melOn); save(); renderDock(); }
   if (id === 'recEc') { RP.ec = !RP.ec; saveRP(); b.setAttribute('aria-pressed', RP.ec); }
   if (id === 'recGo') recStart(true);
@@ -2796,16 +3099,20 @@ $('#bsRec').addEventListener('click', e => {
   if (!tk) return;
   if (id === 'rvPlay') { if (REC.pv) pvStop(); else pvPlay(REC.pvPos); }
   if (id === 'rvLm' || id === 'rvLp') { tk.o.lat = Math.round(Math.max(-.2, Math.min(.5, tk.o.lat + (id === 'rvLp' ? .01 : -.01))) * 1000) / 1000; $('#rvLat').textContent = Math.round(tk.o.lat * 1000) + 'ms'; rvWave(); if (REC.pv) pvPlay(REC.pvPos); }
-  if (id === 'rvFx') { tk.o.fx = !tk.o.fx; RP.fx = tk.o.fx; saveRP(); b.setAttribute('aria-pressed', tk.o.fx); if (REC.pv) pvPlay(REC.pvPos); }
   if (id === 'rvCin') { const pos = REC.pvPos - tk.pre(); tk.o.cin = !tk.o.cin; b.setAttribute('aria-pressed', tk.o.cin); REC.pvPos = Math.max(0, pos + tk.pre()); rvWave(); rvHead(); if (REC.pv) pvPlay(REC.pvPos); }
   if (id === 'rvSave') { pvStop(); recExport(); }
+  if (id === 'rvPunch') recView('punch');
   if (id === 'rvDrop' || id === 'rvAgain') {
     pvStop();
     const again = id === 'rvAgain';
     $('#rvAct').outerHTML = `<div class="rconf" id="rvAct"><span>${Object.keys(REC.saved).length ? '' : 'まだ保存していません。'}このテイクを消しますか？</span><button class="btn ghost" id="cfNo">やめる</button><button class="btn red" id="${again ? 'cfAgain' : 'cfDrop'}">消す${again ? 'して録り直す' : ''}</button></div>`;
   }
   if (id === 'cfNo') recView('review');
-  if (id === 'cfDrop' || id === 'cfAgain') { REC.take = null; REC.out = null; REC.saved = {}; REC.pvPos = 0; recDock(); if (id === 'cfAgain') recView('ready'); else { closeBS(); toast('テイクを消しました'); } }
+  if (id === 'cfDrop' || id === 'cfAgain') { REC.take = null; REC.out = null; REC.saved = {}; REC.pvPos = 0; REC.undo = null; REC.pr = null; recDock(); if (id === 'cfAgain') recView('ready'); else { closeBS(); toast('テイクを消しました'); } }
+  if (id === 'puBack') recView('review');
+  if (id === 'puPv') { if (REC.pv) pvStop(); else { const lo = Math.min(REC.pr.a, REC.pr.b), hi = Math.max(REC.pr.a, REC.pr.b); pvPlay(Math.max(0, barPos(tk, lo) - Math.min(tk.barSec, 1)), barPos(tk, hi + 1)); } }
+  if (id === 'puGo') { REC.pr.pend = false; punchStart(); }
+  if (id === 'puUndo') punchUndo();
   if (id === 'pgCancel' && REC.busy) REC.busy.cancel = true;
   if (id === 'dnSave') recSaveFile();
   if (id === 'dnShare') recShare();
@@ -2813,7 +3120,7 @@ $('#bsRec').addEventListener('click', e => {
   if (id === 'dnBack') recView('review');
 });
 window.addEventListener('resize', () => { if (REC.view === 'review' && REC.take) rvWave(); });
-if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) window.__rec = {REC, RP, planFor};
+if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) window.__rec = {REC, RP, planFor, get A() { return A; }, get P() { return P; }};
 
 /* ---------- editing ---------- */
 function defDur(at) {
@@ -3010,7 +3317,7 @@ $('#tb').addEventListener('click', e => {
   if (a === 'next') selectChord(i + 1, true);
   if (a === 'dm') setDur(-1);
   if (a === 'dp') setDur(1);
-  if (a === 'play') previewChord(ch);
+  if (a === 'play') playFrom(i);
   if (a === 'del') delSel();
 });
 $('#panSeg').addEventListener('click', e => { const b = e.target.closest('[data-p]'); if (!b) return; S.pan = b.dataset.p; S.scView = null; if (S.pan === 'input') syncInp(); renderSeg(); renderPan(); renderDock(); setVols(); save(); });
@@ -3075,12 +3382,33 @@ $('#bpmNum').addEventListener('click', () => {
   else toast('続けてタップするとテンポを測ります');
 });
 $('#rhyBtn').addEventListener('click', () => { renderSet(); bs('#bsSet'); });
-$('#adlBtn').addEventListener('click', () => {
-  const order = ['scale', 'always', 'off'];
-  S.solo.mode = order[(order.indexOf(S.solo.mode) + 1) % 3];
-  renderDock(); setVols(); save();
-  toast({scale:'アドリブ: スケール画面を開いているときだけ鳴らす', always:'アドリブ: いつも鳴らす', off:'アドリブ: 鳴らさない'}[S.solo.mode]);
+$('#adlBtn').addEventListener('click', () => { renderAdl(); bs('#bsAdl'); });
+// 選んだコードの小節の頭から再生（そのあとは普段どおり最後まで行ってループ）
+function playFrom(i) {
+  const tl = timeline(), s = tl.segs.find(x => x.i === i), n = bpb(), st = s ? Math.floor(s.start / n + 1e-9) * n : 0;
+  if (P.ui) { stop(); setTimeout(() => play(st * TPB), 520); } else play(st * TPB);
+}
+function renderAdl() {
+  const ch = (opts, cur, attr) => opts.map(([v, l]) => `<button ${attr}="${v}" aria-pressed="${cur === v}">${l}</button>`).join('');
+  $('#adMode').innerHTML = ch([['scale', 'スケール画面のとき'], ['always', 'いつも'], ['off', '鳴らさない']], S.solo.mode, 'data-sm');
+  $('#adTone').innerHTML = ch([['guitar', 'ギター'], ['vibes', 'ビブラフォン']], S.solo.tone, 'data-st');
+  $('#adDens').innerHTML = ch([[0, '少なめ'], [1, 'ふつう'], [2, '多め']], S.solo.dens, 'data-sd');
+  $('#adVol').value = S.solo.vol; $('#adVolV').textContent = Math.round(S.solo.vol * 100);
+}
+function adlDemo() {
+  if (P.ui || !ac()) return;
+  const t = A.ctx.currentTime + .03;
+  [[67, 0, .3], [69, .3, .3], [71, .6, .3], [74, .9, .9]].forEach(([m, d, l]) => lead(m, t + d, l, .7));
+}
+$('#bsAdl').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.sm) { S.solo.mode = b.dataset.sm; renderDock(); setVols(); save(); }
+  if (b.dataset.st) { S.solo.tone = b.dataset.st; if (A.ctx) applyTone(); save(); adlDemo(); }
+  if (b.dataset.sd != null) { S.solo.dens = +b.dataset.sd; save(); }
+  if (b.id === 'adTry') adlDemo();
+  renderAdl();
 });
+$('#adVol').addEventListener('input', e => { S.solo.vol = +e.target.value; $('#adVolV').textContent = Math.round(S.solo.vol * 100); setVols(); save(); });
 document.addEventListener('pointerdown', () => { if (A.ctx && A.ctx.state !== 'running') A.ctx.resume().catch(() => {}); }, {passive:true});
 
 /* ---------- songbook ---------- */
