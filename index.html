@@ -1842,6 +1842,8 @@ function rebuildAudio(opt) {
   try { if (old) old.close(); } catch (e) {}
   return ac();
 }
+// iPhoneはマイクを閉じると端末の周波数が元に戻る。古い音声エンジンのまま鳴らすと音程がずれることがあるので、次に鳴らす前に作り直す
+function freshCtx() { if (A.stale && !P.ui) { A.stale = false; rebuildAudio(null); } }
 function silentUnlock() {
   try {
     const sr = 8000, n = 800, b = new ArrayBuffer(44 + n * 2), v = new DataView(b);
@@ -1868,6 +1870,8 @@ function applyTone() {
 }
 /* ---------- sampled instruments: FluidR3_GM (Frank Wen, CC BY 3.0) via gleitz/midi-js-soundfonts ---------- */
 const SMP = {};
+// 音源ごとの音程の誤差（セント）。実測して補正している（ジャズギターの低音側は最大12セント高かった）
+const SMP_TUNE = {'gtr-jazz':{42:11,44:7,46:12,48:11,50:4,52:5,54:4,56:3}, 'gtr-clean':{56:7,58:7}, 'gtr-steel':{40:5,42:4,60:4,62:3,64:4,66:3}, 'bass-ac':{30:-4,32:-4,42:-8,44:-5,46:-4,48:4,50:3}, 'bass-el':{28:6,30:4,34:4}, 'vibes':{53:12,55:13,57:12,65:-4,67:6,69:6,71:6,79:-3,81:-3}};
 const leadInst = () => S.style === 'pop' ? 'gtr-clean' : 'gtr-jazz';
 const smpReady = n => SMP[n] && SMP[n].state === 'ready';
 function decodeB64(b64) {
@@ -1905,7 +1909,7 @@ function smpNote(name, m, t, dur, vel, dest, rel = .08, fx) {
   let k = s.keys[0];
   for (const x of s.keys) if (Math.abs(x - m) < Math.abs(k - m)) k = x;
   const e = s.notes.get(k), ctx = A.ctx, src = ctx.createBufferSource(), g = ctx.createGain();
-  const pr = 2 ** ((m - k) / 12);
+  const tn = SMP_TUNE[name], pr = 2 ** ((m - k) / 12 - (tn && tn[k] || 0) / 1200);
   src.buffer = e.buf; src.playbackRate.value = pr;
   const life = (e.buf.duration - e.off) / pr, end = t + Math.max(.04, dur), amp = vel * e.norm;
   pbFx(src.playbackRate, pr, t, end, rel, fx);
@@ -1930,7 +1934,7 @@ function pbuf(midi, br = A.br) {
   let e = A.cache.get(id);
   if (e) return e;
   const ctx = A.ctx, sr = ctx.sampleRate, f = 440 * 2 ** ((midi - 69) / 12);
-  const N = Math.max(2, Math.floor(sr / f - .5));
+  const N = Math.max(2, Math.floor(sr / f + .5));   // 平均フィルタぶん周期は N-0.5 サンプルになる（以前は N+0.5 と計算していて最大24セント高かった）
   const T = Math.max(1.1, Math.min(3.6, 4 * Math.sqrt(82 / f)));
   const rho = Math.pow(.001, 1 / (f * T));
   const buf = ctx.createBuffer(1, Math.floor(sr * T), sr), d = buf.getChannelData(0), ring = new Float32Array(N);
@@ -1946,7 +1950,7 @@ function pbuf(midi, br = A.br) {
   }
   const g = .5 / (peak || 1);
   for (let i = 0; i < d.length; i++) d[i] *= g;
-  e = {buf, rate:f / (sr / (N + .5))};
+  e = {buf, rate:f * (N - .5) / sr};
   A.cache.set(id, e);
   return e;
 }
@@ -2409,6 +2413,7 @@ function frame() {
   if (P.ui) requestAnimationFrame(frame);
 }
 function play(fromTick = 0) {
+  freshCtx();
   const ctx = ac();
   if (!ctx) { toast('このブラウザは音の再生に対応していません'); return; }
   if (!S.chart.length) { toast('先にコードを追加してください'); return; }
@@ -2479,15 +2484,15 @@ function colorQ(c, nc, J, rnd) {
   const pick = opts => { let a = 0; for (const [nq, w] of opts) { a += w; if (r < a) return (!us || Q[nq].f.every(x => us.has(mod(c.root + x)))) && voOK(c.root, nq) ? nq : q; } return q; };
   const d = mod(c.root - S.key.t), home = S.key.minor ? [3, 8] : [0, 5];
   if (!J) { if (q === 'maj') return home.includes(d) ? pick([['add9', .35], ['maj7', .2]]) : (!S.key.minor && d === 7) ? pick([['7', .3]]) : q; if (q === 'm') return pick([['m7', .45]]); return q; }
-  if (q === 'maj7') return pick([['maj9', .4], ['69', .25], [!S.key.minor && (d === 5 || [1, 3, 8].includes(d)) ? 'maj7#11' : 'maj9', .15]]);
+  if (q === 'maj7') return pick([['maj9', .3], ['69', .25], [!S.key.minor && (d === 5 || [1, 3, 8].includes(d)) ? 'maj7#11' : 'maj9', .1]]);
   if (q === 'maj') return home.includes(d) ? pick([['69', .35], ['maj7', .35]]) : (!S.key.minor && d === 7) ? pick([['7', .5]]) : q;
   if (q === '6') return pick([['69', .5]]);
-  if (q === 'm7') return pick(!S.key.minor && d === 4 ? [['m11', .35]] : [['m9', .42], ['m11', .2]]);
+  if (q === 'm7') return pick(!S.key.minor && d === 4 ? [['m11', .25]] : [['m9', .4], ['m11', .1]]);
   if (q === '7') {
     const res = nc && mod(nc.root - c.root) === 5, toMin = res && 'mø'.includes(Q[nc.q].k);
-    if (toMin) return pick([['7b9', .45], ['7alt', .35], ['7b13', .2]]);
-    if (res) return pick([['13', .32], ['9', .2], ['7b9', .16], ['7alt', .16]]);
-    return pick([['9', .38], ['13', .3], ['7#11', .3]]);
+    if (toMin) return pick([['7b9', .45], ['7b13', .2], ['7alt', .15]]);
+    if (res) return pick([['13', .35], ['9', .25], ['7b9', .08], ['7alt', .05]]);
+    return pick([['9', .35], ['13', .3], ['7#11', .15]]);
   }
   return q;
 }
@@ -2501,11 +2506,18 @@ function pickVoPro(ch, prev, ap) {
   let best = null, bp = 1e9;
   for (const x of cand) {
     const m = x.midi.slice().sort((a, b) => a - b), top = m[m.length - 1];
-    let pen = Math.abs(top - pt) * 1.5 + Math.abs(avg(m) - pc) * .7 + (top < 59 ? 8 : 0) + (top > 77 ? 5 : 0) + Math.random() * 1.2 - (x.sc || 0) * .3;
+    let pen = Math.abs(top - pt) * 1.5 + Math.abs(avg(m) - pc) * .7 + (top < 60 ? 8 : 0) + (top > 76 ? 6 : 0) + Math.random() * 1.2 - (x.sc || 0) * .3 + voPen(m, ch.root);
     if (ap && Math.abs(top - pt) > 3) pen += 4;
     if (pen < bp) { bp = pen; best = m; }
   }
   return best;
+}
+// 響きが濁る形を避ける：となり合う半音、低音域で詰まった音程、ルートと♭9の短9度、音の多すぎ
+function voPen(m, root) {
+  let p = 0;
+  for (let i = 1; i < m.length; i++) { const d = m[i] - m[i - 1]; if (d === 1) p += 10; if (m[i - 1] < 48 && d < 7) p += 8; else if (m[i - 1] < 52 && d < 4) p += 5; }
+  for (let i = 0; i < m.length; i++) for (let j = i + 1; j < m.length; j++) if (m[j] - m[i] === 13) p += mod(m[i] - root) === 0 ? 10 : 4;
+  return p + (m.length > 5 ? 5 : m.length === 5 ? 1.5 : 0);
 }
 function quartalVo(root, prev) {
   let b = root; while (b < 45) b += 12; while (b > 52) b -= 12;
@@ -2559,34 +2571,40 @@ function planHarm(tl, seed) {
       if (p.ch.q !== q0 && p.ch.scAuto !== false) { delete p.ch.sc; delete p.ch.scr; }
       if (p.ch.q !== q0 && !p.tech && F === 'color') { p.tech = 'color'; p.lab = `テンションで色付け：${nmx({...p.ch, q:q0})} → ${nmx(p.ch)}`; }
     });
-    const lp = pcs[pcs.length - 1];
-    if (nc && lp.len >= 2 && !(nc.root === lp.ch.root && Q[nc.q].k === Q[lp.ch.q].k)) {
-      const x = rnd(), pAp = P_('approach', J ? .34 : .18), pPush = P_('push', J ? .16 : .12);
-      if (x < pAp) {
-        const y = rnd(), fam = Q[nc.q].k, tq = fam === 'm' ? (J ? 'm7' : 'm') : fam === '7' ? '7' : fam === 'ø' ? 'm7b5' : fam === 'o' ? 'dim7' : (J ? 'maj7' : 'maj');
-        let ap, kind;
-        if (y < .6 || F) { ap = {root:mod(nc.root + 1), q:tq, pref:'b'}; kind = 'chrom'; }
-        else if (y < .8) { ap = {root:mod(nc.root - 1), q:tq, pref:'#'}; kind = 'chrom'; }
-        else { ap = {root:mod(nc.root + 7), q:J ? '9' : '7', pref:null}; kind = 'dom'; }
-        ap.bass = null;
-        if (!(kind === 'dom' && mod(lp.ch.root - nc.root) === 7 && Q[lp.ch.q].k === '7') && fitsMel(ap, en - aL, en)) {
-          lp.len -= aL;
-          pcs.push({start:en - aL, len:aL, ch:ap, ap:kind, tech:'approach', lab:`アプローチ・コード：${nmx(ap)} → ${nmx(nc)}`});
-        }
-      } else if (x < pAp + pPush) {
-        lp.len -= aL;
-        pcs.push({start:en - aL, len:aL, ch:{...nc}, ap:'push', tech:'push', lab:`アンティシペーション：${nmx(nc)} を8分前に`});
-      }
-    }
     for (const p of pcs) out.push(Object.assign(p, {i:s.i}));
   }
+  // つなぎ（アプローチ・コード／食い）は、置き換え後の本当の次のコードに向けて、4小節に1回までに絞る
+  const fin = []; let lastBar = -99;
+  for (let m = 0; m < out.length; m++) {
+    const p = out[m]; fin.push(p);
+    const nxp = out[m + 1] || (S.loop || F === 'turn' ? out[0] : null);
+    if (!nxp || p.len < 2) continue;
+    const en = p.start + p.len, bar = Math.round(en / n);
+    if (Math.abs(en / n - bar) > 1e-6 || (nxp.ch.root === p.ch.root && Q[nxp.ch.q].k === Q[p.ch.q].k)) continue;
+    if (F ? (F !== 'approach' && F !== 'push') : (bar - lastBar < 4 || bar % 2)) continue;
+    const x = rnd(), pAp = P_('approach', J ? .3 : .15), pPush = P_('push', J ? .14 : .1), tg = nxp.ch;
+    if (x < pAp) {
+      const y = rnd(), fam = Q[tg.q].k, tq = fam === 'm' ? (J ? 'm7' : 'm') : fam === '7' ? '7' : fam === 'ø' ? 'm7b5' : fam === 'o' ? 'dim7' : (J ? 'maj7' : 'maj');
+      let ap, kind;
+      if (y < .65 || F) { ap = {root:mod(tg.root + 1), q:tq, pref:'b'}; kind = 'chrom'; }
+      else if (y < .85) { ap = {root:mod(tg.root - 1), q:tq, pref:'#'}; kind = 'chrom'; }
+      else { ap = {root:mod(tg.root + 7), q:J ? '9' : '7', pref:null}; kind = 'dom'; }
+      ap.bass = null;
+      if (kind === 'dom' && mod(p.ch.root - tg.root) === 7 && Q[p.ch.q].k === '7') continue;
+      if (!fitsMel(ap, en - aL, en)) continue;
+      p.len -= aL; fin.push({start:en - aL, len:aL, ch:ap, ap:kind, i:p.i, tech:'approach', lab:`アプローチ・コード：${nmx(ap)} → ${nmx(tg)}`}); lastBar = bar;
+    } else if (x < pAp + pPush) {
+      p.len -= aL; fin.push({start:en - aL, len:aL, ch:{...tg}, ap:'push', i:p.i, tech:'push', lab:`アンティシペーション：${nmx(tg)} を8分前に`}); lastBar = bar;
+    }
+  }
+  out.length = 0; out.push(...fin);
   let prev = null;
   out.forEach(p => { if (p.ap) return; p.vo = p.orig && p.ch.v && p.svo ? p.svo : p.quartal ? quartalVo(p.ch.root, prev) : pickVoPro(p.ch, prev); prev = p.vo; });
   out.forEach((p, m) => {
     if (!p.ap) return;
     const nx = out.slice(m + 1).find(x => !x.ap) || out.find(x => !x.ap);
     if (p.ap === 'push') { p.ch = {...nx.ch}; p.vo = nx.vo.slice(); }
-    else if (p.ap === 'chrom') { const dl = mod(p.ch.root - nx.ch.root + 6) - 6; p.vo = nx.vo.map(x => x + dl); }
+    else if (p.ap === 'chrom') { const dl = mod(p.ch.root - nx.ch.root + 6) - 6; p.vo = Math.abs(dl) === 1 ? nx.vo.map(x => x + dl) : pickVoPro(p.ch, nx.vo, true); }
     else p.vo = pickVoPro(p.ch, nx.vo, true);
   });
   out.forEach((p, k) => { p.k = k; delete p.svo; });
@@ -2634,21 +2652,22 @@ const altOK = x => x.dom && (x.sid === 'alt' || (x.free && x.res && !x.vo13 && !
 const dimOK = x => x.dom && (x.sid === 'hw' || (x.free && x.res && !x.toMin && !x.vo9));
 const triOK = x => x.dom && x.res && (x.sid === 'alt' || (x.free && !x.vo9 && !x.vo13));
 const DEVS = {
-  bebop:{w:3, ok:(x, L) => L >= 1.5 && !x.pop && bebopPass(x) != null},
-  arp:{w:2.4, ok:(x, L) => L >= 1.5 && !'o+'.includes(x.k)},
-  digital:{w:1.6, ok:(x, L) => L >= 1.5 && !x.pop && 'M m 7'.includes(x.k) && !['alt', 'hw'].includes(x.sid)},
-  ust:{w:2.4, ok:(x, L) => L >= 1.5 && !x.pop && !!ustFor(x)},
-  tri:{w:1.8, ok:(x, L) => L >= 1.5 && !x.pop && triOK(x)},
-  alt:{w:2.2, ok:(x, L) => L >= 1.5 && !x.pop && altOK(x)},
-  dim:{w:1.8, ok:(x, L) => L >= 1.5 && !x.pop && dimOK(x)},
-  triad:{w:1.7, ok:(x, L) => L >= 3 && !x.pop && !!TPAIR[x.sid]},
-  penta:{w:2, ok:(x, L) => L >= 1.5 && !!PENT[x.sid]},
-  side:{w:1.3, ok:(x, L) => L >= 4 && x.long && SP.outT <= 0 && !x.pop && !!PENT[x.sid]},
-  motif:{w:2.6, ok:(x, L) => !!SP.mot && L >= 2},
+  lyric:{w:3.4, ok:(x, L) => L >= 1},
+  bebop:{w:1.4, ok:(x, L) => L >= 1.5 && !x.pop && bebopPass(x) != null},
+  arp:{w:2.2, ok:(x, L) => L >= 1.5 && !'o+'.includes(x.k)},
+  digital:{w:1, ok:(x, L) => L >= 1.5 && !x.pop && 'M m 7'.includes(x.k) && !['alt', 'hw'].includes(x.sid)},
+  ust:{w:1.8, ok:(x, L) => L >= 1.5 && !x.pop && !!ustFor(x)},
+  tri:{w:1.2, ok:(x, L) => L >= 1.5 && !x.pop && triOK(x)},
+  alt:{w:1.2, ok:(x, L) => L >= 1.5 && !x.pop && altOK(x)},
+  dim:{w:1, ok:(x, L) => L >= 1.5 && !x.pop && dimOK(x)},
+  triad:{w:1.3, ok:(x, L) => L >= 3 && !x.pop && !!TPAIR[x.sid]},
+  penta:{w:1.6, ok:(x, L) => L >= 1.5 && !!PENT[x.sid]},
+  side:{w:.9, ok:(x, L) => L >= 4 && x.long && SP.outT <= 0 && !x.pop && !!PENT[x.sid]},
+  motif:{w:2.8, ok:(x, L) => !!SP.mot && L >= 2},
   blues:{w:1.5, ok:(x, L) => L >= 2 && ((x.dom && (!x.res || x.bluesy)) || x.sid === 'blues' || (x.pop && 'Mm7'.includes(x.k)))},
-  guide:{w:1.3, ok:(x, L) => L >= 1.5},
-  double:{w:2.2, ok:(x, L) => L >= 2 && S.bpm < 110 && !x.pop && bebopPass(x) != null},
-  squartal:{w:1.4, ok:(x, L) => L >= 2 && !x.pop && ['dor', 'mix', 'lyd', 'aeo', 'mel'].includes(x.sid)},
+  guide:{w:1.4, ok:(x, L) => L >= 1.5},
+  double:{w:1.1, ok:(x, L) => L >= 2 && S.bpm < 110 && !x.pop && bebopPass(x) != null},
+  squartal:{w:.8, ok:(x, L) => L >= 2 && !x.pop && ['dor', 'mix', 'lyd', 'aeo', 'mel'].includes(x.sid)},
 };
 function pickDev(x, L) {
   const f0 = DM.cur && DM.cur.solo, f = f0 === 'disp' ? 'motif' : f0;
@@ -2656,15 +2675,15 @@ function pickDev(x, L) {
   const w = {}, b = S.bpm, d = S.solo.dens;
   for (const [id, dv] of Object.entries(DEVS)) if (dv.ok(x, L)) w[id] = dv.w;
   const mul = (id, k) => { if (w[id] != null) w[id] *= k; };
-  if (b >= 200) { mul('bebop', .7); mul('digital', 2); mul('arp', 1.4); mul('triad', .5); mul('ust', .8); mul('guide', 1.4); }
+  if (b >= 200) { mul('bebop', .7); mul('digital', 2); mul('arp', 1.4); mul('triad', .5); mul('ust', .8); mul('guide', 1.4); mul('lyric', .8); }
   if (b < 100) { mul('guide', 1.8); mul('bebop', .8); mul('penta', 1.2); }
-  if (d === 0) { mul('guide', 2); mul('motif', 1.5); mul('bebop', .5); mul('double', .3); mul('digital', .6); }
+  if (d === 0) { mul('guide', 2); mul('motif', 1.5); mul('lyric', 1.3); mul('bebop', .5); mul('double', .3); mul('digital', .6); }
   if (d === 2) { mul('bebop', 1.5); mul('double', 1.5); mul('digital', 1.3); mul('guide', .5); }
   if (x.pop) { mul('penta', 2.2); mul('blues', 1.6); mul('motif', 1.4); mul('arp', .8); }
   if (x.bluesy) { mul('blues', 2.4); mul('penta', 1.3); }
   if (L < 2) mul('guide', .5);
   if (SP.role === 'resp' && SP.first) mul('motif', 3);
-  mul(SP.prev, .25);
+  mul(SP.prev, SP.prev === 'lyric' ? .6 : .25);
   if (f === 'encl' || f === 'chrom') { mul('bebop', 2); mul('arp', 2); }
   const keys = Object.keys(w);
   if (!keys.length) return 'guide';
@@ -2673,17 +2692,66 @@ function pickDev(x, L) {
   for (const k of keys) { r -= w[k]; if (r <= 0) return k; }
   return keys[0];
 }
+function proRhythm(L) {
+  const b = S.bpm, d = S.solo.dens, W = {e2:3, q:2.2, dq:1.4, syn:1.4, re:1, tr:b < 150 ? .8 : 0, r:.6, h:.6, run:1.1};
+  if (d === 0) Object.assign(W, {e2:1.6, q:3, h:1.2, r:1.2, run:.4});
+  if (d === 2) Object.assign(W, {e2:4, run:2, r:.3, h:.3});
+  const C = {e2:[1, [[0, .5], [.5, .5]]], q:[1, [[0, 1]]], dq:[2, [[0, 1.5], [1.5, .5]]], syn:[2, [[0, .5], [.5, 1.5]]], re:[1, [[.5, .5]]], tr:[1, [[0, 1 / 3], [1 / 3, 1 / 3], [2 / 3, 1 / 3]]], r:[1, []], h:[2, [[0, 2]]], run:[2, [[0, .5], [.5, .5], [1, .5], [1.5, .5]]]};
+  const ev = []; let x = 0;
+  while (x < L - 1e-6) {
+    const keys = Object.keys(C).filter(k => C[k][0] <= L - x + 1e-6 && W[k] > 0 && !(x === 0 && k === 'r'));
+    if (!keys.length) break;
+    let tot = 0; for (const k of keys) tot += W[k];
+    let r = Math.random() * tot, k = keys[0];
+    for (const kk of keys) { r -= W[kk]; if (r <= 0) { k = kk; break; } }
+    for (const [o, dd] of C[k][1]) ev.push({b:x + o, d:dd});
+    x += C[k][0];
+  }
+  return ev;
+}
+// 8分音符が続くだけにならないように：2つを4分にまとめる、拍をまたいで伸ばす（シンコペーション）、息つぎの休符
+function shapeEv(ev, x, L) {
+  const d = S.solo.dens, pM = [.36, .24, .13][d], pS = [.16, .12, .08][d], pR = [.12, .07, .03][d], out = [];
+  for (let i = 0; i < ev.length; i++) {
+    const e = {...ev[i]}, nx = ev[i + 1], on = Math.abs(e.b % 1) < 1e-6;
+    if (i > 0 && i < ev.length - 1 && Math.random() < pR) continue;
+    if (nx && Math.abs(nx.b - e.b - .5) < 1e-6 && e.d <= .5) {
+      if (on && Math.random() < pM) { e.d = 1; i++; }
+      else if (!on && x.si.ct.has(mod(e.m)) && Math.random() < pS && nx.b + .5 <= L + 1e-6) { e.d = 1; i++; }
+    }
+    out.push(e);
+  }
+  return out;
+}
 const E8 = (ps, b0 = 0, step = .5) => ps.map((m, i) => m == null ? null : {b:b0 + i * step, d:step, m}).filter(Boolean);
+const SHAPE = new Set(['bebop', 'alt', 'dim', 'penta', 'squartal', 'tri', 'arp', 'double']);
+const OUTSIDE = new Set(['ust', 'tri', 'alt', 'dim', 'side']);
 function devBody(id, x, L, start) {
   const N = Math.max(1, Math.round(L * 2)), ct = x.si.ct, sc = x.si.sc, r = x.root, cn = nmx(x.c);
   const s0 = start ?? nearSet(ct, SP.last + (SP.last < 64 ? 3 : -2));
   const ps = [];
   switch (id) {
+    case 'lyric': {
+      const rh = proRhythm(L); if (!rh.length) rh.push({b:0, d:Math.min(1, L)});
+      SO.last = start ?? SP.last; SO.dir = SO.last > 70 ? -1 : SO.last < 60 ? 1 : (Math.random() < .5 ? 1 : -1); newGoal();
+      const ev = [];
+      rh.forEach((e, k) => {
+        const ab = (x.a0 || 0) + e.b, strong = Math.abs(ab % 1) < 1e-6 && (bpb() === 3 ? Math.abs(ab) < 1e-6 : Math.round(ab) % 2 === 0);
+        let m = k === 0 && start != null && e.b < 1e-6 ? start : pickPitch(x.si, strong, false, null, e.d >= .75, x.root);
+        m = Math.max(SLO, Math.min(SHI, m)); SO.last = m; ev.push({b:e.b, d:e.d, m});
+      });
+      return {ev, tech:null};
+    }
     case 'bebop': {
       const set = bebopSet(x), pass = bebopPass(x);
-      let y = s0; ps.push(y);
+      let y = s0, run = 0; const maxRun = 3 + Math.floor(Math.random() * 3); ps.push(y);
       if (y < 63 && Math.random() < .6) { for (let i = 0; i < 3 && ps.length < N; i++) { y = stepIn(y, 1, ct); ps.push(y); } }
-      while (ps.length < N) { const z = stepIn(y, -1, set); y = z < SLO + 1 ? stepIn(y, 1, ct) : z; ps.push(y); }
+      while (ps.length < N) {
+        if (run >= maxRun) { y = stepIn(stepIn(y, 1, ct), 1, ct); run = 0; }
+        else { const z = stepIn(y, -1, set); y = z < SLO + 1 ? stepIn(y, 1, ct) : z; run++; }
+        if (y > SHI) y = stepIn(y - 12, 1, ct);
+        ps.push(y);
+      }
       const ev = E8(ps); ev.forEach(e => { if (!sc.has(mod(e.m)) && Math.random() < .55) e.ex = {gh:1}; });
       return {ev, tech:{id, txt:`ビバップ・スケール：${cn} に経過音 ${TH.spell(pass, S.key)} を足して、拍の頭にコードトーン`}};
     }
@@ -2691,7 +2759,8 @@ function devBody(id, x, L, start) {
       const tones = new Set(ct); if (sc.has(mod(r + 2)) && x.k !== 'o') tones.add(mod(r + 2)); if (x.sid === 'alt') { tones.add(mod(r + 3)); tones.add(mod(r + 8)); }
       let y = s0 > 70 ? stepIn(s0 - 12, 1, tones) : s0; ps.push(y);
       while (ps.length < Math.min(4, N)) { y = stepIn(y, 1, tones); ps.push(y); }
-      const top = ps.slice(); while (ps.length < N) { y = stepIn(y, -1, sc); ps.push(y); }
+      const top = ps.slice();
+      for (let k = 0; ps.length < N; k++) { y = k % 2 ? stepIn(y, 1, sc) : stepIn(stepIn(y, -1, sc), -1, sc); if (y < SLO) y = stepIn(y + 12, -1, sc); ps.push(y); }
       return {ev:E8(ps), tech:{id, txt:`アルペジオ：${top.map(m => degOf(m, x.c)).join('–')}（${cn} を${degOf(top[0], x.c) === 'R' ? 'ルート' : degOf(top[0], x.c) + '度'}から積み上げる）`}};
     }
     case 'digital': {
@@ -2725,7 +2794,8 @@ function devBody(id, x, L, start) {
     case 'alt': {
       const set = pcsAt(r, [0, 1, 3, 4, 6, 8, 10]);
       let y = nearSet(pcsAt(r, [3, 8]), SP.last + 2); if (y - N < SLO) y += 12; if (y > SHI) y -= 12;
-      ps.push(y); while (ps.length < N) { y = stepIn(y, -1, set); ps.push(y); }
+      ps.push(y); let run = 0;
+      while (ps.length < N) { if (run >= 4) { y = nearSet(pcsAt(r, [3, 8]), y + 7); run = 0; } else { y = stepIn(y, -1, set); run++; } if (y > SHI) y -= 12; ps.push(y); }
       return {ev:E8(ps), tech:{id, txt:`オルタード・スケール：${cn} の ♭9・♯9・♯11・♭13 を通る`}};
     }
     case 'dim': {
@@ -2759,9 +2829,10 @@ function devBody(id, x, L, start) {
         SP.outT = 4;
         return {ev:E8(ps), tech:{id, txt:`サイドスリップ：${TH.spell(pr + 1, S.key)} に半音ずらして（アウト）→ ${TH.spell(pr, S.key)} に戻る（イン）`}};
       }
+      const PATS = [[0, 1, 2, 3], [0, 2, 1, 3], [0, 1, 3, 2], [0, 2, 3, 1], [1, 0, 2, 3], [0, 3, 2, 1]];
       for (let g = 0; ps.length < N; g++) {
-        const st = down ? Math.min(arr.length - 1, i - g) : Math.max(0, i + g);
-        for (let k = 0; k < 4 && ps.length < N; k++) { const ix = down ? st - k : st + k; ps.push(arr[Math.max(0, Math.min(arr.length - 1, ix))]); }
+        const pat = PATS[Math.floor(Math.random() * PATS.length)], st = down ? Math.max(3, i - g) : Math.min(arr.length - 4, i + g);
+        for (const o of pat) { if (ps.length >= N) break; const ix = down ? st - o : st + o; ps.push(arr[Math.max(0, Math.min(arr.length - 1, ix))]); }
       }
       const degs = [...set].map(pc => ({pc, d:mod(pc - r)})).sort((a, b) => a.d - b.d).map(o => degOf(o.pc, x.c)).join('・');
       return {ev:E8(ps), tech:{id, txt:`ペンタトニックの重ね：${TH.spell(pr, S.key)}${mm === 'm' ? 'マイナー' : 'メジャー'}・ペンタ（${cn} の ${degs}）`}};
@@ -2788,10 +2859,14 @@ function devBody(id, x, L, start) {
     }
     case 'double': {
       const set = bebopSet(x); let y = s0; const seq = [y];
-      while (seq.length < 8) { const z = stepIn(y, -1, set); y = z < SLO ? stepIn(y, 1, ct) : z; seq.push(y); }
+      while (seq.length < 8) {   // 4つ下りたら和音の音で跳ね上がって、もう一度下りる（音階をなぞるだけにしない）
+        if (seq.length === 4) y = stepIn(stepIn(y, 1, ct), 1, ct); else { const z = stepIn(y, -1, set); y = z < SLO ? stepIn(y, 1, ct) : z; }
+        if (y > SHI) y = stepIn(y - 12, 1, ct);
+        seq.push(y);
+      }
       const ev = E8(seq, 0, .25);
-      let b = 2; while (b < L - .01) { y = stepIn(y, -1, sc); if (y < SLO) y = stepIn(y + 12, -1, sc); ev.push({b, d:.5, m:y}); b += .5; }
-      return {ev, tech:{id, txt:`倍テン：16分音符で ${cn} を一気に駆け下りる`}};
+      let b = 2, k = 0; while (b < L - .01) { y = k++ % 2 ? stepIn(y, 1, sc) : stepIn(stepIn(y, -1, sc), -1, sc); if (y < SLO) y = stepIn(y + 12, -1, sc); ev.push({b, d:.5, m:y}); b += .5; }
+      return {ev, tech:{id, txt:`倍テン：16分音符で ${cn} を駆け下り、途中で跳ね上げてもう一度`}};
     }
     case 'squartal': {
       const arr = []; for (let m = SLO; m <= SHI; m++) if (sc.has(mod(m))) arr.push(m);
@@ -2806,7 +2881,7 @@ function devBody(id, x, L, start) {
 }
 function connector(tgt, last, xn, force) {
   const set = xn.si.sc, r = Math.random(), up = stepIn(tgt, 1, set), dn = stepIn(tgt, -1, set);
-  const encl = force === 'encl' || (force !== 'chrom' && r < (S.style === 'pop' ? .2 : .48));
+  const encl = force === 'encl' || (force !== 'chrom' && r < (S.style === 'pop' ? .2 : .4));
   if (encl) {
     const v = Math.random();
     if (v < .45) return {len:1, ps:[up, tgt - 1], tech:{id:'encl', txt:`エンクロージャー：${nn(up)}–${nn(tgt - 1)} で ${nn(tgt)}（${nmx(xn.c)} の ${degOf(tgt, xn.c)}）をはさむ`}};
@@ -2869,7 +2944,8 @@ function soloBarPro(tick0) {
     if (ending && lastSpan) {
       const fb = Math.max(a, Math.min(sp.b1 - 1, n - 2)), body = fb - a;
       if (body >= 1) {
-        const dv = pickDev(x, body), res = devBody(dv, x, body, SP.target);
+        x.a0 = a; const dv = pickDev(x, body), res = devBody(dv, x, body, SP.target);
+        if (SHAPE.has(dv) && !(DM.cur && DM.cur.solo)) res.ev = shapeEv(res.ev, x, body);
         res.ev.forEach((e, i) => { if (e.b < body - 1e-6) put(a + e.b, Math.min(e.d, body - e.b), e.m, e.ex, i === 0 ? res.tech : null); });
         SP.prev = dv; if (res.ev.length) SP.last = res.ev[res.ev.length - 1].m;
       }
@@ -2882,14 +2958,17 @@ function soloBarPro(tick0) {
     }
     let conn = null, tgt = null;
     const fc = force === 'encl' || force === 'chrom' ? force : null;
-    if (chg && xn && L >= 1.5 && (fc || Math.random() < (L <= 2.01 ? .45 : .85))) {
+    if (chg && xn && L >= 1.5 && (fc || Math.random() < (L <= 2.01 ? .3 : .55))) {
       tgt = chooseTarget(xn, SP.last); conn = connector(tgt, SP.last, xn, fc);
       if (conn.len > L - 1) conn = L >= 1.5 && fc !== 'encl' ? connector(tgt, SP.last, xn, 'chrom') : null;
       if (!conn) tgt = null;
     }
     const bodyL = L - (conn ? conn.len : 0);
     if (bodyL > .01) {
+      x.a0 = a;
       const dv = pickDev(x, bodyL), res = devBody(dv, x, bodyL, first ? SP.target : null);
+      if (SHAPE.has(dv) && !(DM.cur && DM.cur.solo)) res.ev = shapeEv(res.ev, x, bodyL);
+      if (OUTSIDE.has(dv)) res.ev.forEach(e => { e.ex = Object.assign({}, e.ex, {out:1}); });
       res.ev.forEach((e, i) => { if (e.b < bodyL - 1e-6) put(a + e.b, Math.min(e.d, bodyL - e.b), e.m, e.ex, i === 0 ? res.tech : null); });
       if (res.ev.length) SP.last = res.ev[res.ev.length - 1].m;
       if (SP.first && !recorded && SP.role === 'call' && res.ev.length >= 3) {
@@ -2899,13 +2978,13 @@ function soloBarPro(tick0) {
       }
       SP.prev = dv;
     }
-    if (conn) { conn.ps.forEach((m, i) => put(sp.b1 - conn.len + i * .5, .5, m, null, i === 0 ? conn.tech : null)); SP.last = conn.ps[conn.ps.length - 1]; SP.target = tgt; }
+    if (conn) { conn.ps.forEach((m, i) => put(sp.b1 - conn.len + i * .5, .5, m, {cn:1}, i === 0 ? conn.tech : null)); SP.last = conn.ps[conn.ps.length - 1]; SP.target = tgt; }
     else SP.target = null;
     pos = sp.b1; first = false;
   }
   SP.first = false;
   if (!force) SP.left--;
-  if (ending) SP.rest = Math.random() < [.8, .5, .22][S.solo.dens] ? 1 : 0;
+  if (ending) SP.rest = Math.random() < [.85, .6, .3][S.solo.dens] ? 1 : 0;
   writeSolo(tick0, evs, true);
 }
 // 表現：フレーズの山・アクセント・ゴーストノート・スクープ・ビブラート、スウィングの跳ね具合はテンポで変える
@@ -2916,6 +2995,14 @@ function writeSolo(tick0, evs, phrase) {
   for (let k = 1; k < evs.length; k++) {   // 同じ音の連打はなるべく避けて、となりのスケール音へ
     const e = evs[k];
     if (e.m === evs[k - 1].m && e.d <= .5 && !(e.ex && e.ex.end)) { const seg = segAt((tick0 / TPB + e.b) % P.hl.total), nx = evs[k + 1]; e.m = stepIn(e.m, nx && nx.m > e.m ? 1 : -1, scaleInfo(seg).sc); }
+  }
+  const n = bpb();
+  for (const e of evs) {
+    const ab = (tick0 / TPB + e.b) % P.hl.total, onStrong = Math.abs(e.b % 1) < 1e-6 && Math.round(e.b) % (n === 3 ? 3 : 2) === 0;
+    if (!onStrong || (e.ex && (e.ex.out || e.ex.cn))) continue;
+    const si = scaleInfo(segAt(ab)), pc = mod(e.m);
+    if (si.ct.has(pc) || (si.sc.has(pc) && !si.avoid.has(pc))) continue;
+    e.m = nearSet(si.ct, e.m);
   }
   const hi = Math.max(...evs.map(e => e.m), 0);
   evs.forEach((e, k) => {
@@ -2971,7 +3058,7 @@ function demoEnd() {
   Object.assign(S, DM.saved); DM.cur = null; DM.saved = null;
   renderGuideBtns(); const g = $('#gdNow'); if (g) g.textContent = '';
 }
-if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) window.__pro = {rebuildTL, SP, S, P, TH, scaleInfo, segAt, segNextReal, planHarm, devBody, spanCtx, DEVS, TECH, DM, demoStart, soloBarPro};
+if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) window.__pro = {A, SMP, smpNote, loadInst, pluck, ac, soloBar, rebuildTL, SP, S, P, TH, scaleInfo, segAt, segNextReal, planHarm, devBody, spanCtx, DEVS, TECH, DM, demoStart, soloBarPro};
 /* ===== 解説ページ：アドリブの技・表現・伴奏の技・コード進行の技（お手本つき） ===== */
 const GD = {open:false, tab:'solo'};
 const S1 = (prog, solo, o = {}) => ({a:{prog, solo, cmp:'easy', bpm:o.bpm || 132, rid:o.rid || 'swing', key:o.key}});
@@ -3213,7 +3300,10 @@ async function micOpen() {
   }
   let msr = 0; try { msr = stream.getAudioTracks()[0].getSettings().sampleRate || 0; } catch (e) {}
   const ctx = ac();
-  if (ctx && ((msr && Math.abs(msr - ctx.sampleRate) > 1) || (!msr && IS_IOS))) { if (P.ui) stop(); rebuildAudio(msr ? {sampleRate:msr} : null); }
+  // iPhone：周波数は指定せず、マイクを開いた後の端末の設定で作り直す（指定すると音程がずれることがある）／その他：マイクと周波数をそろえる
+  A.stale = false;
+  if (ctx && IS_IOS) { if (P.ui) stop(); rebuildAudio(null); }
+  else if (ctx && msr && Math.abs(msr - ctx.sampleRate) > 1) { if (P.ui) stop(); rebuildAudio({sampleRate:msr}); }
   return stream;
 }
 function estLat(stream) {
@@ -3299,8 +3389,10 @@ function recCleanup() {
   if (REC.cap) { REC.cap.on = false; capClose(REC.cap); REC.cap = null; }
   REC.stems.forEach(stemClose); REC.stems = [];
   if (REC.pu && REC.pu.g) { REC.pu.g.stop(); REC.pu.g = null; }
+  const hadMic = !!REC.stream;
   if (REC.stream) REC.stream.getTracks().forEach(t => t.stop());
   REC.stream = null;
+  if (hadMic && IS_IOS) { A.stale = true; setTimeout(() => { if (!REC.on && !REC.pv) freshCtx(); }, 350); }
   A.sess = 'playback'; try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
   REC.on = false; REC.mode = ''; P.endAt = null;
   if (REC.loopWas != null) { S.loop = REC.loopWas; REC.loopWas = null; }
@@ -3421,8 +3513,9 @@ async function mixdown(tk) {
 /* --- 試聴 --- */
 function pvStop() { if (REC.pv) { REC.pvPos = Math.min(REC.take ? REC.take.dur() : 0, REC.pvPos); REC.pv.g.stop(); REC.pv = null; } for (const id of ['#rvPlay', '#puPv']) { const b = $(id); if (b) b.innerHTML = id === '#puPv' ? `${ICON.play}区間を試聴` : ICON.play; } }
 function pvPlay(from, to) {
+  pvStop(); freshCtx();
   const tk = REC.take, ctx = ac(); if (!tk || !ctx) return;
-  pvStop(); if (ctx.state !== 'running') ctx.resume();
+  if (ctx.state !== 'running') ctx.resume();
   if (from >= tk.dur() - .05) from = 0;
   const end = Math.min(tk.dur(), to || Infinity);
   const g = mixGraph(ctx, ctx.destination, tk, tk.o), t = ctx.currentTime + .05;
@@ -4238,7 +4331,7 @@ function playFrom(i) {
 function renderAdl() {
   const ch = (opts, cur, attr) => opts.map(([v, l]) => `<button ${attr}="${v}" aria-pressed="${cur === v}">${l}</button>`).join('');
   document.querySelectorAll('#adLv button').forEach(b => b.setAttribute('aria-pressed', b.dataset.lv === S.solo.lv));
-  $('#adLvNote').textContent = S.solo.lv === 'pro' ? '高度：エンクロージャー、ビバップ・スケール、アッパーストラクチャー、裏コードのラインなどジャズの語法と、スクープやゴーストノートなどの表現で弾きます。使った技は画面に表示されます。' : 'かんたん：スケールの音でなめらかに歌う、シンプルなアドリブです。';
+  $('#adLvNote').textContent = S.solo.lv === 'pro' ? '高度：歌うようなフレーズを軸に、エンクロージャー、ビバップ・スケール、アッパーストラクチャー、裏コードのラインなどジャズの語法と、スクープやゴーストノートなどの表現を織り交ぜて弾きます。使った技は画面に表示されます。' : 'かんたん：スケールの音でなめらかに歌う、シンプルなアドリブです。';
   $('#adMode').innerHTML = ch([['scale', 'スケール画面のとき'], ['always', 'いつも'], ['off', '鳴らさない']], S.solo.mode, 'data-sm');
   $('#adTone').innerHTML = ch([['guitar', 'ギター'], ['vibes', 'ビブラフォン']], S.solo.tone, 'data-st');
   $('#adDens').innerHTML = ch([[0, '少なめ'], [1, 'ふつう'], [2, '多め']], S.solo.dens, 'data-sd');
