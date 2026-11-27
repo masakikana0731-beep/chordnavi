@@ -125,7 +125,18 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
 .notes{display:flex;gap:3px;margin:0 0 4px}
 .nt{flex:1;border:1px solid var(--line);border-radius:6px;text-align:center;line-height:1.1;padding:2px 0;font-size:9px;color:var(--mute);background:var(--card)}
 .nt b{display:block;font:700 13px Kalam,cursive;color:var(--ink)}
-.nt.ct{border-color:var(--ink)}.nt.rt{border-color:var(--red)}.nt.rt b{color:var(--red)}.nt.av{border-style:dashed;opacity:.6}
+:root{--fr:#ff6a4d;--f3:#ffc94a;--f5:#3fd3c6;--f7:#b59cff}
+.nt.f-r{--fc:var(--fr)}.nt.f-3{--fc:var(--f3)}.nt.f-5{--fc:var(--f5)}.nt.f-7{--fc:var(--f7)}
+.nt.f-r,.nt.f-3,.nt.f-5,.nt.f-7{border:1.5px solid var(--fc);color:var(--fc)}
+.nt.f-r b,.nt.f-3 b,.nt.f-5 b,.nt.f-7 b{color:var(--fc)}
+.nt.ct.f-r,.nt.ct.f-3,.nt.ct.f-5,.nt.ct.f-7{background:var(--fc);color:#1b1208}
+.nt.ct.f-3 b,.nt.ct.f-5 b,.nt.ct.f-7 b{color:#1b1208}.nt.ct.f-r b,.nt.ct.f-r{color:#fff}
+.nt.f-t{opacity:.85}.nt.av{border-style:dashed;opacity:.5}
+.leg{display:flex;flex-wrap:wrap;align-items:center;gap:2px 9px;font-size:10px;color:var(--mute);margin:-2px 0 6px;line-height:1.3}
+.leg span{display:inline-flex;align-items:center;gap:3px;white-space:nowrap}
+.leg i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.leg .f-r{background:var(--fr)}.leg .f-3{background:var(--f3)}.leg .f-5{background:var(--f5)}.leg .f-7{background:var(--f7)}.leg .f-t{border:1.5px solid #cdbfa8}
+.leg .lx{margin-left:auto}.leg .lx::before{content:"｜";color:var(--line)}
 .fb{display:block;width:100%;height:auto;border-radius:8px;margin-bottom:6px}
 #fbSvg g{transform-box:fill-box;transform-origin:center;transition:transform .08s}
 #fbSvg g.hit{transform:scale(1.5)}#fbSvg g.hit circle{stroke:#ffd166;stroke-width:3}
@@ -356,9 +367,39 @@ body:has(.bs.on) .toast{bottom:auto;top:calc(12px + env(safe-area-inset-top))}
 @media (max-width:380px){.dk b{font-size:11px;letter-spacing:-.03em}.dk{padding:0 4px}.play{width:46px;height:46px}.seg button{padding:0 7px}.hd{gap:4px;padding:6px 8px}.keyb{padding:0 7px}.tempo .pm{width:23px}.ib{min-width:36px}}
 @media (max-height:680px){.cd{height:54px}.cd .cn .r{font-size:18px}.cd .cr{display:none}.bars{max-height:clamp(100px,19vh,200px)}.tb{min-height:46px;padding:3px 10px}}
 @media (min-height:800px){.cd{height:72px}.cd .cn .r{font-size:23px}.bars{max-height:clamp(108px,24vh,240px)}}
+/* wallpaper (stored only on this device) */
+#wall{position:fixed;inset:-24px;z-index:0;background:center/cover no-repeat;pointer-events:none;display:none}
+#wall::after{content:"";position:absolute;inset:0;background:rgba(5,9,16,var(--wdim,.5))}
+body.haswall #wall{display:block}
+body.haswall .app{position:relative;z-index:1}
+body.haswall .tb,body.haswall .pan{background:rgba(11,17,29,var(--wpan,.38));-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+body.haswall .segbar .seg,body.haswall .hd .seg{background:rgba(11,17,29,.7)}
+body.haswall .stage{background:rgba(5,9,16,.55)}
+.wtiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:4px 0 8px}
+.wtiles button{position:relative;aspect-ratio:3/4;border:1.5px solid var(--line);border-radius:10px;background:var(--card) center/cover no-repeat;font-size:10px;font-weight:700;color:#fff;display:flex;align-items:flex-end;justify-content:center;padding:0 0 5px;text-shadow:0 1px 3px #000;overflow:hidden}
+.wtiles button[aria-pressed=true]{border-color:var(--red);box-shadow:0 0 0 2px var(--red)}
+.wtiles .wadd{color:var(--ink);text-shadow:none;align-items:center;flex-direction:column;gap:4px;justify-content:center;padding:0}
+.wtiles .wadd svg{width:22px;height:22px}
+.wfile{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+/* help */
+.help .gd-body h3{margin:0 0 4px;font-size:15px}
+.hc{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:11px 12px;margin:0 0 9px;scroll-margin-top:8px}
+.hc p,.hc li{font-size:12.5px;line-height:1.7;margin:3px 0}
+.hc ol,.hc ul{margin:4px 0;padding-left:20px}
+.hc b{color:var(--pearl)}
+.hc .hk{display:inline-block;border:1px solid var(--line);background:var(--paper);border-radius:6px;padding:0 5px;font-size:11.5px;font-weight:700;color:var(--ink);line-height:1.6}
+.hc .hgo{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
+.htoc{display:flex;gap:5px;overflow-x:auto;padding:0 10px 6px;max-width:760px;width:100%;margin:0 auto;scrollbar-width:none;flex:none}
+.htoc::-webkit-scrollbar{display:none}
+.htoc button{flex:none;height:32px;border:1px solid var(--line);background:var(--card);border-radius:16px;padding:0 11px;font-size:11.5px;font-weight:700}
+.hc .leg{margin:6px 0 2px;font-size:11px}.hc .leg .lx{flex:none}
+.hsteps{counter-reset:s;list-style:none;padding:0!important}
+.hsteps li{counter-increment:s;position:relative;padding-left:30px;margin:6px 0}
+.hsteps li::before{content:counter(s);position:absolute;left:0;top:1px;width:22px;height:22px;border-radius:50%;background:var(--red);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
 </style>
 </head>
 <body>
+<div id="wall" aria-hidden="true"></div>
 <div class="app">
 <header class="hd">
   <button class="ib" id="libBtn" aria-label="スタンダード曲集"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19.5V5a2 2 0 0 1 2-2h14v15H6a2 2 0 0 0-2 2 2 2 0 0 0 2 2h14"/><path d="M9 7h7M9 11h5"/></svg><span>曲集</span></button>
@@ -390,6 +431,11 @@ body:has(.bs.on) .toast{bottom:auto;top:calc(12px + env(safe-area-inset-top))}
   <div class="gd-hd"><button class="ib" id="gdBack" aria-label="戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button><h2>音楽の技・解説</h2><span class="gd-now" id="gdNow" aria-live="polite"></span></div>
   <div class="seg gd-tabs" id="gdTabs" role="tablist"><button data-t="solo">アドリブ</button><button data-t="expr">表現</button><button data-t="comp">伴奏</button><button data-t="prog">コード進行</button><button data-t="log">鳴った技</button></div>
   <div class="gd-body" id="gdBody"></div>
+</section>
+<section class="guide help" id="help" hidden aria-label="使い方">
+  <div class="gd-hd"><button class="ib" id="hpBack" aria-label="戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button><h2>使い方</h2></div>
+  <nav class="htoc" id="hpToc" aria-label="目次"></nav>
+  <div class="gd-body" id="hpBody"></div>
 </section>
 <section class="stage" id="stage" hidden aria-label="演奏モード">
   <div class="st-hd"><span id="stInfo"></span><button class="x" id="stClose" aria-label="閉じる">×</button></div>
@@ -430,6 +476,18 @@ body:has(.bs.on) .toast{bottom:auto;top:calc(12px + env(safe-area-inset-top))}
   <div class="grab"></div>
   <div class="bs-hd"><h4 id="recH">スキャット録音</h4><button class="x" data-close aria-label="閉じる">×</button></div>
   <div id="recBody"></div>
+</section>
+<section class="bs" id="bsWall" aria-label="壁紙">
+  <div class="grab"></div>
+  <div class="bs-hd"><h4>壁紙</h4><button class="x" data-close aria-label="閉じる">×</button></div>
+  <div class="wtiles" id="wTiles"></div>
+  <input type="file" accept="image/*" id="wFile" class="wfile" tabindex="-1" aria-hidden="true">
+  <div class="lbl">暗さ（文字を読みやすく）</div>
+  <div class="vrow"><span id="wDimV">50</span><input type="range" id="wDim" min="0" max=".85" step=".01" aria-label="壁紙の暗さ"></div>
+  <div class="lbl">ぼかし</div>
+  <div class="vrow"><span id="wBlurV">0</span><input type="range" id="wBlur" min="0" max="16" step="1" aria-label="壁紙のぼかし"></div>
+  <p class="note">壁紙は<b>このスマホのこのアプリ（ブラウザ）の中だけ</b>に保存されます。写真がGitHubやほかの人に送られることはなく、同じアドレスを開いた人には見えません。ブラウザのデータを消すと壁紙も消えます。</p>
+  <button class="btn ghost wide" id="wDel" hidden>選んだ写真を削除</button>
 </section>
 <section class="bs" id="bsKey" aria-label="キー">
   <div class="grab"></div>
@@ -1393,6 +1451,8 @@ const ICON = {
   sliders: svgI('<path d="M4 21V14M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/>'),
   book: svgI('<path d="M4 19.5V5a2 2 0 0 1 2-2h14v15H6a2 2 0 0 0-2 2 2 2 0 0 0 2 2h14"/>'),
   bulb: svgI('<path d="M9 18h6M10 21.5h4M12 2.5a6.5 6.5 0 0 0-3.8 11.8c.5.4.8 1 .8 1.6V16h6v-.1c0-.6.3-1.2.8-1.6A6.5 6.5 0 0 0 12 2.5z"/>'),
+  help: svgI('<circle cx="12" cy="12" r="9.5"/><path d="M9.3 9.2a2.8 2.8 0 0 1 5.4 1c0 1.9-2.7 2.4-2.7 4.1M12 17.6v.2"/>'),
+  image: svgI('<rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/>'),
   stage: svgI('<path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/>'),
 };
 
@@ -1517,6 +1577,17 @@ function spellDeg(ch, pc, label) {
   return TH.spell(pc, S.key);
 }
 const DEG = {0:'R',1:'♭2',2:'2',3:'♭3',4:'3',5:'4',6:'♭5',7:'5',8:'♭6',9:'6',10:'♭7',11:'7'};
+// 度数の色分け：R・3・5・7（コードの骨組み）を色で、テンションは控えめに
+const FAMC = {r:'#ff6a4d', 3:'#ffc94a', 5:'#3fd3c6', 7:'#b59cff'};
+function famOf(lb, ct) {
+  if (lb === 'R') return 'r';
+  const d = +((String(lb).match(/\d+/) || [0])[0]);
+  if (d === 3 || d === 5 || d === 7) return String(d);
+  if (ct && d === 6) return '7';
+  if (ct && (d === 4 || d === 2)) return '3';
+  return 't';
+}
+const FAM_LEG = '<div class="leg" aria-label="色の見方"><span><i class="f-r"></i>R</span><span><i class="f-3"></i>3度</span><span><i class="f-5"></i>5度</span><span><i class="f-7"></i>7度</span><span><i class="f-t"></i>テンション</span><span class="lx">塗り＝コードの音・枠＝スケールの音</span></div>';
 function scaleNotes(row, ch) {
   const sc = TH.SC[row.id], chordRel = row.root === ch.root;
   const cpcs = TH.pcs(ch), av = chordRel ? TH.scaleAvoid(row.id, row.root, ch) : [];
@@ -1524,7 +1595,8 @@ function scaleNotes(row, ch) {
     const pc = mod(row.root + iv);
     const lb = chordRel ? TH.ivLabel(ch.q, iv) : (iv === 6 && row.id === 'lyd' ? '♯4' : DEG[iv]);
     const base = chordRel ? ch : {root:row.root, q:'maj', pref:null};
-    return {iv, pc, lb, name:spellDeg(base, pc, lb), rt:iv === 0, ct:cpcs.includes(pc), av:av.includes(iv)};
+    const ct = cpcs.includes(pc);
+    return {iv, pc, lb, name:spellDeg(base, pc, lb), rt:iv === 0, ct, av:av.includes(iv), fam:famOf(lb, ct)};
   });
 }
 
@@ -1684,8 +1756,9 @@ function fretboard(notes) {
       const n = map.get(mod(TH.TUNE[st] + f));
       if (!n) continue;
       const x = fx(f), t = S.fbNames ? n.name : n.lb;
-      const fill = n.rt ? '#e8492a' : n.ct ? '#f3eadc' : '#4a2c1d', tc = n.rt ? '#fff' : n.ct ? '#2a180f' : '#f3eadc';
-      s += `<g data-p="${st}-${f}" opacity="${n.av ? .5 : 1}"><circle cx="${x}" cy="${y}" r="7" fill="${fill}" stroke="${n.rt ? '#e8492a' : '#f3eadc'}" stroke-width="1.1"${n.av ? ' stroke-dasharray="2 1.5"' : ''}/><text x="${x}" y="${y + 3}" text-anchor="middle" font-size="${t.length > 2 ? 6.5 : 8}" font-weight="700" fill="${tc}">${esc(t)}</text></g>`;
+      const col = FAMC[n.fam], full = col && (n.ct || n.rt), r = col ? 7.4 : 6;
+      const fill = full ? col : '#3a2216', stroke = col || '#cdbfa8', tc = full ? (n.fam === 'r' ? '#fff' : '#1b1208') : col || '#e9dcc6';
+      s += `<g data-p="${st}-${f}" opacity="${n.av ? .45 : 1}"><circle cx="${x}" cy="${y}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="${col && !full ? 2 : 1}"${n.av ? ' stroke-dasharray="2 1.5"' : ''}/><text x="${x}" y="${y + 3}" text-anchor="middle" font-size="${t.length > 2 ? (col ? 6.5 : 5.8) : col ? 8 : 7}" font-weight="700" fill="${tc}">${esc(t)}</text></g>`;
     }
   }
   return s + '</svg>';
@@ -1707,8 +1780,8 @@ function renderScaleP() {
   return `<div class="sch"><div class="t"><b>${esc(vName)}</b><small>${esc(status)}${view.why ? ' ・ ' + esc(view.why) : ''}</small></div>
       <button class="btn ghost" data-scplay aria-label="音階を鳴らす">${ICON.play}音階</button>
       <div class="seg"><button data-fb="deg" aria-pressed="${!S.fbNames}">度数</button><button data-fb="name" aria-pressed="${S.fbNames}">音名</button></div></div>
-    <div class="notes">${notes.map(n => `<span class="nt${n.rt ? ' rt' : n.ct ? ' ct' : ''}${n.av ? ' av' : ''}"><b>${esc(n.name)}</b>${esc(n.lb)}</span>`).join('')}</div>
-    ${fretboard(notes)}
+    <div class="notes">${notes.map(n => `<span class="nt f-${n.fam}${n.ct || n.rt ? ' ct' : ''}${n.av ? ' av' : ''}"><b>${esc(n.name)}</b>${esc(n.lb)}</span>`).join('')}</div>
+    ${fretboard(notes)}${FAM_LEG}
     <div class="scs">${rows.map((r, k) => chip(r, k)).join('')}${keys.length ? `<span class="lb">キー全体（Key of ${esc(TH.keyName(S.key))}）</span>` + keys.map((r, k) => chip(r, rows.length + k)).join('') : ''}
       ${i >= 0 && ch.scAuto === false ? `<button data-scauto>${ICON.reset.replace('<svg', '<svg width="12" height="12" style="vertical-align:-2px"')} おすすめに戻す</button>` : ''}</div>`;
 }
@@ -1728,11 +1801,11 @@ function diagram(v) {
   fr.forEach((f, st) => {
     const x = x0 + st * sx;
     if (f < 0) { s += `<text x="${x}" y="${y0 - 4}" text-anchor="middle" font-size="10" style="fill:var(--mute)">×</text>`; return; }
-    const lb = v.lbl[li++], root = lb === 'R';
-    s += `<text x="${x}" y="${H - 4}" text-anchor="middle" font-size="${lb.length > 2 ? 8 : 9.5}" font-weight="700" style="fill:${root ? 'var(--red)' : 'var(--mute)'}">${esc(lb)}</text>`;
-    if (f === 0) { s += `<circle cx="${x}" cy="${y0 - 8}" r="4.2" fill="none" style="stroke:${root ? 'var(--red)' : 'var(--ink)'}" stroke-width="1.5"/>`; return; }
+    const lb = v.lbl[li++], fm = famOf(lb, true), col = FAMC[fm] || 'var(--ink)', root = fm === 'r';
+    s += `<text x="${x}" y="${H - 4}" text-anchor="middle" font-size="${lb.length > 2 ? 8 : 9.5}" font-weight="700" style="fill:${FAMC[fm] || 'var(--mute)'}">${esc(lb)}</text>`;
+    if (f === 0) { s += `<circle cx="${x}" cy="${y0 - 8}" r="4.2" fill="none" style="stroke:${col}" stroke-width="1.8"/>`; return; }
     const y = y0 + (f - start + .5) * fy;
-    s += `<circle cx="${x}" cy="${y}" r="7.3" style="fill:${root ? 'var(--red)' : 'var(--ink)'}"/><text x="${x}" y="${y + 3.2}" text-anchor="middle" font-size="${lb.length > 2 ? 6.8 : 8.5}" font-weight="700" style="fill:${root ? '#fff' : 'var(--paper)'}">${esc(lb)}</text>`;
+    s += `<circle cx="${x}" cy="${y}" r="7.3" style="fill:${col}"/><text x="${x}" y="${y + 3.2}" text-anchor="middle" font-size="${lb.length > 2 ? 6.8 : 8.5}" font-weight="700" style="fill:${root ? '#fff' : '#141a26'}">${esc(lb)}</text>`;
   });
   return s + '</svg>';
 }
@@ -3194,6 +3267,177 @@ $('#gdBody').addEventListener('click', e => {
   const cl = e.target.closest('[data-clg]'); if (cl) { setCmp(cl.dataset.clg); return; }
 });
 $('#techTick').addEventListener('click', () => openGuide($('#techTick').dataset.id || 'solo'));
+/* ---------- wallpaper: kept only in this browser on this device (IndexedDB → localStorage fallback) ---------- */
+const WP = {k:'chordnavi-wall', st:{id:'', dim:.42, blur:0}, img:null};
+const WPRE = [
+  {id:'night', n:'夜空', css:'radial-gradient(circle at 20% 15%, #fff 0 1px, transparent 1.6px) 0 0/90px 90px, radial-gradient(circle at 65% 55%, #ffffffaa 0 1px, transparent 1.6px) 0 0/130px 130px, radial-gradient(ellipse at 70% 0%, #5468c4 0%, #1e2a63 45%, #070a18 100%)'},
+  {id:'dusk', n:'夕焼け', css:'linear-gradient(170deg, #ff9a6b 0%, #c4497a 35%, #3a1f5c 66%, #0b1020 100%)'},
+  {id:'wood', n:'木目', css:'repeating-linear-gradient(95deg, #00000024 0 2px, transparent 2px 9px), repeating-linear-gradient(88deg, #ffffff0e 0 1px, transparent 1px 23px), linear-gradient(160deg, #8a5532, #4a2a17 60%, #2a170c)'},
+  {id:'forest', n:'森', css:'radial-gradient(ellipse at 30% 8%, #9bd37d66, transparent 52%), linear-gradient(180deg, #1f4d3a, #0f2a22 55%, #06120e)'},
+  {id:'neon', n:'ネオン', css:'radial-gradient(circle at 15% 85%, #ff3d9a99, transparent 42%), radial-gradient(circle at 85% 20%, #2ee6ff88, transparent 45%), linear-gradient(135deg, #140b2e, #070a1a)'},
+  {id:'stage', n:'ステージ', css:'radial-gradient(ellipse at 50% -10%, #ffe3a8dd 0%, #ff9a4a55 26%, transparent 56%), linear-gradient(180deg, #2a1010, #0a0505)'},
+];
+const wdb = () => new Promise((res, rej) => {
+  try { const r = indexedDB.open('chordnavi', 1); r.onupgradeneeded = () => r.result.createObjectStore('kv'); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }
+  catch (e) { rej(e); }
+});
+async function wGet() {
+  try { const db = await wdb(); const v = await new Promise((res, rej) => { const q = db.transaction('kv').objectStore('kv').get('wall'); q.onsuccess = () => res(q.result || null); q.onerror = () => rej(q.error); }); if (v) return v; } catch (e) {}
+  try { return localStorage.getItem(WP.k + '-img'); } catch (e) { return null; }
+}
+async function wPut(v) {
+  try {
+    const db = await wdb();
+    await new Promise((res, rej) => { const tx = db.transaction('kv', 'readwrite'), os = tx.objectStore('kv'); v == null ? os.delete('wall') : os.put(v, 'wall'); tx.oncomplete = res; tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error); });
+    try { localStorage.removeItem(WP.k + '-img'); } catch (e) {}
+    return true;
+  } catch (e) {
+    try { v == null ? localStorage.removeItem(WP.k + '-img') : localStorage.setItem(WP.k + '-img', v); return true; } catch (x) { return false; }
+  }
+}
+function wSave() { try { localStorage.setItem(WP.k, JSON.stringify(WP.st)); } catch (e) {} }
+// 画面に合う大きさに縮めてJPEGに（大きな写真でも軽く保存できるように）
+function wResize(file) {
+  return new Promise((res, rej) => {
+    const u = URL.createObjectURL(file), im = new Image();
+    im.onload = () => {
+      const L = Math.min(2000, Math.max(1100, Math.round(Math.max(screen.width, screen.height) * Math.min(3, devicePixelRatio || 1))));
+      const k = Math.min(1, L / Math.max(im.naturalWidth, im.naturalHeight)), c = document.createElement('canvas');
+      c.width = Math.max(1, Math.round(im.naturalWidth * k)); c.height = Math.max(1, Math.round(im.naturalHeight * k));
+      const g = c.getContext('2d'); g.fillStyle = '#000'; g.fillRect(0, 0, c.width, c.height); g.drawImage(im, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(u); res(c.toDataURL('image/jpeg', .85));
+    };
+    im.onerror = () => { URL.revokeObjectURL(u); rej(new Error('img')); };
+    im.src = u;
+  });
+}
+function wApply() {
+  const el = $('#wall'), s = WP.st, pre = WPRE.find(p => p.id === s.id);
+  const css = s.id === 'photo' && WP.img ? `center/cover no-repeat url("${WP.img}")` : pre ? pre.css : '';
+  document.body.classList.toggle('haswall', !!css);
+  el.style.background = css;
+  el.style.setProperty('--wdim', s.dim);
+  el.style.filter = s.blur ? `blur(${s.blur}px)` : '';
+}
+function renderWall() {
+  const s = WP.st, tile = (id, label, style) => `<button data-w="${id}" aria-pressed="${s.id === id}" style="${style}">${label}</button>`;
+  $('#wTiles').innerHTML = tile('', 'なし', 'background:var(--bg)')
+    + `<button class="wadd" data-w="pick">${ICON.image}写真を選ぶ</button>`
+    + (WP.img ? tile('photo', '自分の写真', `background:center/cover no-repeat url('${WP.img}')`) : '')
+    + WPRE.map(p => tile(p.id, p.n, `background:${p.css}`)).join('');
+  $('#wDim').value = s.dim; $('#wDimV').textContent = Math.round(s.dim * 100);
+  $('#wBlur').value = s.blur; $('#wBlurV').textContent = s.blur;
+  $('#wDel').hidden = !WP.img;
+}
+function openWall() { renderWall(); bs('#bsWall'); }
+$('#wTiles').addEventListener('click', e => {
+  const b = e.target.closest('[data-w]'); if (!b) return;
+  if (b.dataset.w === 'pick') { $('#wFile').value = ''; $('#wFile').click(); return; }
+  WP.st.id = b.dataset.w; wSave(); wApply(); renderWall();
+});
+$('#wFile').addEventListener('change', async e => {
+  const f = e.target.files && e.target.files[0]; if (!f) return;
+  toast('写真を読み込んでいます…');
+  let d;
+  try { d = await wResize(f); } catch (x) { toast('この画像は読み込めませんでした（JPEGかPNGで試してください）'); return; }
+  const ok = await wPut(d);
+  WP.img = d; WP.st.id = 'photo'; if (WP.st.dim < .25) WP.st.dim = .42;
+  wSave(); wApply(); renderWall();
+  toast(ok ? '壁紙にしました（このスマホの中だけに保存）' : '壁紙にしました（保存できなかったので、閉じると元に戻ります）');
+});
+$('#wDim').addEventListener('input', e => { WP.st.dim = +e.target.value; $('#wDimV').textContent = Math.round(WP.st.dim * 100); wApply(); wSave(); });
+$('#wBlur').addEventListener('input', e => { WP.st.blur = +e.target.value; $('#wBlurV').textContent = WP.st.blur; wApply(); wSave(); });
+$('#wDel').addEventListener('click', async () => { await wPut(null); WP.img = null; if (WP.st.id === 'photo') WP.st.id = ''; wSave(); wApply(); renderWall(); toast('写真を削除しました'); });
+(async () => {
+  try { const v = JSON.parse(localStorage.getItem(WP.k) || 'null'); if (v) Object.assign(WP.st, v); } catch (e) {}
+  if (WP.st.id === 'photo') { WP.img = await wGet(); if (!WP.img) WP.st.id = ''; }
+  else WP.img = await wGet();
+  wApply();
+})();
+/* ---------- how-to page ---------- */
+const HK = s => `<span class="hk">${s}</span>`;
+const HGO = (k, l) => `<button class="btn ghost" data-hgo="${k}">${l}</button>`;
+const HELP = [
+  {id:'start', t:'はじめに（3ステップ）', h:`<ol class="hsteps">
+    <li><b>コードを入れる</b>：画面下の「次の候補」をタップすると譜面に入ります。長押しで試聴できます。${HK('曲集')}からスタンダード曲を読み込むこともできます。</li>
+    <li><b>再生する</b>：いちばん下の ▶ で、ギター・ベース・ドラムの伴奏が鳴ります。もう一度押すと止まります。</li>
+    <li><b>合わせて弾く・歌う</b>：${HK('スケール')}で使える音を見ながら合わせたり、● ボタンで声を録音したりできます。</li></ol>
+    <p>入れた進行や設定は、このスマホの中に自動で保存されます。</p>`, go:[['cand', '次の候補を見る'], ['lib', '曲集を開く']]},
+  {id:'screen', t:'画面の見方', h:`<ul>
+    <li><b>上の列</b>：${HK('曲集')} 曲を読み込む／${HK('Key')} キーの変更・推定・移調／${HK('ポップ・ジャズ')} 候補と伴奏の雰囲気／${HK('演奏')} 大きな文字の演奏画面／↶ 元に戻す／… メニュー</li>
+    <li><b>譜面</b>：入れたコードが並びます。タップで選ぶと音が鳴り、そのコードが編集の対象になります。</li>
+    <li><b>選んだコードの列</b>：‹ › で前後へ、${HK('−')}${HK('＋')}で長さ、▶| でそこから再生、ごみ箱で削除。</li>
+    <li><b>パネルの切り替え</b>：次の候補・入力・スケール・押さえ方。${HK('追従')}をONにすると、再生中のコードに画面がついていきます。</li>
+    <li><b>いちばん下</b>：再生／録音（●）／テンポ／伴奏／メロディ／アドリブ。</li></ul>`},
+  {id:'chord', t:'コードを入れる・直す', h:`<ul>
+    <li><b>次の候補</b>：今のコードの次に合うコードが、相性のよい順に並びます（数字は目安）。タップで追加、長押しで試聴。</li>
+    <li><b>途中に入れる</b>：譜面のコードをタップして選ぶと、その後ろに入ります。</li>
+    <li><b>入力</b>：音名と種類を選んで「追加」。選んだコードを変えるときは「置き換え」。</li>
+    <li><b>まとめて入力</b>：メニューの下の欄に「Dm7 G7 Cmaj7」のようにスペースで区切って入れます。</li>
+    <li><b>間違えたら</b>：↶（元に戻す）。全部消すのはメニューの「譜面をクリア」。</li></ul>`, go:[['input', '入力パネルへ'], ['menu', 'メニューを開く']]},
+  {id:'scale', t:'スケールと色の見方', h:`<p>選んだコードで使える音を、指板の上に表示します。<b>色はコードの骨組み（R・3・5・7）</b>を表しています。</p>
+    ${FAM_LEG}
+    <ul><li><b>塗りつぶしの丸</b>＝今のコードの音（コードトーン）。ここに着地すると、コードに合って聞こえます。まずは R・3度・7度をねらうのがおすすめ。</li>
+    <li><b>色の枠だけの丸</b>＝スケールの3度・5度・7度だけど、コードには入っていない音（例：C の3和音での 7度）。</li>
+    <li><b>小さい白枠の丸</b>＝テンション（9・11・13など）。色づけに使う音です。</li>
+    <li><b>点線</b>＝長く伸ばすとぶつかりやすい音。経過音として短く使います。</li></ul>
+    <p>${HK('度数')}${HK('音名')}で表示を切り替え。下のスケール名をタップするとそのコードに記録、長押しで試聴。赤い点がおすすめです。</p>`, go:[['scale', 'スケールを見る']]},
+  {id:'voicing', t:'押さえ方', h:`<ul>
+    <li>選んだコードの押さえ方を、指板の図で表示します。丸の色はスケールと同じです（R 赤・3度 黄・5度 水色・7度 紫）。</li>
+    <li>図をタップすると鳴ります。ピンのボタンで、伴奏でもその押さえ方を使うよう固定できます。</li></ul>`, go:[['voicing', '押さえ方を見る']]},
+  {id:'play', t:'再生・伴奏', h:`<ul>
+    <li><b>途中から再生</b>：譜面のコードを選んで ▶|（ここから再生）。</li>
+    <li><b>テンポ</b>：${HK('−')}${HK('＋')}、または数字を続けてタップすると、その速さに合わせます。</li>
+    <li><b>伴奏</b>：下の${HK('伴奏')}で、4ビート・ボサノバ・バラードなどのリズム、楽器ごとの音量、ループ、カウントイン、リアル音源を選べます。</li>
+    <li><b>演奏モード</b>：上の${HK('演奏')}で、今と次のコードを大きく表示。譜面台に置いて弾くとき向けです。</li>
+    <li><b>メロディ</b>：曲集の ♪ 印の曲では、メロディも鳴らせます。</li></ul>`, go:[['set', '伴奏・音の設定'], ['stage', '演奏モード']]},
+  {id:'adlib', t:'アドリブと「かんたん／高度」', h:`<ul>
+    <li>下の${HK('アドリブ')}で、自動のソロを鳴らすとき（スケール画面のとき／いつも／鳴らさない）・音色・音数・音量を選べます。</li>
+    <li><b>アドリブのかんたん／高度</b>：かんたんはスケールの音でなめらかに、高度はジャズの技や表現を入れて弾きます。使った技は右下に出て、タップすると解説が開きます。</li>
+    <li><b>コードの技のかんたん／高度</b>：高度にすると、次の候補に上級の技が並び、伴奏もテンションや裏コードを使います。</li></ul>`, go:[['adl', 'アドリブの設定'], ['guide', '音楽の技・解説']]},
+  {id:'rec', t:'スキャット録音', h:`<ol>
+    <li>● を押して、長さ（何周）とカウントの小節数を選び「録音スタート」。初めてのときはマイクの許可を求められるので「許可」。</li>
+    <li>カウントのあと、伴奏に合わせて歌います。停止で終わり。</li>
+    <li>試聴して、声のエフェクトや伴奏とのずれを調整します。うまくいかなかった区間だけ選んで録り直すこともできます。</li>
+    <li>形式（MP3・音声・動画）を選んで保存します。</li></ol>
+    <p>イヤホン（ヘッドホン）を使うと、伴奏がマイクに入らず声がきれいに録れます。</p>`, go:[['rec', '録音を開く']]},
+  {id:'app', t:'アプリとして使う・壁紙', h:`<ul>
+    <li><b>ホーム画面に追加</b>：iPhone は Safari の共有ボタン（□↑）→「ホーム画面に追加」。Android は Chrome のメニュー（︙）→「ホーム画面に追加」または「アプリをインストール」。一度開けば、電波がなくても使えます。</li>
+    <li><b>壁紙</b>：メニューの「壁紙」で、自分の写真や用意した柄を選べます。暗さ・ぼかしも調整できます。</li>
+    <li>壁紙や進行は<b>このスマホのこのアプリ（ブラウザ）の中だけ</b>に保存されます。同じアドレスを開いたほかの人には見えません。Safari とホーム画面のアプリでは保存場所が別なので、使う方で設定してください。</li></ul>`, go:[['wall', '壁紙を設定する']]},
+  {id:'trouble', t:'困ったとき', h:`<ul>
+    <li><b>音が出ない</b>：iPhone はマナーモード（消音スイッチ）を解除して、音量を上げてください。</li>
+    <li><b>音の高さや鳴り方がおかしい</b>：録音のあとなどに起きたら、アプリを閉じて開き直してください。</li>
+    <li><b>録音できない</b>：ブラウザの設定でマイクが許可されているか確認してください。Claude のアプリの中で開いている場合はマイクを使えないので、ブラウザかホーム画面のアプリ版で開いてください。</li>
+    <li><b>動きが重い</b>：伴奏の設定でリアル音源をオフにすると軽くなります。</li>
+    <li><b>消したものを戻したい</b>：上の ↶（元に戻す）。</li></ul>`},
+];
+const HTOC = {start:'はじめに', screen:'画面', chord:'コード入力', scale:'スケールと色', voicing:'押さえ方', play:'再生・伴奏', adlib:'アドリブ', rec:'録音', app:'アプリ・壁紙', trouble:'困ったとき'};
+function renderHelp() {
+  $('#hpToc').innerHTML = HELP.map(s => `<button data-hto="${s.id}">${HTOC[s.id]}</button>`).join('');
+  $('#hpBody').innerHTML = HELP.map(s => `<article class="hc" id="h-${s.id}"><h3>${s.t}</h3>${s.h}${s.go ? `<div class="hgo">${s.go.map(([k, l]) => HGO(k, l)).join('')}</div>` : ''}</article>`).join('');
+}
+function openHelp(sec) {
+  closeBS(); renderHelp(); $('#help').hidden = false; $('#toast').classList.remove('on');
+  try { localStorage.setItem('chordnavi-help', '1'); } catch (e) {}
+  const el = sec && $('#h-' + sec); if (el) el.scrollIntoView({block:'start'}); else $('#hpBody').scrollTop = 0;
+}
+function closeHelp() { $('#help').hidden = true; }
+$('#hpBack').addEventListener('click', closeHelp);
+$('#hpToc').addEventListener('click', e => { const b = e.target.closest('[data-hto]'); if (b) { const el = $('#h-' + b.dataset.hto); if (el) el.scrollIntoView({block:'start', behavior:'smooth'}); } });
+$('#hpBody').addEventListener('click', e => {
+  const b = e.target.closest('[data-hgo]'); if (!b) return;
+  const k = b.dataset.hgo; closeHelp();
+  if (['cand', 'input', 'scale', 'voicing'].includes(k)) { S.pan = k; S.scView = null; if (k === 'input') syncInp(); renderSeg(); renderPan(); renderDock(); setVols(); save(); return; }
+  if (k === 'lib') { renderSongs(); bs('#bsLib'); }
+  if (k === 'menu') { renderMenu(); bs('#bsMenu'); }
+  if (k === 'set') { renderSet(); bs('#bsSet'); }
+  if (k === 'adl') { renderAdl(); bs('#bsAdl'); }
+  if (k === 'rec') recOpen();
+  if (k === 'stage') { $('#stage').hidden = false; updateStage(); }
+  if (k === 'wall') openWall();
+  if (k === 'guide') openGuide('solo');
+});
 /* ===== スキャット録音：収録 → 試聴 → 保存（動画MP4／音声MP4／MP3）・区間の録り直し ===== */
 const REC = {on:false, mode:'', take:null, adl:false, cap:null, stream:null, stems:[], timer:0, view:'', out:null, busy:null, saved:{}, pv:null, pvPos:0, pr:null, pu:null, undo:null};
 const RP = (() => { let o = {}; try { o = JSON.parse(localStorage.getItem('chordnavi-rec') || '{}') || {}; } catch (e) {}
@@ -4146,6 +4390,7 @@ $('#trDn').addEventListener('click', () => transpose(-1)); $('#trUp').addEventLi
 
 /* menu */
 const MENU = [
+  ['help', ICON.help, '使い方'], ['wall', ICON.image, '壁紙'],
   ['copy', ICON.copy, 'コード進行をコピー'], ['key', ICON.key, 'キーを推定'],
   ['up', ICON.up, '半音上げる'], ['down', ICON.down, '半音下げる'],
   ['showsc', ICON.eye, ''], ['scall', ICON.reset, 'スケールを全部おすすめに'],
@@ -4168,6 +4413,8 @@ $('#menu').addEventListener('click', e => {
   if (k === 'set') { renderSet(); bs('#bsSet'); }
   if (k === 'rec') recOpen();
   if (k === 'guide') openGuide('solo');
+  if (k === 'help') openHelp();
+  if (k === 'wall') openWall();
   if (k === 'lib') { renderSongs(); bs('#bsLib'); }
   if (k === 'clear') { if (!S.chart.length) return; pushUndo(); S.chart = []; S.sel = -1; S.mel = null; S.melTitle = ''; S.title = ''; touch(); if (P.ui) stop(); closeBS(); refresh(); toast('譜面をクリアしました', '元に戻す', undo); }
 });
@@ -4439,7 +4686,9 @@ $('#sgPlay').addEventListener('click', () => loadSong(true));
 
 if (S.pan === 'input') syncInp();
 refresh(); revealSel();
-if (S.sample) setTimeout(() => toast('サンプル進行（丸サ進行）が入っています。メニューからクリアできます'), 600);
+{ let seen = false; try { seen = localStorage.getItem('chordnavi-help') === '1'; } catch (e) {}
+  if (!seen) setTimeout(() => toast('はじめての方へ：使い方はメニュー（…）にあります', '使い方を見る', () => openHelp()), 600);
+  else if (S.sample) setTimeout(() => toast('サンプル進行（丸サ進行）が入っています。メニューからクリアできます'), 600); }
 $('#cmpLv').addEventListener('click', e => { const b = e.target.closest('[data-cl]'); if (b && S.cmp !== b.dataset.cl) setCmp(b.dataset.cl); });
 }
 
