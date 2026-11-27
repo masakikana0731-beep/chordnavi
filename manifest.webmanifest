@@ -1,7 +1,7 @@
 {
  "name": "コードナビ ギター",
  "short_name": "コードナビ",
- "description": "ギター作曲用のコード進行アシスト。次のコード候補・自動伴奏・押さえ方・スケール・スキャット録音。",
+ "description": "ギター作曲用のコード進行アシスト。つくる・ひく・とる・まなぶの4モード。次のコード候補・自動伴奏・押さえ方・スケール・録音・レッスン。",
  "lang": "ja",
  "start_url": "./",
  "scope": "./",
@@ -27,6 +27,52 @@
    "sizes": "512x512",
    "type": "image/png",
    "purpose": "maskable"
+  }
+ ],
+ "shortcuts": [
+  {
+   "name": "つくる（作曲）",
+   "short_name": "つくる",
+   "url": "./?mode=make",
+   "icons": [
+    {
+     "src": "icons/icon-192.png",
+     "sizes": "192x192"
+    }
+   ]
+  },
+  {
+   "name": "ひく（練習）",
+   "short_name": "ひく",
+   "url": "./?mode=play",
+   "icons": [
+    {
+     "src": "icons/icon-192.png",
+     "sizes": "192x192"
+    }
+   ]
+  },
+  {
+   "name": "とる（録音）",
+   "short_name": "とる",
+   "url": "./?mode=rec",
+   "icons": [
+    {
+     "src": "icons/icon-192.png",
+     "sizes": "192x192"
+    }
+   ]
+  },
+  {
+   "name": "まなぶ（勉強）",
+   "short_name": "まなぶ",
+   "url": "./?mode=learn",
+   "icons": [
+    {
+     "src": "icons/icon-192.png",
+     "sizes": "192x192"
+    }
+   ]
   }
  ]
 }
