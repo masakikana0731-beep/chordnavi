@@ -138,8 +138,8 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
 .leg .f-r{background:var(--fr)}.leg .f-3{background:var(--f3)}.leg .f-5{background:var(--f5)}.leg .f-7{background:var(--f7)}.leg .f-t{border:1.5px solid #cdbfa8}
 .leg .lx{margin-left:auto}.leg .lx::before{content:"｜";color:var(--line)}
 .fb{display:block;width:100%;height:auto;border-radius:8px;margin-bottom:6px}
-#fbSvg g{transform-box:fill-box;transform-origin:center;transition:transform .08s}
-#fbSvg g.hit{transform:scale(1.5)}#fbSvg g.hit circle{stroke:#ffd166;stroke-width:3}
+#fbSvg g,#gdFb g{transform-box:fill-box;transform-origin:center;transition:transform .08s}
+#fbSvg g.hit,#gdFb g.hit{transform:scale(1.5)}#fbSvg g.hit circle,#gdFb g.hit circle{stroke:#ffd166;stroke-width:3}
 .scs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
 @media (max-height:760px){.scs button{height:30px}.sch .btn,.sch .seg button{height:34px}}
 .scs button{position:relative;height:34px;border:1px solid var(--line);background:var(--card);border-radius:8px;font-size:10.5px;font-weight:700;padding:0 3px;letter-spacing:-.02em;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -370,6 +370,10 @@ body.recording .sheet{pointer-events:none}
 .gtext{font-size:15px;line-height:1.9;color:#eef2f8;margin:12px 0;letter-spacing:.01em}
 .gdt .gx{font-size:14px;line-height:1.7;background:var(--paper);border-radius:10px;padding:9px 11px;color:var(--ink)}.gdt .gx b{color:var(--red);margin-right:6px}
 .gsec{border-top:1px solid var(--line);padding-top:10px;margin-top:12px}
+.gctl{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin:10px 0 4px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--paper)}
+.gctl>div{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--mute)}
+.gseg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}.gseg button{border:0;background:var(--card);color:var(--mute);font-size:12px;font-weight:700;padding:6px 9px}.gseg button[aria-pressed=true]{background:var(--sel);color:#fff}
+.gkey{display:inline-flex;align-items:center;gap:4px}.gkey button{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:16px;font-weight:700}.gkey b{min-width:34px;text-align:center;color:#fff;font-size:14px}
 .glbl{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;font-weight:700;color:var(--mute);letter-spacing:.06em;margin-bottom:6px}
 .gcv{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}.gcv button{border:0;background:var(--card);color:var(--mute);font-size:11.5px;font-weight:700;padding:5px 10px}.gcv button[aria-pressed=true]{background:var(--sel);color:#fff}
 .gbars{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--paper)}
@@ -2805,14 +2809,16 @@ function setPlaying(i) {
   updateStage();
 }
 function setDot(b) { document.querySelectorAll('#dots i').forEach((d, k) => { d.className = k === b ? (k === 0 ? 'on one' : 'on') : ''; }); }
+// 画面の動きは、実際に耳に届く時刻（出力の遅れぶん後ろ）に合わせる
+const outLat = () => { const c = A.ctx; return c ? Math.min(.4, c.outputLatency || c.baseLatency || 0) : 0; };
 function frame() {
   if (!A.ctx) return;
-  const now = A.ctx.currentTime;
+  const now = A.ctx.currentTime - outLat();
   while (P.vis.length && P.vis[0].time <= now) {
     const v = P.vis.shift();
     if (v.stop) { stop(); return; }
     if (v.tech) { techShow(v.tech); continue; }
-    if (DM.cur) continue;
+    if (DM.cur) { if (v.note != null) hitNote(v.note, v.dur); continue; }
     if (v.note != null) { hitNote(v.note, v.dur); continue; }
     if (v.i !== P.curI) setPlaying(v.i);
     setDot(v.beat);
@@ -3453,13 +3459,14 @@ function techShow(e) {
 function techHide() { clearTimeout(TECH.timer); const el = $('#techTick'); if (el) el.hidden = true; const st = $('#stTech'); if (st) st.textContent = ''; }
 
 /* ---------- お手本（解説ページの ▶） ---------- */
-const DCH = s => s.split(' ').map(tok => { const [c, d] = tok.split(':'); return {...TH.parse(c), dur:+(d || 4), v:null}; });
+const DCH = (s, n = 0) => s.split(' ').map(tok => { const [c, d] = tok.split(':'); const x = TH.parse(c); return {...x, root:mod(x.root + n), bass:x.bass != null ? mod(x.bass + n) : x.bass, pref:n ? null : x.pref, dur:+(d || 4), v:null}; });
+const DKEY = (k, n = 0) => ({t:mod((k || {t:0}).t + n), minor:!!(k && k.minor)});
 function demoStart(spec) {
   if (REC.on) { toast('録音中はお手本を鳴らせません'); return; }
   const go = () => {
     DM.saved = {key:S.key, bpm:S.bpm, loop:S.loop, cin:S.cin, melOn:S.melOn};
-    DM.cur = {...spec, chart:DCH(spec.prog)};
-    S.key = spec.key || {t:0, minor:false}; S.bpm = spec.bpm || 126; S.loop = false; S.cin = false; S.melOn = false;
+    DM.cur = {...spec, chart:DCH(spec.prog, spec.shift || 0)};
+    S.key = DKEY(spec.key, spec.shift || 0); S.bpm = spec.bpm || 126; S.loop = !!spec.loop; S.cin = false; S.melOn = false;
     spReset(); play(0); renderGuideBtns();
   };
   if (P.ui) { stop(); setTimeout(go, 540); } else go();
@@ -3471,7 +3478,7 @@ function demoEnd() {
 }
 if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) window.__pro = {drum, drumSyn, DRB, prepDrums, sched, LOOK, A, SMP, smpNote, loadInst, pluck, ac, soloBar, rebuildTL, SP, S, P, TH, scaleInfo, segAt, segNextReal, planHarm, devBody, spanCtx, DEVS, TECH, DM, demoStart, soloBarPro};
 /* ===== 解説ページ：アドリブの技・表現・伴奏の技・コード進行の技（お手本つき） ===== */
-const GD = {open:false, tab:'solo', sel:null, ci:0, cv:'a', cache:{}};
+const GD = {open:false, tab:'solo', sel:null, ci:0, cv:'a', cache:{}, shift:0, rate:1, loop:false};
 const S1 = (prog, solo, o = {}) => ({a:{prog, solo, cmp:'easy', bpm:o.bpm || 132, rid:o.rid || 'swing', key:o.key}});
 const AB = (b, a, o = {}) => ({b:{prog:b, cmp:'easy', bpm:o.bpm || 120, rid:o.rid || 'swing', key:o.key}, a:{prog:a, cmp:'easy', bpm:o.bpm || 120, rid:o.rid || 'swing', key:o.key}});
 const CF = (prog, cf, o = {}) => ({b:{prog, cmp:'easy', bpm:o.bpm || 120, rid:o.rid || 'comp', key:o.key}, a:{prog, cmp:'pro', cforce:cf, bpm:o.bpm || 120, rid:o.rid || 'comp', key:o.key}, bl:'かんたん', al:'この技'});
@@ -3547,10 +3554,10 @@ function gitem(it) {
 // お手本の進行（「この技」の伴奏は、実際に技を入れた形を計算して見せる）
 function gdPieces(it, v) {
   const d = it.demo; if (!d) return null;
-  const sp = v === 'b' && d.b ? d.b : d.a, key = sp.key || {t:0, minor:false}, ck = it.id + v;
+  const sp = v === 'b' && d.b ? d.b : d.a, key = DKEY(sp.key, GD.shift), ck = it.id + v + GD.shift;
   if (DM.cur && DM.cur.gid === it.id && DM.cur.gv === v && P.hl && P.ui) return {key, live:true, list:P.hl.segs.map(s => ({ch:s.ch, start:s.start, len:s.len, tech:s.tech}))};
   if (GD.cache[ck]) return GD.cache[ck];
-  const chart = DCH(sp.prog);
+  const chart = DCH(sp.prog, GD.shift);
   let list = []; let pos = 0; chart.forEach(c => { list.push({ch:c, start:pos, len:c.dur}); pos += c.dur; });
   if (sp.cmp === 'pro' && !P.ui) {
     const keep = {cur:DM.cur, key:S.key};
@@ -3591,29 +3598,44 @@ function gdDetail(it) {
     <button class="gback" data-sel="">‹ ${esc(GTABS[it.tab])}の一覧</button>
     <h3>${esc(it.t)}<small>${esc(it.en)}</small></h3>
     <p class="gs">${esc(it.s)}</p>
-    ${btns ? `<div class="gb">${btns}</div>` : ''}
-    <p class="gtext">${esc(it.b)}</p>
-    ${it.ex ? `<p class="gx"><b>例</b>${esc(it.ex)}</p>` : ''}
+    ${btns ? `<div class="gb">${btns}</div>
+    <div class="gctl"><div><span>速さ</span><span class="gseg">${[[1, '100%'], [.75, '75%'], [.5, '50%']].map(([r, l]) => `<button data-rate="${r}" aria-pressed="${GD.rate === r}">${l}</button>`).join('')}</span></div>
+      <div><span>キー</span><span class="gkey"><button data-kshift="-1" aria-label="キーを下げる">‹</button><b>${esc(TH.keyName(DKEY((d.a.key), GD.shift)))}</b><button data-kshift="1" aria-label="キーを上げる">›</button></span></div>
+      <div><span>くり返し</span><button class="sw" data-gloop aria-pressed="${GD.loop}" aria-label="くり返し"></button></div></div>` : ''}
     ${pc ? `<div class="gsec"><div class="glbl">コード譜${d.b ? `<span class="gcv"><button data-cv="b" aria-pressed="${GD.cv === 'b'}">${esc(d.bl || '元の進行')}</button><button data-cv="a" aria-pressed="${GD.cv === 'a'}">${esc(d.al || 'この技')}</button></span>` : ''}</div>
       <div id="gdChart">${gdChart(pc, GD.ci)}</div>
       <p class="gnote">${pc.list.some(x => x.tech) ? '<i class="tqm"></i>は技で入れ替わったコード。' : ''}コードをタップすると、そのスケールを表示します（再生中は自動で追いかけます）。</p></div>
       <div class="gsec"><div class="glbl">スケール</div><div id="gdScale">${gdScale(pc, GD.ci)}</div></div>` : ''}
+    <div class="gsec"><div class="glbl">解説</div><p class="gtext">${esc(it.b)}</p></div>
+    ${it.ex ? `<p class="gx"><b>例</b>${esc(it.ex)}</p>` : ''}${GD.shift && d ? '<p class="gnote">解説の文章の音名は Key C での例です。コード譜とスケールは選んだキーで表示しています。</p>' : ''}
     <div class="gnav">${k > 0 ? `<button class="btn ghost" data-sel="${arr[k - 1].id}">‹ ${esc(arr[k - 1].t)}</button>` : '<span></span>'}${k < arr.length - 1 ? `<button class="btn ghost" data-sel="${arr[k + 1].id}">${esc(arr[k + 1].t)} ›</button>` : '<span></span>'}</div>
   </div>`;
 }
 // 再生中は、いま鳴っているコードをコード譜とスケールで追いかける
 function gdFollow() {
-  if (!GD.open || !GD.sel) return;
-  const it = GIDX[GD.sel];
+  if (!GD.open) { GD.follow = false; return; }
+  const it = GD.sel && GIDX[GD.sel];
   if (it && DM.cur && DM.cur.gid === it.id && P.ui && A.ctx) {
-    const pc = gdPieces(it, GD.cv), beat = (A.ctx.currentTime - P.t0) * S.bpm / 60;
+    const pc = gdPieces(it, GD.cv), tot = pc.list.length ? pc.list[pc.list.length - 1].start + pc.list[pc.list.length - 1].len : 1;
+    let beat = (A.ctx.currentTime - outLat() - P.t0) * S.bpm / 60;
     if (beat >= 0) {
+      if (S.loop) beat %= tot;
       let i = pc.list.findIndex(x => beat >= x.start - 1e-6 && beat < x.start + x.len - 1e-6); if (i < 0) i = GD.ci;
       const live = pc.live ? pc.list.map(x => TH.name(x.ch, pc.key) + x.start).join() : '';
       if (i !== GD.ci || live !== GD.lastLive) { GD.ci = i; GD.lastLive = live; const c = $('#gdChart'), s = $('#gdScale'); if (c) c.innerHTML = gdChart(pc, i); if (s) s.innerHTML = gdScale(pc, i); }
     }
   }
   requestAnimationFrame(gdFollow);
+}
+function gdPlay(it, v) {
+  const base = v === 'b' ? it.demo.b : it.demo.a;
+  demoStart({...base, gid:it.id, gv:v, shift:GD.shift, loop:GD.loop, bpm:Math.round((base.bpm || 126) * GD.rate)});
+}
+// 速さ・キー・くり返しを変えたら、鳴っているお手本はその設定で鳴らし直す
+function gdReplay() {
+  const it = GD.sel && GIDX[GD.sel], v = DM.cur && it && DM.cur.gid === it.id ? DM.cur.gv : null;
+  GD.ci = 0; renderGuide();
+  if (v) gdPlay(it, v);
 }
 function gcard(it) {
   const d = it.demo;
@@ -3654,7 +3676,7 @@ function openGuide(target) {
   GD.sel = it ? it.id : null; GD.ci = 0; GD.cv = 'a';
   GD.open = true; closeBS(); $('#guide').hidden = false; renderGuide();
   $('#gdBody').scrollTop = 0;
-  if (!was) requestAnimationFrame(gdFollow);
+  if (!GD.follow) { GD.follow = true; requestAnimationFrame(gdFollow); }
 }
 function closeGuide() { GD.open = false; $('#guide').hidden = true; if (DM.cur) stop(); }
 function setSoloLv(v) {
@@ -3675,7 +3697,7 @@ $('#gdBody').addEventListener('click', e => {
   if (d) {
     const it = GIDX[d.dataset.demo], v = d.dataset.v;
     if (DM.cur && DM.cur.gid === it.id && DM.cur.gv === v) { stop(); return; }
-    demoStart({...(v === 'b' ? it.demo.b : it.demo.a), gid:it.id, gv:v});
+    gdPlay(it, v);
     if (GD.sel === it.id && it.demo.b && GD.cv !== v) { GD.cv = v; GD.ci = 0; setTimeout(renderGuide, 700); }
     return;
   }
@@ -3683,6 +3705,9 @@ $('#gdBody').addEventListener('click', e => {
   if (sl) { const id = sl.dataset.sel; if (DM.cur && DM.cur.gid !== id) stop(); GD.sel = id || null; GD.ci = 0; GD.cv = 'a'; renderGuide(); $('#gdBody').scrollTop = 0; return; }
   const ci = e.target.closest('[data-gci]');
   if (ci) { GD.ci = +ci.dataset.gci; const it = GIDX[GD.sel], pc = gdPieces(it, GD.cv); $('#gdChart').innerHTML = gdChart(pc, GD.ci); $('#gdScale').innerHTML = gdScale(pc, GD.ci); return; }
+  const rt = e.target.closest('[data-rate]'); if (rt) { GD.rate = +rt.dataset.rate; gdReplay(); return; }
+  const ks = e.target.closest('[data-kshift]'); if (ks) { GD.shift = ((GD.shift + +ks.dataset.kshift) % 12 + 12) % 12; gdReplay(); return; }
+  const lp = e.target.closest('[data-gloop]'); if (lp) { GD.loop = !GD.loop; gdReplay(); return; }
   const cv = e.target.closest('[data-cv]');
   if (cv) { GD.cv = cv.dataset.cv; GD.ci = 0; renderGuide(); return; }
   const g = e.target.closest('[data-goto]'); if (g) { openGuide(g.dataset.goto); return; }
