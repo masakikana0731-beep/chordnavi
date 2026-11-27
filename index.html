@@ -361,6 +361,7 @@ body.recording .sheet{pointer-events:none}
 .glog button{width:100%;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:center;text-align:left;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:8px 10px;color:var(--ink);font-size:12px}
 .glog b{font-size:10px;color:#fff;background:var(--red);border-radius:5px;padding:2px 5px}.glog i{font-style:normal;font-size:10px;color:var(--mute)}
 .gempty{font-size:12px;color:var(--mute);text-align:center;margin:30px 0}
+body:has(#bsWall.on) .scrim{background:transparent}
 body:has(.bs.on) .toast{bottom:auto;top:calc(12px + env(safe-area-inset-top))}
 @media (max-width:380px){.recb{width:32px;height:32px}.dock{gap:3px;padding-left:8px;padding-right:8px}.rgo.three{grid-template-columns:1fr 1fr 1.2fr}.rgo.three .btn{font-size:12px;padding:0 6px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
@@ -375,7 +376,13 @@ body.haswall .app{position:relative;z-index:1}
 body.haswall .tb,body.haswall .pan{background:rgba(11,17,29,var(--wpan,.38));-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 body.haswall .segbar .seg,body.haswall .hd .seg{background:rgba(11,17,29,.7)}
 body.haswall .stage{background:rgba(5,9,16,.55)}
-.wtiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:4px 0 8px}
+.wtiles{display:flex;gap:6px;margin:4px -12px 6px;padding:2px 12px 4px;overflow-x:auto;scrollbar-width:none}.wtiles::-webkit-scrollbar{display:none}
+.wtiles button{flex:none;width:62px}
+.wadj{display:grid;grid-template-columns:96px minmax(0,1fr);gap:10px;align-items:start}
+.wadj .vrow{margin:4px 0 0}.wadj .seg.lv button{height:34px}
+#wPrev{width:96px;border-radius:12px;border:2px solid var(--line);background:#05080e;position:relative;overflow:hidden}
+#wPrev::after{content:"";position:absolute;inset:0;background:rgba(5,9,16,var(--wdim,.42))}
+#bsWall .lbl{margin-top:8px}
 .wtiles button{position:relative;aspect-ratio:3/4;border:1.5px solid var(--line);border-radius:10px;background:var(--card) center/cover no-repeat;font-size:10px;font-weight:700;color:#fff;display:flex;align-items:flex-end;justify-content:center;padding:0 0 5px;text-shadow:0 1px 3px #000;overflow:hidden}
 .wtiles button[aria-pressed=true]{border-color:var(--red);box-shadow:0 0 0 2px var(--red)}
 .wtiles .wadd{color:var(--ink);text-shadow:none;align-items:center;flex-direction:column;gap:4px;justify-content:center;padding:0}
@@ -482,6 +489,16 @@ body.haswall .stage{background:rgba(5,9,16,.55)}
   <div class="bs-hd"><h4>壁紙</h4><button class="x" data-close aria-label="閉じる">×</button></div>
   <div class="wtiles" id="wTiles"></div>
   <input type="file" accept="image/*" id="wFile" class="wfile" tabindex="-1" aria-hidden="true">
+  <div id="wAdj" hidden>
+    <div class="lbl">写真の合わせ方（左は画面全体のイメージ）</div>
+    <div class="wadj"><div id="wPrev" aria-hidden="true"></div><div>
+      <div class="seg lv" id="wFit"><button data-fit="cover">画面いっぱい</button><button data-fit="contain">写真全体</button></div>
+      <div class="vrow"><span id="wZoomV">100%</span><input type="range" id="wZoom" min="1" max="3" step=".01" aria-label="写真の大きさ"></div>
+      <div class="vrow"><span>左右</span><input type="range" id="wPx" min="0" max="100" step="1" aria-label="写真の左右の位置"></div>
+      <div class="vrow"><span>上下</span><input type="range" id="wPy" min="0" max="100" step="1" aria-label="写真の上下の位置"></div>
+      <button class="btn ghost" id="wReset" style="width:100%;height:34px">位置と大きさを元に戻す</button>
+    </div></div>
+  </div>
   <div class="lbl">暗さ（文字を読みやすく）</div>
   <div class="vrow"><span id="wDimV">50</span><input type="range" id="wDim" min="0" max=".85" step=".01" aria-label="壁紙の暗さ"></div>
   <div class="lbl">ぼかし</div>
@@ -526,6 +543,7 @@ body.haswall .stage{background:rgba(5,9,16,.55)}
   <div class="lbl">音源</div>
   <div class="tg">リアル音源（ギター・ベース・ビブラフォン）<button class="sw" id="realSw" aria-label="リアル音源を使う"></button></div>
   <p class="note" id="sndStat"></p>
+  <div class="tg"><span>反応の速さを優先<small class="sub">ONにするとタップへの反応は速くなりますが、音が途切れやすくなります。ふだんはOFF（音切れ防止）のままがおすすめです。</small></span><button class="sw" id="latSw" aria-label="反応の速さを優先"></button></div>
   <div class="lbl">音量</div>
   <div class="mix">
     <label for="vg">ギター</label><input type="range" id="vg" min="0" max="1" step=".01">
@@ -1513,7 +1531,7 @@ try {
     if (RHY.some(r => r.id === d.rid)) S.rid = d.rid;
     if (d.bpm >= 40 && d.bpm <= 260) S.bpm = Math.round(d.bpm);
     if (d.vol) for (const k of ['g','b','d']) if (d.vol[k] >= 0 && d.vol[k] <= 1) S.vol[k] = +d.vol[k];
-    S.loop = d.loop !== false; S.cin = !!d.cin; S.sample = !!d.sample; S.showSc = d.showSc !== false; S.real = d.real !== false; S.follow = d.follow !== false;
+    S.loop = d.loop !== false; S.cin = !!d.cin; S.sample = !!d.sample; S.showSc = d.showSc !== false; S.real = d.real !== false; S.lowLat = !!d.lowLat; S.follow = d.follow !== false;
     if (['cand','input','scale','voicing'].includes(d.pan)) S.pan = d.pan;
     if (Array.isArray(d.mel)) S.mel = d.mel.filter(n => n && n.b >= 0 && n.d > 0 && Number.isInteger(n.m) && n.m > 20 && n.m < 110).map(n => ({b:+n.b, d:+n.d, m:n.m}));
     if (S.mel && !S.mel.length) S.mel = null;
@@ -1528,7 +1546,7 @@ try {
 } catch (e) {}
 const DM = {cur:null, saved:null};   // お手本の再生中だけ使う一時設定
 const save = () => { if (DM.cur) return; try { localStorage.setItem(STORE, JSON.stringify({chart:S.chart, cmp:S.cmp, key:S.key, style:S.style, rid:S.rid, bpm:S.bpm, vol:S.vol, loop:S.loop, cin:S.cin, sample:S.sample,
-  showSc:S.showSc, real:S.real, follow:S.follow, pan:S.pan, sel:S.sel, solo:S.solo, mel:S.mel, melTitle:S.melTitle, title:S.title, melOn:S.melOn, melInst:S.melInst, melVol:S.melVol, sb:{feel:S.sb.feel, key:S.sb.key, sort:S.sb.sort}})); } catch (e) {} };
+  showSc:S.showSc, real:S.real, lowLat:!!S.lowLat, follow:S.follow, pan:S.pan, sel:S.sel, solo:S.solo, mel:S.mel, melTitle:S.melTitle, title:S.title, melOn:S.melOn, melInst:S.melInst, melVol:S.melVol, sb:{feel:S.sb.feel, key:S.sb.key, sort:S.sb.sort}})); } catch (e) {} };
 const R = () => RHY.find(r => r.id === (DM.cur && DM.cur.rid || S.rid)) || RHY[0];
 const bpb = () => R().bpb;
 const nm = (c, key = S.key) => TH.name(c, key);
@@ -1875,7 +1893,8 @@ function ac() {
   if (!A.ctx) {
     const C = window.AudioContext || window.webkitAudioContext;
     if (!C) return null;
-    let ctx; try { ctx = new C(Object.assign({latencyHint:'interactive'}, A.opt || {})); } catch (e) { ctx = new C(); }
+    // 音切れ防止（標準）：端末に大きめの音声バッファを使わせて、処理が混んでも途切れないようにする
+    let ctx; try { ctx = new C(Object.assign({latencyHint:S.lowLat ? 'interactive' : 'playback'}, A.opt || {})); } catch (e) { ctx = new C(); }
     A.ctx = ctx;
     try { if (navigator.audioSession) navigator.audioSession.type = A.sess || 'playback'; } catch (e) {}
     const comp = ctx.createDynamicsCompressor();
@@ -1895,12 +1914,14 @@ function ac() {
     dlf.type = 'lowpass'; dlf.frequency.value = 2300; fb.gain.value = .3; dw.gain.value = .17;
     sl.connect(A.dl); A.dl.connect(dlf); dlf.connect(fb); fb.connect(A.dl); dlf.connect(dw); dw.connect(A.master);
     A.rv = ctx.createConvolver();
-    const sr = ctx.sampleRate, ir = ctx.createBuffer(2, Math.floor(sr * 2.2), sr);
-    for (let c = 0; c < 2; c++) { const x = ir.getChannelData(c); for (let i = 0; i < x.length; i++) x[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / x.length, 3.2); }
+    const sr = ctx.sampleRate, ir = ctx.createBuffer(2, Math.floor(sr * 1.5), sr);
+    for (let c = 0; c < 2; c++) { const x = ir.getChannelData(c); for (let i = 0; i < x.length; i++) x[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / x.length, 2.6); }
     A.rv.buffer = ir;
     const rw = ctx.createGain(); rw.gain.value = .3; A.rv.connect(rw); rw.connect(A.master);
-    const send = (src, amt) => { const g = ctx.createGain(); g.gain.value = amt; src.connect(g); g.connect(A.rv); };
-    send(sl, .42); send(A.tone, .14); send(A.gD, .07);
+    const send = (src, amt) => { const g = ctx.createGain(); g.gain.value = amt; src.connect(g); g.connect(A.rv); return g; };
+    send(sl, .42); send(A.tone, .14); const rvD = send(A.gD, .07);
+    A.dst = {gG:[A.tone], gB:[A.master], gD:[A.master, rvD], gS:[sl], gM:[sl]};
+    DRB.b = {}; DRB.ready = false; setTimeout(prepDrums, 300);
     const nb = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate), d = nb.getChannelData(0);
     for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
     A.noise = nb;
@@ -1916,7 +1937,20 @@ function rebuildAudio(opt) {
   return ac();
 }
 // iPhoneはマイクを閉じると端末の周波数が元に戻る。古い音声エンジンのまま鳴らすと音程がずれることがあるので、次に鳴らす前に作り直す
+document.addEventListener('visibilitychange', () => { if (P.on) sched(); });
 function freshCtx() { if (A.stale && !P.ui) { A.stale = false; rebuildAudio(null); } }
+// 停止したときは、先読みで予約済みの音ごと楽器の通り道を差し替えて、確実に消す
+function swapBuses() {
+  const ctx = A.ctx; if (!ctx || !A.dst) return;
+  const t = ctx.currentTime;
+  for (const k of Object.keys(A.dst)) {
+    const old = A[k], nw = ctx.createGain();
+    nw.gain.value = old.gain.value; A.dst[k].forEach(d => nw.connect(d)); A[k] = nw;
+    old.gain.cancelScheduledValues(t); old.gain.setValueAtTime(old.gain.value, t); old.gain.linearRampToValueAtTime(0, t + .06);
+    setTimeout(() => { try { old.disconnect(); } catch (e) {} }, 6000);
+  }
+  setVols();
+}
 function silentUnlock() {
   try {
     const sr = 8000, n = 800, b = new ArrayBuffer(44 + n * 2), v = new DataView(b);
@@ -2078,8 +2112,33 @@ function metal(t, dur, vel, bpF, hpF) {
   bp.connect(hp); hp.connect(g); g.connect(A.gD);
   for (const f of METAL) { const o = ctx.createOscillator(); o.type = 'square'; o.frequency.value = f * (1 + (Math.random() - .5) * .006); o.connect(bp); o.start(t); o.stop(t + dur + .02); }
 }
+// ドラムは最初に一度だけ音を作っておき、演奏中は録音済みの音を鳴らすだけにする（スマホの処理を大幅に軽く）
+const DRB = {b:{}, ready:false, busy:false};
+const DRLEN = {kick:.45, snare:.3, hat:.1, pedal:.12, ride:.95, rim:.08, brush:.36};
+async function prepDrums() {
+  if (DRB.busy || DRB.ready || !A.ctx || !window.OfflineAudioContext) return;
+  DRB.busy = true; const sr = A.ctx.sampleRate, built = {};
+  try {
+    for (const [k, len] of Object.entries(DRLEN)) {
+      built[k] = [];
+      for (let n = 0; n < 3; n++) {
+        const off = new OfflineAudioContext(1, Math.ceil(sr * len), sr), real = A.ctx, rg = A.gD;
+        A.ctx = off; A.gD = off.destination;
+        try { drumSyn(k, 0, 1); } finally { A.ctx = real; A.gD = rg; }
+        built[k].push(await off.startRendering());
+      }
+    }
+    if (A.ctx && A.ctx.sampleRate === sr) { DRB.b = built; DRB.ready = true; }
+  } catch (e) {}
+  DRB.busy = false;
+}
 function drum(k, t, v = 1) {
   if (k !== 'click') { t += (Math.random() - .5) * .005; v *= .9 + Math.random() * .2; }
+  const vs = DRB.ready && DRB.b[k];
+  if (vs) { const s = A.ctx.createBufferSource(), g = A.ctx.createGain(); s.buffer = vs[Math.floor(Math.random() * vs.length)]; g.gain.value = v; s.connect(g); g.connect(A.gD); s.start(Math.max(t, 0)); return; }
+  drumSyn(k, t, v);
+}
+function drumSyn(k, t, v) {
   switch (k) {
     case 'kick': tn(t, 'sine', 115, 44, .38, v * .95); nz(t, .014, 'highpass', 2500, .7, v * .18); break;
     case 'snare': nz(t, .2, 'bandpass', 2100, .8, v * .55); nz(t, .12, 'highpass', 5200, .7, v * .32); tn(t, 'triangle', 188, 162, .1, v * .38); break;
@@ -2445,15 +2504,22 @@ function doTick(tick, t) {
     if (!b) bass({a:'R', v:.85, len:Math.min(seg.len, 1)}, seg, beat, t);
   }
 }
+// 先読み：標準は0.3秒先まで音を予約（画面の処理で少し待たされても途切れない）。画面が裏に回ったときはさらに長く
+const LOOK = () => document.hidden ? 1.6 : S.lowLat ? .12 : .3;
+let CLK = null;
+try { CLK = new Worker(URL.createObjectURL(new Blob(['let t;onmessage=e=>{clearInterval(t);if(e.data)t=setInterval(()=>postMessage(0),e.data)}'], {type:'text/javascript'}))); CLK.onmessage = () => sched(); } catch (e) { CLK = null; }
+function clockOn(on) { clearInterval(P.timer); if (on) P.timer = setInterval(sched, 25); try { if (CLK) CLK.postMessage(on ? 25 : 0); } catch (e) {} }
 function sched() {
-  if (!P.on) return;
-  const spt = 60 / S.bpm / TPB, end = P.tl.total * TPB;
-  while (P.next < A.ctx.currentTime + .12) {
-    if (P.endAt && P.next >= P.endAt - 1e-4) { P.on = false; clearInterval(P.timer); return; }
+  if (!P.on || !A.ctx) return;
+  const spt = 60 / S.bpm / TPB, end = P.tl.total * TPB, now = A.ctx.currentTime;
+  // 予約が遅れてしまったら（端末が一瞬止まったなど）、まとめて鳴らさずに少し後ろへずらして続ける
+  if (P.next < now - .02 && !REC.on && P.cnt <= 0) { const d = now + .06 - P.next; P.next += d; P.t0 += d; }
+  while (P.next < now + LOOK()) {
+    if (P.endAt && P.next >= P.endAt - 1e-4) { P.on = false; clockOn(false); return; }
     if (P.cnt > 0) { doCount(-P.cnt, P.next); P.cnt--; P.next += spt; continue; }
     if (P.tick >= end) {
       if (S.loop) { P.tick = 0; P.loopN = (P.loopN || 0) + 1; if (PRO.cmp()) P.hl = planHarm(P.tl, P.loopN); }
-      else { P.vis.push({time:P.next, stop:true}); P.on = false; clearInterval(P.timer); return; }
+      else { P.vis.push({time:P.next, stop:true}); P.on = false; clockOn(false); return; }
     }
     doTick(P.tick, P.next);
     P.next += spt; P.tick++;
@@ -2496,13 +2562,16 @@ function play(fromTick = 0) {
   P.tick = fromTick > 0 && fromTick < end ? Math.round(fromTick) : 0; P.cnt = cb * bpb() * TPB;
   P.next = ctx.currentTime + (P.lead || .1); P.t0 = P.next + cb * bpb() * 60 / S.bpm; P.vis = []; P.last = 40; P.dir = 1;
   P.on = true; P.ui = true; soloReset(); setVols();
-  clearInterval(P.timer); P.timer = setInterval(sched, 25); sched();
+  clockOn(true); sched();
   requestAnimationFrame(frame); renderDock();
   if (S.pan === 'scale') renderPan();
 }
 function stop() {
-  P.on = false; P.ui = false; clearInterval(P.timer); P.vis = []; P.solo = new Map();
-  if (A.ctx) { const g = A.master.gain, t = A.ctx.currentTime; g.cancelScheduledValues(t); g.setValueAtTime(g.value, t); g.linearRampToValueAtTime(0, t + .08); g.setValueAtTime(.9, t + .5); }
+  P.on = false; P.ui = false; clockOn(false); P.vis = []; P.solo = new Map();
+  if (A.ctx) {
+    if (!REC.on && !(REC.stems && REC.stems.length)) swapBuses();
+    else { const g = A.master.gain, t = A.ctx.currentTime; g.cancelScheduledValues(t); g.setValueAtTime(g.value, t); g.linearRampToValueAtTime(0, t + .08); g.setValueAtTime(.9, t + .5); }
+  }
   techHide(); if (DM.cur) demoEnd();
   setPlaying(-1); setDot(-1); clearBarNow(); renderDock(); updateStage();
   if (S.pan === 'scale') renderPan();
@@ -3131,7 +3200,7 @@ function demoEnd() {
   Object.assign(S, DM.saved); DM.cur = null; DM.saved = null;
   renderGuideBtns(); const g = $('#gdNow'); if (g) g.textContent = '';
 }
-if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) window.__pro = {A, SMP, smpNote, loadInst, pluck, ac, soloBar, rebuildTL, SP, S, P, TH, scaleInfo, segAt, segNextReal, planHarm, devBody, spanCtx, DEVS, TECH, DM, demoStart, soloBarPro};
+if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) window.__pro = {drum, drumSyn, DRB, prepDrums, sched, LOOK, A, SMP, smpNote, loadInst, pluck, ac, soloBar, rebuildTL, SP, S, P, TH, scaleInfo, segAt, segNextReal, planHarm, devBody, spanCtx, DEVS, TECH, DM, demoStart, soloBarPro};
 /* ===== 解説ページ：アドリブの技・表現・伴奏の技・コード進行の技（お手本つき） ===== */
 const GD = {open:false, tab:'solo'};
 const S1 = (prog, solo, o = {}) => ({a:{prog, solo, cmp:'easy', bpm:o.bpm || 132, rid:o.rid || 'swing', key:o.key}});
@@ -3268,7 +3337,7 @@ $('#gdBody').addEventListener('click', e => {
 });
 $('#techTick').addEventListener('click', () => openGuide($('#techTick').dataset.id || 'solo'));
 /* ---------- wallpaper: kept only in this browser on this device (IndexedDB → localStorage fallback) ---------- */
-const WP = {k:'chordnavi-wall', st:{id:'', dim:.42, blur:0}, img:null};
+const WP = {k:'chordnavi-wall', st:{id:'', dim:.42, blur:0, fit:'cover', zoom:1, px:50, py:50}, img:null, iw:0, ih:0};
 const WPRE = [
   {id:'night', n:'夜空', css:'radial-gradient(circle at 20% 15%, #fff 0 1px, transparent 1.6px) 0 0/90px 90px, radial-gradient(circle at 65% 55%, #ffffffaa 0 1px, transparent 1.6px) 0 0/130px 130px, radial-gradient(ellipse at 70% 0%, #5468c4 0%, #1e2a63 45%, #070a18 100%)'},
   {id:'dusk', n:'夕焼け', css:'linear-gradient(170deg, #ff9a6b 0%, #c4497a 35%, #3a1f5c 66%, #0b1020 100%)'},
@@ -3311,13 +3380,27 @@ function wResize(file) {
     im.src = u;
   });
 }
+// 写真の大きさ：画面いっぱい（はみ出た分は切る）か全体を表示を基準に、拡大と位置を調整
+function wSize(el = $('#wall')) {
+  const s = WP.st, W = el.clientWidth || innerWidth, H = el.clientHeight || innerHeight;
+  if (!WP.iw || !WP.ih) return s.fit === 'contain' ? 'contain' : 'cover';
+  const k = (s.fit === 'contain' ? Math.min(W / WP.iw, H / WP.ih) : Math.max(W / WP.iw, H / WP.ih)) * s.zoom;
+  return `${Math.round(WP.iw * k)}px ${Math.round(WP.ih * k)}px`;
+}
+function wDims(src) { return new Promise(res => { const im = new Image(); im.onload = () => res([im.naturalWidth, im.naturalHeight]); im.onerror = () => res([0, 0]); im.src = src; }); }
 function wApply() {
   const el = $('#wall'), s = WP.st, pre = WPRE.find(p => p.id === s.id);
-  const css = s.id === 'photo' && WP.img ? `center/cover no-repeat url("${WP.img}")` : pre ? pre.css : '';
+  const css = s.id === 'photo' && WP.img ? `${s.px}% ${s.py}%/${wSize()} no-repeat url("${WP.img}") #05080e` : pre ? pre.css : '';
   document.body.classList.toggle('haswall', !!css);
   el.style.background = css;
   el.style.setProperty('--wdim', s.dim);
   el.style.filter = s.blur ? `blur(${s.blur}px)` : '';
+  const pv = $('#wPrev');
+  if (pv && s.id === 'photo' && WP.img) {
+    pv.style.height = Math.round(96 * innerHeight / innerWidth) + 'px';
+    pv.style.background = `${s.px}% ${s.py}%/${wSize(pv)} no-repeat url("${WP.img}") #05080e`;
+    pv.style.setProperty('--wdim', s.dim); pv.style.filter = s.blur ? `blur(${Math.max(1, s.blur / 4)}px)` : '';
+  }
 }
 function renderWall() {
   const s = WP.st, tile = (id, label, style) => `<button data-w="${id}" aria-pressed="${s.id === id}" style="${style}">${label}</button>`;
@@ -3328,6 +3411,13 @@ function renderWall() {
   $('#wDim').value = s.dim; $('#wDimV').textContent = Math.round(s.dim * 100);
   $('#wBlur').value = s.blur; $('#wBlurV').textContent = s.blur;
   $('#wDel').hidden = !WP.img;
+  const ph = s.id === 'photo' && !!WP.img;
+  $('#wAdj').hidden = !ph; if (ph) wApply();
+  if (ph) {
+    document.querySelectorAll('#wFit button').forEach(b => b.setAttribute('aria-pressed', b.dataset.fit === s.fit));
+    $('#wZoom').value = s.zoom; $('#wZoomV').textContent = Math.round(s.zoom * 100) + '%';
+    $('#wPx').value = s.px; $('#wPy').value = s.py;
+  }
 }
 function openWall() { renderWall(); bs('#bsWall'); }
 $('#wTiles').addEventListener('click', e => {
@@ -3341,17 +3431,25 @@ $('#wFile').addEventListener('change', async e => {
   let d;
   try { d = await wResize(f); } catch (x) { toast('この画像は読み込めませんでした（JPEGかPNGで試してください）'); return; }
   const ok = await wPut(d);
-  WP.img = d; WP.st.id = 'photo'; if (WP.st.dim < .25) WP.st.dim = .42;
+  [WP.iw, WP.ih] = await wDims(d);
+  WP.img = d; WP.st.id = 'photo'; Object.assign(WP.st, {fit:'cover', zoom:1, px:50, py:50}); if (WP.st.dim < .25) WP.st.dim = .42;
   wSave(); wApply(); renderWall();
   toast(ok ? '壁紙にしました（このスマホの中だけに保存）' : '壁紙にしました（保存できなかったので、閉じると元に戻ります）');
 });
 $('#wDim').addEventListener('input', e => { WP.st.dim = +e.target.value; $('#wDimV').textContent = Math.round(WP.st.dim * 100); wApply(); wSave(); });
 $('#wBlur').addEventListener('input', e => { WP.st.blur = +e.target.value; $('#wBlurV').textContent = WP.st.blur; wApply(); wSave(); });
+$('#wFit').addEventListener('click', e => { const b = e.target.closest('[data-fit]'); if (!b) return; WP.st.fit = b.dataset.fit; WP.st.zoom = 1; WP.st.px = 50; WP.st.py = 50; wApply(); wSave(); renderWall(); });
+$('#wZoom').addEventListener('input', e => { WP.st.zoom = +e.target.value; $('#wZoomV').textContent = Math.round(WP.st.zoom * 100) + '%'; wApply(); wSave(); });
+$('#wPx').addEventListener('input', e => { WP.st.px = +e.target.value; wApply(); wSave(); });
+$('#wPy').addEventListener('input', e => { WP.st.py = +e.target.value; wApply(); wSave(); });
+$('#wReset').addEventListener('click', () => { Object.assign(WP.st, {fit:'cover', zoom:1, px:50, py:50}); wApply(); wSave(); renderWall(); });
+addEventListener('resize', () => { if (WP.st.id === 'photo') wApply(); });
 $('#wDel').addEventListener('click', async () => { await wPut(null); WP.img = null; if (WP.st.id === 'photo') WP.st.id = ''; wSave(); wApply(); renderWall(); toast('写真を削除しました'); });
 (async () => {
   try { const v = JSON.parse(localStorage.getItem(WP.k) || 'null'); if (v) Object.assign(WP.st, v); } catch (e) {}
   if (WP.st.id === 'photo') { WP.img = await wGet(); if (!WP.img) WP.st.id = ''; }
   else WP.img = await wGet();
+  if (WP.img) [WP.iw, WP.ih] = await wDims(WP.img);
   wApply();
 })();
 /* ---------- how-to page ---------- */
@@ -4437,7 +4535,7 @@ function renderSet() {
   $('#cmpNote').textContent = S.cmp === 'pro' ? '高度：伴奏がテンション・裏コード・アプローチコードなどを使い、次のコード候補にもコルトレーン・チェンジなどの上級の技が出ます（譜面はそのまま）。' : 'かんたん：譜面のコードをそのまま、素直な押さえ方で伴奏します。';
   $('#sBpm').textContent = S.bpm; $('#bpmRange').value = S.bpm;
   $('#bpmChips').innerHTML = [60,80,100,120,140,160,200,240].map(b => `<button data-b="${b}" aria-pressed="${b === S.bpm}">${b}</button>`).join('');
-  $('#loopSw').setAttribute('aria-pressed', S.loop); $('#cinSw').setAttribute('aria-pressed', S.cin); $('#realSw').setAttribute('aria-pressed', S.real);
+  $('#loopSw').setAttribute('aria-pressed', S.loop); $('#cinSw').setAttribute('aria-pressed', S.cin); $('#realSw').setAttribute('aria-pressed', S.real); $('#latSw').setAttribute('aria-pressed', !!S.lowLat);
   const ch = (opts, cur, attr) => opts.map(([v, l]) => `<button ${attr}="${v}" aria-pressed="${cur === v}">${l}</button>`).join('');
   $('#soloMode').innerHTML = ch([['scale','スケール画面のときだけ'],['always','いつも'],['off','鳴らさない']], S.solo.mode, 'data-sm');
   $('#soloTone').innerHTML = ch([['guitar','音色: ギター'],['vibes','音色: ビブラフォン']], S.solo.tone, 'data-st');
@@ -4463,6 +4561,7 @@ $('#bpmChips').addEventListener('click', e => { const b = e.target.closest('[dat
 $('#loopSw').addEventListener('click', () => { S.loop = !S.loop; renderSet(); save(); });
 $('#cinSw').addEventListener('click', () => { S.cin = !S.cin; renderSet(); save(); });
 $('#realSw').addEventListener('click', () => { S.real = !S.real; if (A.ctx) applyTone(); renderSet(); save(); });
+$('#latSw').addEventListener('click', () => { if (REC.on) return; S.lowLat = !S.lowLat; if (P.ui) stop(); if (A.ctx) rebuildAudio(A.opt); renderSet(); save(); toast(S.lowLat ? '反応の速さを優先にしました（音が途切れたらOFFに戻してください）' : '音切れ防止にしました'); });
 $('#soloMode').addEventListener('click', e => { const b = e.target.closest('[data-sm]'); if (b) { S.solo.mode = b.dataset.sm; renderSet(); renderDock(); setVols(); save(); } });
 $('#soloTone').addEventListener('click', e => { const b = e.target.closest('[data-st]'); if (b) { S.solo.tone = b.dataset.st; if (A.ctx) applyTone(); renderSet(); save(); if (!P.ui && ac()) { lead(67, A.ctx.currentTime + .03, .45, .7); lead(71, A.ctx.currentTime + .33, .9, .7); } } });
 $('#soloDens').addEventListener('click', e => { const b = e.target.closest('[data-sd]'); if (b) { S.solo.dens = +b.dataset.sd; renderSet(); save(); } });
