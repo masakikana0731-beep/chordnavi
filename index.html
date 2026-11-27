@@ -357,6 +357,29 @@ body.recording .sheet{pointer-events:none}
 .gb{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}.gb .btn{height:38px;font-size:12px;padding:0 12px;flex:1;min-width:120px}
 .gb .btn svg{width:12px;height:12px;margin-right:5px;vertical-align:-1px}
 .gb .btn.on{background:var(--sel);color:#fff;border-color:var(--red)}
+.glist{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.gli{display:flex;align-items:center;gap:8px;width:100%;text-align:left;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:10px 10px 10px 12px;color:var(--ink)}
+.gli>span{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.gli b{font-size:14.5px;color:#fff}.gli small{font-size:10.5px;color:var(--mute);font-weight:600}.gli i{font-style:normal;font-size:12.5px;color:var(--pearl);line-height:1.5}
+.gli em{flex:none;width:26px;height:26px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center}.gli em svg{width:10px;height:10px}
+.gli>svg{flex:none;width:16px;height:16px;color:var(--mute)}
+.gdt{padding-bottom:10px}
+.gback{border:0;background:none;color:var(--red);font-size:13px;font-weight:700;padding:6px 0 8px}
+.gdt h3{margin:0 0 4px;font-size:20px;line-height:1.3;color:#fff}.gdt h3 small{display:block;font-size:12px;color:var(--mute);font-weight:600;margin-top:2px}
+.gdt .gs{font-size:15px;font-weight:700;color:var(--pearl);margin:6px 0 10px;line-height:1.6}
+.gtext{font-size:15px;line-height:1.9;color:#eef2f8;margin:12px 0;letter-spacing:.01em}
+.gdt .gx{font-size:14px;line-height:1.7;background:var(--paper);border-radius:10px;padding:9px 11px;color:var(--ink)}.gdt .gx b{color:var(--red);margin-right:6px}
+.gsec{border-top:1px solid var(--line);padding-top:10px;margin-top:12px}
+.glbl{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;font-weight:700;color:var(--mute);letter-spacing:.06em;margin-bottom:6px}
+.gcv{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}.gcv button{border:0;background:var(--card);color:var(--mute);font-size:11.5px;font-weight:700;padding:5px 10px}.gcv button[aria-pressed=true]{background:var(--sel);color:#fff}
+.gbars{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--paper)}
+.gbar{display:flex;border-right:1px solid var(--line);border-bottom:1px solid var(--line);min-height:46px}.gbar:nth-child(4n){border-right:0}
+.gcc{min-width:0;border:0;background:none;color:var(--ink);font-family:var(--hand,inherit);font-size:15px;font-weight:700;padding:4px 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gcc.tq{color:var(--f3)}.gcc.now{background:var(--sel);color:#fff;box-shadow:inset 0 -3px 0 var(--red)}
+.gnote{font-size:11.5px;color:var(--mute);margin:6px 0 0}.tqm{display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--f3);margin-right:4px;vertical-align:-1px}
+.gsch{font-size:13px;color:var(--pearl);margin:0 0 6px}.gsch b{color:#fff;font-size:15px}
+.gdt .notes{margin-bottom:8px}.gdt .fb{width:100%;height:auto;display:block;margin-bottom:6px}
+.gnav{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}.gnav .btn{height:40px;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .glog{list-style:none;margin:0;padding:0}.glog li{margin:0 0 6px}
 .glog button{width:100%;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:center;text-align:left;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:8px 10px;color:var(--ink);font-size:12px}
 .glog b{font-size:10px;color:#fff;background:var(--red);border-radius:5px;padding:2px 5px}.glog i{font-style:normal;font-size:10px;color:var(--mute)}
@@ -411,6 +434,11 @@ body.hasbanner .pan{flex:0 1 auto}
 .htoc::-webkit-scrollbar{display:none}
 .htoc button{flex:none;height:32px;border:1px solid var(--line);background:var(--card);border-radius:16px;padding:0 11px;font-size:11.5px;font-weight:700}
 .hc .leg{margin:6px 0 2px;font-size:11px}.hc .leg .lx{flex:none}
+.hfig{margin:8px 0 6px;text-align:center}.hfig img{max-width:100%;height:auto;border-radius:10px;border:1px solid var(--line);display:inline-block;background:#05080e}
+.hfig.tall img{max-width:72%}
+.hn{display:inline-flex;align-items:center;justify-content:center;width:19px;height:19px;border-radius:50%;background:#ff5c46;color:#fff;font-size:11px;font-weight:800;margin-right:5px;vertical-align:1px;flex:none}
+.hnl{list-style:none;padding-left:0!important}.hnl li{margin:5px 0}
+.hc .leg{margin:6px 0 2px}
 .hsteps{counter-reset:s;list-style:none;padding:0!important}
 .hsteps li{counter-increment:s;position:relative;padding-left:30px;margin:6px 0}
 .hsteps li::before{content:counter(s);position:absolute;left:0;top:1px;width:22px;height:22px;border-radius:50%;background:var(--red);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
@@ -2576,8 +2604,9 @@ function buildMel() {
   return map;
 }
 function hitNote(m, dur) {
-  if (S.pan !== 'scale') return;
-  const svg = document.getElementById('fbSvg');
+  const inGd = typeof GD !== 'undefined' && GD.open && GD.sel && DM.cur;
+  if (S.pan !== 'scale' && !inGd) return;
+  const svg = document.getElementById(inGd ? 'gdFb' : 'fbSvg');
   if (!svg) return;
   let best = null, bd = 1e9;
   for (let st = 0; st < 6; st++) {
@@ -3442,7 +3471,7 @@ function demoEnd() {
 }
 if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) window.__pro = {drum, drumSyn, DRB, prepDrums, sched, LOOK, A, SMP, smpNote, loadInst, pluck, ac, soloBar, rebuildTL, SP, S, P, TH, scaleInfo, segAt, segNextReal, planHarm, devBody, spanCtx, DEVS, TECH, DM, demoStart, soloBarPro};
 /* ===== 解説ページ：アドリブの技・表現・伴奏の技・コード進行の技（お手本つき） ===== */
-const GD = {open:false, tab:'solo'};
+const GD = {open:false, tab:'solo', sel:null, ci:0, cv:'a', cache:{}};
 const S1 = (prog, solo, o = {}) => ({a:{prog, solo, cmp:'easy', bpm:o.bpm || 132, rid:o.rid || 'swing', key:o.key}});
 const AB = (b, a, o = {}) => ({b:{prog:b, cmp:'easy', bpm:o.bpm || 120, rid:o.rid || 'swing', key:o.key}, a:{prog:a, cmp:'easy', bpm:o.bpm || 120, rid:o.rid || 'swing', key:o.key}});
 const CF = (prog, cf, o = {}) => ({b:{prog, cmp:'easy', bpm:o.bpm || 120, rid:o.rid || 'comp', key:o.key}, a:{prog, cmp:'pro', cforce:cf, bpm:o.bpm || 120, rid:o.rid || 'comp', key:o.key}, bl:'かんたん', al:'この技'});
@@ -3511,6 +3540,81 @@ const GUIDE = {
 const GIDX = {};
 for (const [tab, arr] of Object.entries(GUIDE)) for (const it of arr) GIDX[it.id] = {...it, tab};
 const GTABS = {solo:'アドリブ', expr:'表現', comp:'伴奏', prog:'コード進行', log:'鳴った技'};
+// 一覧はタイトルと一言だけ。タップすると、その技だけの画面（解説・コード譜・スケール）に切り替わる
+function gitem(it) {
+  return `<button class="gli" data-sel="${it.id}"><span><b>${esc(it.t)}</b><small>${esc(it.en)}</small><i>${esc(it.s)}</i></span>${it.demo ? `<em>${ICON.play}</em>` : ''}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 6l6 6-6 6"/></svg></button>`;
+}
+// お手本の進行（「この技」の伴奏は、実際に技を入れた形を計算して見せる）
+function gdPieces(it, v) {
+  const d = it.demo; if (!d) return null;
+  const sp = v === 'b' && d.b ? d.b : d.a, key = sp.key || {t:0, minor:false}, ck = it.id + v;
+  if (DM.cur && DM.cur.gid === it.id && DM.cur.gv === v && P.hl && P.ui) return {key, live:true, list:P.hl.segs.map(s => ({ch:s.ch, start:s.start, len:s.len, tech:s.tech}))};
+  if (GD.cache[ck]) return GD.cache[ck];
+  const chart = DCH(sp.prog);
+  let list = []; let pos = 0; chart.forEach(c => { list.push({ch:c, start:pos, len:c.dur}); pos += c.dur; });
+  if (sp.cmp === 'pro' && !P.ui) {
+    const keep = {cur:DM.cur, key:S.key};
+    try { DM.cur = {...sp, chart}; S.key = key; const hl = planHarm(timeline(), 1); list = hl.segs.map(s => ({ch:s.ch, start:s.start, len:s.len, tech:s.tech})); }
+    catch (e) {} finally { DM.cur = keep.cur; S.key = keep.key; }
+  }
+  return (GD.cache[ck] = {key, list});
+}
+function gdChart(pc, cur) {
+  const L = pc.list, total = L.length ? L[L.length - 1].start + L[L.length - 1].len : 0, nb = Math.ceil(total / 4 - 1e-6);
+  let h = '';
+  for (let b = 0; b < nb; b++) {
+    const inBar = L.map((x, i) => ({x, i})).filter(({x}) => x.start < (b + 1) * 4 - 1e-6 && x.start + x.len > b * 4 + 1e-6);
+    h += '<div class="gbar">' + inBar.map(({x, i}) => { const s = Math.max(x.start, b * 4), e = Math.min(x.start + x.len, (b + 1) * 4), cont = x.start < b * 4 - 1e-6;
+      return `<button data-gci="${i}" class="gcc${i === cur ? ' now' : ''}${x.tech ? ' tq' : ''}" style="flex:${e - s}">${cont ? '%' : esc(TH.name(x.ch, pc.key))}</button>`; }).join('') + '</div>';
+  }
+  return `<div class="gbars">${h}</div>`;
+}
+function gdScale(pc, i) {
+  const x = pc.list[i]; if (!x) return '';
+  const ch = x.ch, nx = pc.list[i + 1] ? pc.list[i + 1].ch : null, rows = TH.chordScales(ch, pc.key, nx);
+  const row = ch.sc ? {id:ch.sc, root:ch.scr ?? ch.root} : rows[0]; if (!row) return '';
+  const notes = scaleNotes(row, ch);
+  return `<div class="gsch"><b>${esc(TH.name(ch, pc.key))}</b> のスケール：${esc(TH.spell(row.root, pc.key))} ${esc(SCJ[row.id] || '')}</div>
+    <div class="notes">${notes.map(n => `<span class="nt f-${n.fam}${n.ct || n.rt ? ' ct' : ''}${n.av ? ' av' : ''}"><b>${esc(n.name)}</b>${esc(n.lb)}</span>`).join('')}</div>
+    ${fretboard(notes).replace('id="fbSvg"', 'id="gdFb"')}${FAM_LEG}`;
+}
+function gdDetail(it) {
+  const d = it.demo, arr = GUIDE[it.tab], k = arr.findIndex(x => x.id === it.id);
+  const playing = DM.cur && DM.cur.gid === it.id;
+  if (playing) GD.cv = DM.cur.gv;
+  if (!d || !d.b) GD.cv = 'a';
+  const pc = gdPieces(it, GD.cv);
+  if (pc && GD.ci >= pc.list.length) GD.ci = 0;
+  const btn = (v, l, cls) => `<button class="btn ${cls}" data-demo="${it.id}" data-v="${v}">${ICON.play}${l}</button>`;
+  const btns = !d ? '' : d.b ? btn('b', d.bl || '元の進行', 'ghost') + btn('a', d.al || 'この技', 'red') : btn('a', 'お手本を聴く', 'red');
+  return `<div class="gdt">
+    <button class="gback" data-sel="">‹ ${esc(GTABS[it.tab])}の一覧</button>
+    <h3>${esc(it.t)}<small>${esc(it.en)}</small></h3>
+    <p class="gs">${esc(it.s)}</p>
+    ${btns ? `<div class="gb">${btns}</div>` : ''}
+    <p class="gtext">${esc(it.b)}</p>
+    ${it.ex ? `<p class="gx"><b>例</b>${esc(it.ex)}</p>` : ''}
+    ${pc ? `<div class="gsec"><div class="glbl">コード譜${d.b ? `<span class="gcv"><button data-cv="b" aria-pressed="${GD.cv === 'b'}">${esc(d.bl || '元の進行')}</button><button data-cv="a" aria-pressed="${GD.cv === 'a'}">${esc(d.al || 'この技')}</button></span>` : ''}</div>
+      <div id="gdChart">${gdChart(pc, GD.ci)}</div>
+      <p class="gnote">${pc.list.some(x => x.tech) ? '<i class="tqm"></i>は技で入れ替わったコード。' : ''}コードをタップすると、そのスケールを表示します（再生中は自動で追いかけます）。</p></div>
+      <div class="gsec"><div class="glbl">スケール</div><div id="gdScale">${gdScale(pc, GD.ci)}</div></div>` : ''}
+    <div class="gnav">${k > 0 ? `<button class="btn ghost" data-sel="${arr[k - 1].id}">‹ ${esc(arr[k - 1].t)}</button>` : '<span></span>'}${k < arr.length - 1 ? `<button class="btn ghost" data-sel="${arr[k + 1].id}">${esc(arr[k + 1].t)} ›</button>` : '<span></span>'}</div>
+  </div>`;
+}
+// 再生中は、いま鳴っているコードをコード譜とスケールで追いかける
+function gdFollow() {
+  if (!GD.open || !GD.sel) return;
+  const it = GIDX[GD.sel];
+  if (it && DM.cur && DM.cur.gid === it.id && P.ui && A.ctx) {
+    const pc = gdPieces(it, GD.cv), beat = (A.ctx.currentTime - P.t0) * S.bpm / 60;
+    if (beat >= 0) {
+      let i = pc.list.findIndex(x => beat >= x.start - 1e-6 && beat < x.start + x.len - 1e-6); if (i < 0) i = GD.ci;
+      const live = pc.live ? pc.list.map(x => TH.name(x.ch, pc.key) + x.start).join() : '';
+      if (i !== GD.ci || live !== GD.lastLive) { GD.ci = i; GD.lastLive = live; const c = $('#gdChart'), s = $('#gdScale'); if (c) c.innerHTML = gdChart(pc, i); if (s) s.innerHTML = gdScale(pc, i); }
+    }
+  }
+  requestAnimationFrame(gdFollow);
+}
 function gcard(it) {
   const d = it.demo;
   const btn = (v, l, cls) => `<button class="btn ${cls}" data-demo="${it.id}" data-v="${v}">${ICON.play}${l}</button>`;
@@ -3530,7 +3634,8 @@ function renderGuide() {
   if (T === 'log') {
     const now = Date.now();
     B.innerHTML = `<p class="gi">高度モードで再生したときに使われた技が、新しい順にたまります。タップすると解説に飛びます。</p>` + (TECH.log.length ? `<ul class="glog">${TECH.log.map(e => `<li><button data-goto="${esc(e.id)}"><b>${e.kind === 'solo' ? 'アドリブ' : '伴奏'}</b><span>${esc(e.txt)}</span><i>${Math.max(0, Math.round((now - e.at) / 1000))}秒前</i></button></li>`).join('')}</ul>` : '<p class="gempty">まだありません。アドリブかコードの技を「高度」にして再生してみてください。</p>');
-  } else B.innerHTML = intro[T] + GUIDE[T].map(gcard).join('');
+  } else if (GD.sel && GIDX[GD.sel]) B.innerHTML = gdDetail(GIDX[GD.sel]);
+  else B.innerHTML = intro[T] + `<div class="glist">${GUIDE[T].map(gitem).join('')}</div>`;
   renderGuideBtns();
 }
 function renderGuideBtns() {
@@ -3545,9 +3650,11 @@ function renderGuideBtns() {
 function openGuide(target) {
   const it = GIDX[target] || (target === 'disp' ? GIDX.motif : null);
   GD.tab = it ? it.tab : GTABS[target] ? target : 'solo';
+  const was = GD.open;
+  GD.sel = it ? it.id : null; GD.ci = 0; GD.cv = 'a';
   GD.open = true; closeBS(); $('#guide').hidden = false; renderGuide();
-  if (it) { const el = $('#g-' + it.id); if (el) { el.scrollIntoView({block:'start'}); el.classList.add('hl'); setTimeout(() => el.classList.remove('hl'), 1600); } }
-  else $('#gdBody').scrollTop = 0;
+  $('#gdBody').scrollTop = 0;
+  if (!was) requestAnimationFrame(gdFollow);
 }
 function closeGuide() { GD.open = false; $('#guide').hidden = true; if (DM.cur) stop(); }
 function setSoloLv(v) {
@@ -3562,15 +3669,22 @@ function setCmp(v) {
   toast(v === 'pro' ? 'コードの技：高度（候補に上級の技、伴奏もテンションや裏コードで）' : 'コードの技：かんたん');
 }
 $('#gdBack').addEventListener('click', closeGuide);
-$('#gdTabs').addEventListener('click', e => { const b = e.target.closest('[data-t]'); if (!b) return; GD.tab = b.dataset.t; renderGuide(); $('#gdBody').scrollTop = 0; });
+$('#gdTabs').addEventListener('click', e => { const b = e.target.closest('[data-t]'); if (!b) return; GD.tab = b.dataset.t; GD.sel = null; renderGuide(); $('#gdBody').scrollTop = 0; });
 $('#gdBody').addEventListener('click', e => {
   const d = e.target.closest('[data-demo]');
   if (d) {
     const it = GIDX[d.dataset.demo], v = d.dataset.v;
     if (DM.cur && DM.cur.gid === it.id && DM.cur.gv === v) { stop(); return; }
     demoStart({...(v === 'b' ? it.demo.b : it.demo.a), gid:it.id, gv:v});
+    if (GD.sel === it.id && it.demo.b && GD.cv !== v) { GD.cv = v; GD.ci = 0; setTimeout(renderGuide, 700); }
     return;
   }
+  const sl = e.target.closest('[data-sel]');
+  if (sl) { const id = sl.dataset.sel; if (DM.cur && DM.cur.gid !== id) stop(); GD.sel = id || null; GD.ci = 0; GD.cv = 'a'; renderGuide(); $('#gdBody').scrollTop = 0; return; }
+  const ci = e.target.closest('[data-gci]');
+  if (ci) { GD.ci = +ci.dataset.gci; const it = GIDX[GD.sel], pc = gdPieces(it, GD.cv); $('#gdChart').innerHTML = gdChart(pc, GD.ci); $('#gdScale').innerHTML = gdScale(pc, GD.ci); return; }
+  const cv = e.target.closest('[data-cv]');
+  if (cv) { GD.cv = cv.dataset.cv; GD.ci = 0; renderGuide(); return; }
   const g = e.target.closest('[data-goto]'); if (g) { openGuide(g.dataset.goto); return; }
   const lv = e.target.closest('[data-lvg]'); if (lv) { setSoloLv(lv.dataset.lvg); return; }
   const cl = e.target.closest('[data-clg]'); if (cl) { setCmp(cl.dataset.clg); return; }
@@ -3725,55 +3839,79 @@ $('#wDel').addEventListener('click', async () => { await wPut(null); WP.img = nu
 /* ---------- how-to page ---------- */
 const HK = s => `<span class="hk">${s}</span>`;
 const HGO = (k, l) => `<button class="btn ghost" data-hgo="${k}">${l}</button>`;
+const HN = n => `<span class="hn">${n}</span>`;
+const HIMG = {"h_adl":[620,1024],"h_cand":[620,610],"h_dock":[620,113],"h_guide":[480,1039],"h_input":[620,642],"h_lib":[620,1246],"h_main":[560,1212],"h_rec":[620,944],"h_review":[620,1103],"h_scale":[620,674],"h_set":[620,944],"h_song":[620,817],"h_stage":[420,909],"h_voicing":[620,642],"h_wall":[620,1024]};
+const HF = (src, alt, cls = '') => { const [w, h] = HIMG[src] || [0, 0]; return `<figure class="hfig ${cls}"><img src="help/${src}.webp" alt="${alt}" width="${w}" height="${h}" loading="lazy" decoding="async"></figure>`; };
 const HELP = [
   {id:'start', t:'はじめに（3ステップ）', h:`<ol class="hsteps">
-    <li><b>コードを入れる</b>：画面下の「次の候補」をタップすると譜面に入ります。長押しで試聴できます。${HK('曲集')}からスタンダード曲を読み込むこともできます。</li>
+    <li><b>コードを入れる</b>：画面下の「次の候補」をタップすると譜面に入ります。長押しで試聴。${HK('曲集')}から曲を読み込むこともできます。</li>
     <li><b>再生する</b>：いちばん下の ▶ で、ギター・ベース・ドラムの伴奏が鳴ります。もう一度押すと止まります。</li>
-    <li><b>合わせて弾く・歌う</b>：${HK('スケール')}で使える音を見ながら合わせたり、● ボタンで声を録音したりできます。</li></ol>
+    <li><b>合わせて弾く・歌う</b>：${HK('スケール')}で使える音を見ながら合わせたり、● ボタンで声や楽器を録音したりできます。</li></ol>
     <p>入れた進行や設定は、このスマホの中に自動で保存されます。</p>`, go:[['cand', '次の候補を見る'], ['lib', '曲集を開く']]},
-  {id:'screen', t:'画面の見方', h:`<ul>
-    <li><b>上の列</b>：${HK('曲集')} 曲を読み込む／${HK('Key')} キーの変更・推定・移調／${HK('ポップ・ジャズ')} 候補と伴奏の雰囲気／${HK('演奏')} 大きな文字の演奏画面／↶ 元に戻す／… メニュー</li>
-    <li><b>譜面</b>：入れたコードが並びます。タップで選ぶと音が鳴り、そのコードが編集の対象になります。</li>
-    <li><b>選んだコードの列</b>：‹ › で前後へ、${HK('−')}${HK('＋')}で長さ、▶| でそこから再生、ごみ箱で削除。</li>
-    <li><b>パネルの切り替え</b>：次の候補・入力・スケール・押さえ方。${HK('追従')}をONにすると、再生中のコードに画面がついていきます。</li>
-    <li><b>いちばん下</b>：再生／録音（●）／テンポ／伴奏／メロディ／アドリブ。</li></ul>`},
-  {id:'chord', t:'コードを入れる・直す', h:`<ul>
-    <li><b>次の候補</b>：今のコードの次に合うコードが、相性のよい順に並びます（数字は目安）。タップで追加、長押しで試聴。</li>
-    <li><b>途中に入れる</b>：譜面のコードをタップして選ぶと、その後ろに入ります。</li>
+  {id:'screen', t:'画面の見方', h:`${HF('h_main', 'ふだんの画面', 'tall')}<ul class="hnl">
+    <li>${HN(1)}<b>上の列</b>：${HK('曲集')} 曲を読み込む／${HK('Key')} キーの変更・移調／${HK('ポップ・ジャズ')} 候補と伴奏の雰囲気／${HK('演奏')} 大きな文字の演奏画面／↶ 元に戻す／… メニュー</li>
+    <li>${HN(2)}<b>譜面</b>：入れたコードが並びます。タップで選ぶと音が鳴り、編集の対象になります。</li>
+    <li>${HN(3)}<b>選んだコードの列</b>：‹ › で前後へ、${HK('−')}${HK('＋')}で長さ、▶| でそこから再生、ごみ箱で削除。</li>
+    <li>${HN(4)}<b>パネルの切り替え</b>：次の候補・入力・スケール・押さえ方。${HK('追従')}をONにすると、再生中のコードに画面がついていきます。</li>
+    <li>${HN(5)}<b>パネル</b>：選んだ内容がここに出ます。下が空いていれば、好きなバナー画像も出せます。</li>
+    <li>${HN(6)}<b>いちばん下</b>：再生・録音・テンポ・伴奏・メロディ・アドリブ。</li></ul>`},
+  {id:'chord', t:'コードを入れる・直す', h:`${HF('h_cand', '次の候補')}<ul class="hnl">
+    <li>${HN(1)}<b>次の候補</b>：今のコードの次に合うコードが、相性のよい順に並びます（右上の数字が目安）。タップで追加、長押しで試聴。</li>
+    <li>${HN(2)}<b>かんたん／高度</b>：高度にすると、上級の技（裏コードなど）も候補に出ます。</li>
+    <li><b>途中に入れる</b>：譜面のコードをタップして選ぶと、その後ろに入ります。</li></ul>
+    ${HF('h_input', '入力パネル')}<ul>
     <li><b>入力</b>：音名と種類を選んで「追加」。選んだコードを変えるときは「置き換え」。</li>
     <li><b>まとめて入力</b>：メニューの下の欄に「Dm7 G7 Cmaj7」のようにスペースで区切って入れます。</li>
     <li><b>間違えたら</b>：↶（元に戻す）。全部消すのはメニューの「譜面をクリア」。</li></ul>`, go:[['input', '入力パネルへ'], ['menu', 'メニューを開く']]},
-  {id:'scale', t:'スケールと色の見方', h:`<p>選んだコードで使える音を、指板の上に表示します。<b>色はコードの骨組み（R・3・5・7）</b>を表しています。</p>
+  {id:'lib', t:'曲集から読み込む', h:`${HF('h_lib', '曲集')}<ul>
+    <li>上の${HK('曲集')}で開きます。ジャンル（ポップス・ロック、作曲の定番進行など）とキーで絞り込めます。曲名や作曲者で検索もできます。</li>
+    <li>右側のバーは複雑さの目安です。</li></ul>
+    ${HF('h_song', '曲の読み込み')}<ul>
+    <li>曲を選ぶと、読み込むキーと伴奏のリズムを選べます。「読み込んで再生」ですぐ鳴ります。今の譜面は置き換わりますが、↶で戻せます。</li></ul>`, go:[['lib', '曲集を開く']]},
+  {id:'scale', t:'スケールと色の見方', h:`${HF('h_scale', 'スケール画面')}
+    <ul class="hnl"><li>${HN(1)}<b>スケールの音</b>：色付きの四角はコードの音、灰色はスケールだけの音。</li>
+    <li>${HN(2)}<b>指板</b>：同じ色分けで、どこを押さえればいいかを表示します。</li>
+    <li>${HN(3)}<b>凡例</b>：色の意味です。</li></ul>
     ${FAM_LEG}
     <ul><li><b>塗りつぶしの丸</b>＝今のコードの音（コードトーン）。ここに着地すると、コードに合って聞こえます。まずは R・3度・7度をねらうのがおすすめ。</li>
     <li><b>色の枠だけの丸</b>＝スケールの3度・5度・7度だけど、コードには入っていない音（例：C の3和音での 7度）。</li>
-    <li><b>小さい白枠の丸</b>＝テンション（9・11・13など）。色づけに使う音です。</li>
-    <li><b>点線</b>＝長く伸ばすとぶつかりやすい音。経過音として短く使います。</li></ul>
+    <li><b>小さい白枠の丸</b>＝テンション（9・11・13など）。<b>点線</b>＝長く伸ばすとぶつかりやすい音。</li></ul>
     <p>${HK('度数')}${HK('音名')}で表示を切り替え。下のスケール名をタップするとそのコードに記録、長押しで試聴。赤い点がおすすめです。</p>`, go:[['scale', 'スケールを見る']]},
-  {id:'voicing', t:'押さえ方', h:`<ul>
+  {id:'voicing', t:'押さえ方', h:`${HF('h_voicing', '押さえ方')}<ul>
     <li>選んだコードの押さえ方を、指板の図で表示します。丸の色はスケールと同じです（R 赤・3度 黄・5度 水色・7度 紫）。</li>
     <li>図をタップすると鳴ります。ピンのボタンで、伴奏でもその押さえ方を使うよう固定できます。</li></ul>`, go:[['voicing', '押さえ方を見る']]},
-  {id:'play', t:'再生・伴奏', h:`<ul>
-    <li><b>途中から再生</b>：譜面のコードを選んで ▶|（ここから再生）。</li>
-    <li><b>テンポ</b>：${HK('−')}${HK('＋')}、または数字を続けてタップすると、その速さに合わせます。</li>
-    <li><b>伴奏</b>：下の${HK('伴奏')}で、4ビート・ボサノバ・バラードなどのリズム、楽器ごとの音量、ループ、カウントイン、リアル音源を選べます。</li>
-    <li><b>演奏モード</b>：上の${HK('演奏')}で、今と次のコードを大きく表示。譜面台に置いて弾くとき向けです。</li>
-    <li><b>メロディ</b>：曲集の ♪ 印の曲では、メロディも鳴らせます。</li></ul>`, go:[['set', '伴奏・音の設定'], ['stage', '演奏モード']]},
-  {id:'adlib', t:'アドリブと「かんたん／高度」', h:`<ul>
+  {id:'play', t:'再生・伴奏', h:`${HF('h_dock', '再生バー')}<ul class="hnl">
+    <li>${HN(1)}<b>再生／停止</b>。途中から鳴らすときは、譜面のコードを選んで ▶|（ここから再生）。</li>
+    <li>${HN(2)}<b>録音</b>（声・楽器）。</li>
+    <li>${HN(3)}<b>テンポ</b>：${HK('−')}${HK('＋')}、または数字を続けてタップすると、その速さに合わせます。</li>
+    <li>${HN(4)}<b>伴奏</b>：リズム（18種類）・楽器ごとの音量・ループ・カウントイン・リアル音源。</li>
+    <li>${HN(5)}<b>メロディ</b>：曲集の ♪ 印の曲で、メロディを鳴らせます。</li>
+    <li>${HN(6)}<b>アドリブ</b>：自動のソロの設定。</li></ul>
+    ${HF('h_set', '伴奏の設定')}
+    ${HF('h_stage', '演奏モード', 'tall')}<ul>
+    <li><b>演奏モード</b>：上の${HK('演奏')}で、今と次のコードを大きく表示。譜面台に置いて弾くとき向けです。壁紙を設定すると背景に出ます。</li></ul>`, go:[['set', '伴奏・音の設定'], ['stage', '演奏モード']]},
+  {id:'adlib', t:'アドリブと「かんたん／高度」', h:`${HF('h_adl', 'アドリブの設定')}<ul>
     <li>下の${HK('アドリブ')}で、自動のソロを鳴らすとき（スケール画面のとき／いつも／鳴らさない）・音色・音数・音量を選べます。</li>
     <li><b>アドリブのかんたん／高度</b>：かんたんはスケールの音でなめらかに、高度はジャズの技や表現を入れて弾きます。使った技は右下に出て、タップすると解説が開きます。</li>
-    <li><b>コードの技のかんたん／高度</b>：高度にすると、次の候補に上級の技が並び、伴奏もテンションや裏コードを使います。</li></ul>`, go:[['adl', 'アドリブの設定'], ['guide', '音楽の技・解説']]},
-  {id:'rec', t:'録音（声・楽器）', h:`<ol>
-    <li>● を押して、上で<b>声</b>か<b>楽器</b>を選びます。楽器にすると、声用の処理（ノイズ除去など）を切って楽器の音をそのまま録ります。</li>
-    <li>長さ（何周）とカウントの小節数を選び「録音スタート」。初めてのときはマイクの許可を求められるので「許可」。</li>
-    <li>カウントのあと、伴奏に合わせて歌う（弾く）。停止で終わり。</li>
-    <li>試聴して、エフェクトや伴奏とのずれを調整します。うまくいかなかった区間だけ選んで録り直すこともできます。</li>
-    <li>形式（MP3・音声・動画）を選んで保存します。</li></ol>
+    <li><b>コードの技のかんたん／高度</b>：高度にすると、次の候補に上級の技が並び、伴奏もテンションや裏コードを使います。</li></ul>
+    ${HF('h_guide', '音楽の技・解説', 'tall')}<ul>
+    <li><b>音楽の技・解説</b>（メニュー）：技をタップすると、その技だけの画面になり、解説・お手本・コード譜・スケールを表示します。再生中は鳴っているコードを追いかけます。</li></ul>`, go:[['adl', 'アドリブの設定'], ['guide', '音楽の技・解説']]},
+  {id:'rec', t:'録音（声・楽器）', h:`${HF('h_rec', '録音の準備')}<ul class="hnl">
+    <li>${HN(1)}<b>声か楽器か</b>：楽器にすると、声用の処理（ノイズ除去など）を切って楽器の音をそのまま録ります。</li>
+    <li>${HN(2)}<b>長さ</b>（何周するか）。</li>
+    <li>${HN(3)}<b>カウント</b>の小節数。</li>
+    <li>${HN(4)}<b>録音スタート</b>。初めてのときはマイクの許可を求められるので「許可」。カウントのあと、伴奏に合わせて歌う（弾く）。停止で終わり。</li></ul>
+    ${HF('h_review', 'テイクの確認')}<ul class="hnl">
+    <li>${HN(1)}<b>試聴</b>：波形をタップした所から聴けます。上のスライダーで音量のバランス。</li>
+    <li>${HN(2)}<b>エフェクト</b>：リバーブ・エコー・くっきり・ダブリング・ノイズ除去。</li>
+    <li>${HN(3)}<b>区間を決めて録り直す</b>：うまくいかなかった小節だけ録り直せます。</li>
+    <li>${HN(4)}<b>保存形式</b>：動画MP4・音声・MP3から選んで「保存する」。</li></ul>
     <p>イヤホン（ヘッドホン）を使うと、伴奏がマイクに入らずきれいに録れます。楽器はスマホを30cmくらい離して置くのがおすすめです。</p>`, go:[['rec', '録音を開く']]},
   {id:'app', t:'アプリとして使う・壁紙', h:`<ul>
-    <li><b>ホーム画面に追加</b>：iPhone は Safari の共有ボタン（□↑）→「ホーム画面に追加」。Android は Chrome のメニュー（︙）→「ホーム画面に追加」または「アプリをインストール」。一度開けば、電波がなくても使えます。</li>
-    <li><b>壁紙・バナー</b>：メニューの「壁紙」で、演奏モードの背景に自分の写真や柄を選べます（ふだんの画面にも出すかは切り替え可）。<b>バナー</b>はふだんの画面の下の空いたところに好きな画像を表示します。</li>
-    <li>壁紙や進行は<b>このスマホのこのアプリ（ブラウザ）の中だけ</b>に保存されます。同じアドレスを開いたほかの人には見えません。Safari とホーム画面のアプリでは保存場所が別なので、使う方で設定してください。</li></ul>`, go:[['wall', '壁紙・バナーを設定']]},
+    <li><b>ホーム画面に追加</b>：iPhone は Safari の共有ボタン（□↑）→「ホーム画面に追加」。Android は Chrome のメニュー（︙）→「ホーム画面に追加」または「アプリをインストール」。一度開けば、電波がなくても使えます。</li></ul>
+    ${HF('h_wall', '壁紙・バナー')}<ul>
+    <li><b>壁紙・バナー</b>：メニューの「壁紙・バナー」で、演奏モードの背景に自分の写真や柄を選べます（ふだんの画面にも出すかは切り替え可）。<b>バナー</b>はふだんの画面の下の空いたところに好きな画像を表示します。</li>
+    <li>壁紙や進行は<b>このスマホのこのアプリ（ブラウザ）の中だけ</b>に保存されます。同じアドレスを開いたほかの人には見えません。</li></ul>`, go:[['wall', '壁紙・バナーを設定']]},
   {id:'trouble', t:'困ったとき', h:`<ul>
     <li><b>音が出ない</b>：iPhone はマナーモード（消音スイッチ）を解除して、音量を上げてください。</li>
     <li><b>音の高さや鳴り方がおかしい</b>：録音のあとなどに起きたら、アプリを閉じて開き直してください。</li>
@@ -3781,7 +3919,7 @@ const HELP = [
     <li><b>動きが重い</b>：伴奏の設定でリアル音源をオフにすると軽くなります。</li>
     <li><b>消したものを戻したい</b>：上の ↶（元に戻す）。</li></ul>`},
 ];
-const HTOC = {start:'はじめに', screen:'画面', chord:'コード入力', scale:'スケールと色', voicing:'押さえ方', play:'再生・伴奏', adlib:'アドリブ', rec:'録音', app:'アプリ・壁紙', trouble:'困ったとき'};
+const HTOC = {start:'はじめに', screen:'画面', chord:'コード入力', lib:'曲集', scale:'スケールと色', voicing:'押さえ方', play:'再生・伴奏', adlib:'アドリブ', rec:'録音', app:'アプリ・壁紙', trouble:'困ったとき'};
 function renderHelp() {
   $('#hpToc').innerHTML = HELP.map(s => `<button data-hto="${s.id}">${HTOC[s.id]}</button>`).join('');
   $('#hpBody').innerHTML = HELP.map(s => `<article class="hc" id="h-${s.id}"><h3>${s.t}</h3>${s.h}${s.go ? `<div class="hgo">${s.go.map(([k, l]) => HGO(k, l)).join('')}</div>` : ''}</article>`).join('');
