@@ -409,7 +409,7 @@ body.haswall .stage{background:rgba(5,9,16,.55)}
 <div id="wall" aria-hidden="true"></div>
 <div class="app">
 <header class="hd">
-  <button class="ib" id="libBtn" aria-label="スタンダード曲集"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19.5V5a2 2 0 0 1 2-2h14v15H6a2 2 0 0 0-2 2 2 2 0 0 0 2 2h14"/><path d="M9 7h7M9 11h5"/></svg><span>曲集</span></button>
+  <button class="ib" id="libBtn" aria-label="曲集"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19.5V5a2 2 0 0 1 2-2h14v15H6a2 2 0 0 0-2 2 2 2 0 0 0 2 2h14"/><path d="M9 7h7M9 11h5"/></svg><span>曲集</span></button>
   <button class="keyb" id="keyBtn" aria-label="キーを変更"><small>Key</small><b id="keyName">C</b></button>
   <div class="seg" id="styleSeg" role="group" aria-label="スタイル"><button data-s="pop" aria-pressed="false">ポップ</button><button data-s="jazz" aria-pressed="true">ジャズ</button></div>
   <span class="gap"></span>
@@ -554,10 +554,10 @@ body.haswall .stage{background:rgba(5,9,16,.55)}
   </div>
   <p class="note">iPhoneで音が出ないときは、本体のマナーモード（消音スイッチ）を解除してください。ギター・ベース・ビブラフォンの音源: FluidR3_GM SoundFont（Frank Wen、<a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>）。<a href="https://github.com/gleitz/midi-js-soundfonts">midi-js-soundfonts</a>（gleitz）の書き出しから一部の音を抜き出して使っています。ドラムは合成音です。録音の書き出し: <a href="https://github.com/Vanilagy/mp4-muxer">mp4-muxer</a>・<a href="https://github.com/Vanilagy/webm-muxer">webm-muxer</a>（MIT）、<a href="https://github.com/zhuker/lamejs">lamejs</a>（LGPL-3.0）。</p>
 </section>
-<section class="bs tall" id="bsLib" aria-label="スタンダード曲集">
+<section class="bs tall" id="bsLib" aria-label="曲集">
   <div class="libtop">
     <div class="grab"></div>
-    <div class="bs-hd"><h4>スタンダード曲集 <small id="songCount" style="font-size:11px;color:var(--mute);font-weight:500"></small></h4><button class="x" data-close aria-label="閉じる">×</button></div>
+    <div class="bs-hd"><h4>曲集 <small id="songCount" style="font-size:11px;color:var(--mute);font-weight:500"></small></h4><button class="x" data-close aria-label="閉じる">×</button></div>
     <form class="look" id="songQ" role="search"><input id="songIn" type="search" placeholder="曲名・作曲者で探す" autocomplete="off" enterkeyhint="search"></form>
     <div class="hscroll chips" id="songFeel" style="margin-top:6px;flex-wrap:nowrap"></div>
     <div class="selrow"><select id="songKey" aria-label="キー"></select><select id="songSort" aria-label="並び順">
@@ -1205,6 +1205,90 @@ const rhyA1 = 'Bbmaj7 G7|Cm7 F7|Bbmaj7 G7|Cm7 F7|Fm7 Bb7|Ebmaj7 Edim7|Bbmaj7 G7|
 const rhyA2 = 'Bbmaj7 G7|Cm7 F7|Bbmaj7 G7|Cm7 F7|Fm7 Bb7|Ebmaj7 Edim7|Cm7 F7|Bb6';
 const rhyB = 'D7|D7|G7|G7|C7|C7|F7|F7';
 const L = [
+  // ---- ポップス・ロック（コード進行のみ。歌詞・メロディは収録していません） ----
+  ['Let It Be','The Beatles','C','pballad',72, A('C|G|Am|F|C|G|F|C', 'C|G|Am|F|C|G|F|C', 'Am|G|F|C|C|G|F|C')],
+  ['Imagine','John Lennon','C','pballad',76, A('C Cmaj7|F|C Cmaj7|F|C Cmaj7|F|C Cmaj7|F', 'F Am|Dm F|G|G7', 'F G|C E7|F G|C E7|F G|C E7|F G|C')],
+  ['No Woman, No Cry','Bob Marley','C','pop',78, A('C|G|Am|F|C|F|C|G', 'C|G|Am|F|C|F|C|G')],
+  ["Don't Look Back in Anger",'Oasis','C','rock',82, A('C|G|Am|E|F|G|C|Am G', 'C|G|Am|E|F|G|C|Am G', 'F|Fm|C|C', 'C|G|Am|E|F|G|C|G')],
+  ['Stand By Me','Ben E. King','A','pop',118, A('A|A|F#m|F#m|D|E|A|A', 'A|A|F#m|F#m|D|E|A|A')],
+  ['Take Me Home, Country Roads','John Denver','A','pop',82, A('A|F#m|E|D|A|A', 'A|F#m|E|D|A|A', 'A|E|F#m|D|A|E|D|A')],
+  ['Someone Like You','Adele','A','pballad',68, A('A|C#m|F#m|D|A|C#m|F#m|D', 'A|E/G#|F#m|D|A|E/G#|F#m|D')],
+  ["Knockin' on Heaven's Door",'Bob Dylan','G','rock',68, A('G|D|Am|Am|G|D|C|C', 'G|D|Am|Am|G|D|C|C')],
+  ['Creep','Radiohead','G','rock',92, A('G|B|C|Cm|G|B|C|Cm')],
+  ['Golden','HUNTR/X','G','pop',123, A('C|G|D|Em|C|G|D|D', 'C|D|G D/F#|Em|C|D|G D/F#|Em')],
+  ['With or Without You','U2','D','rock',110, A('D|A|Bm|G|D|A|Bm|G')],
+  ['Thinking Out Loud','Ed Sheeran','D','pballad',79, A('D|D/F#|G|A|D|D/F#|G|A')],
+  ['Hey Jude','The Beatles','F','pop',74, A('F|C|C7|F|Bb|F|C7|F', 'F|Eb|Bb|F|F|Eb|Bb|F')],
+  ['I\'m Yours','Jason Mraz','B','pop',150, A('B|F#|G#m|E|B|F#|G#m|E')],
+  ['Viva la Vida','Coldplay','Ab','pop',138, A('Db|Eb|Ab|Fm|Db|Eb|Ab|Fm')],
+  ['Perfect','Ed Sheeran','Ab','pballad',63, A('Ab|Fm|Db|Eb|Ab|Fm|Db|Eb')],
+  ['All of Me','John Legend','Ab','pballad',63, A('Fm|Db|Ab|Eb|Fm|Db|Ab|Eb', 'Ab|Fm|Db|Eb|Ab|Fm|Db|Eb')],
+  ['Someone You Loved','Lewis Capaldi','Db','pballad',110, A('Db|Ab|Bbm|Gb|Db|Ab|Bbm|Gb')],
+  ['怪物（サビ冒頭の進行）','YOASOBI ／ 王道進行','E','pop',152, A('A|B|G#m|C#m|A|B|G#m|C#m')],
+  ['Shape of You','Ed Sheeran','C#m','dance',96, A('C#m|F#m|A|B|C#m|F#m|A|B')],
+  ['Counting Stars','OneRepublic','C#m','pop',122, A('C#m|E|B|A|C#m|E|B|A')],
+  ['Despacito','Luis Fonsi','Bm','dance',89, A('Bm|G|D|A|Bm|G|D|A')],
+  ['Hotel California','Eagles','Bm','rock',74, A('Bm|F#|A|E|G|D|Em|F#', 'G|D|F#|Bm|G|D|Em|F#')],
+  ['Zombie','The Cranberries','Em','rock',84, A('Em|C|G|D|Em|C|G|D')],
+  ['Wonderwall','Oasis','F#m','rock',87, A('F#m7|A|Esus4|B7sus4|F#m7|A|Esus4|B7sus4', 'D|E|F#m7|F#m7|D|E|F#m7|F#m7')],
+  ['Blinding Lights','The Weeknd','Fm','dance',171, A('Fm|Cm|Eb|Bb|Fm|Cm|Eb|Bb')],
+  ['Hello','Adele','Fm','pballad',79, A('Fm|Ab|Eb|Db|Fm|Ab|Eb|Db')],
+  ['Get Lucky','Daft Punk','Bm','city',116, A('Bm7|D|F#m7|E|Bm7|D|F#m7|E')],
+  ['Uptown Funk','Mark Ronson ft. Bruno Mars','Dm','city',115, A('Dm7|G7|Dm7|G7|Dm7|G7|Dm7|G7')],
+  // ---- 著作権の切れた曲（コード進行のみ） ----
+  ['カノン（パッヘルベル）','Johann Pachelbel','D','pballad',70, A('D|A|Bm|F#m|G|D|G|A', 'D|A|Bm|F#m|G|D|G|A')],
+  ['アメイジング・グレイス','トラディショナル','G','waltz',80, A('G|G7|C|G|G|Em|D|D7', 'G|G7|C|G|Em|D|G|G')],
+  ['きよしこの夜（Silent Night）','Franz Gruber','C','waltz',90, A('C|C|C|C|G7|G7|C|C', 'F|F|C|C|F|F|C|C', 'G7|G7|C|C|C|G7|C|C')],
+  ['ジングル・ベル（サビ）','J. Pierpont','G','pop',120, A('G|G|G|G|C|G|A7|D7', 'G|G|G|G|C|G|D7|G')],
+  ['聖者の行進','トラディショナル','F','swing',150, A('F|F|F|F|F|F|C7|C7', 'F|F7|Bb|Bbm|F|C7|F|F')],
+  ['朝日のあたる家','トラディショナル','Am','waltz',110, A('Am|C|D|F|Am|C|E|E', 'Am|C|D|F|Am|E|Am|E')],
+  ['グリーンスリーブス','トラディショナル','Am','waltz',100, A('Am|C|G|Em|Am|F|E|E', 'Am|C|G|Em|Am|E|Am|Am', 'C|C|G|Em|Am|F|E|E', 'C|C|G|Em|Am|E|Am|Am')],
+  ['ハッピー・バースデー','Mildred & Patty Hill','F','waltz',100, A('F|C7|C7|F|F|Bb|F C7|F')],
+  // ---- 作曲の定番進行（キーは全体のかたよりが少なくなるよう自動で割り振り） ----
+  ['王道進行（4536）','定番進行｜例：夜に駆ける・君はロックを聴かない（サビ）','C*','pop',130, 'Fmaj7|G|Em7|Am|Fmaj7|G|Em7 Am|Dm7 G'],
+  ['王道進行（III7で切なく）','定番進行｜4536の3をセカンダリー・ドミナントに','C*','pop',130, 'Fmaj7|G|E7|Am|Fmaj7|G|E7|Am'],
+  ['王道進行のロング版','定番進行｜サビを8小節で回す形','C*','pop',140, 'Fmaj7|G|Em7|Am|Dm7|Em7|Fmaj7|G'],
+  ['王道進行＋セブンス','定番進行｜少しおしゃれな王道','C*','city',110, 'Fmaj7|G7|Em7|A7|Dm7|G7|Cmaj7|Cmaj7'],
+  ['4156進行','定番進行｜例：Lemon（サビ）・Good Luck, Babe!','C*','pop',88, 'F|C|G|Am|F|C|G|Am'],
+  ['4561進行','定番進行｜例：打上花火','C*','pop',96, 'F|G|Am|C|F|G|Am|C'],
+  ['1564進行（Let It Be進行）','定番進行｜例：チェリー（スピッツ）・Let It Be','C*','pop',120, 'C|G|Am|F|C|G|Am|F'],
+  ['1645進行（50s進行）','定番進行｜例：Stand By Me','C*','pop',112, 'C|Am|F|G|C|Am|F|G'],
+  ['カノン進行','定番進行｜例：さくら（独唱）・浪漫飛行（サビ）','C*','pballad',76, 'C|G|Am|Em|F|C|F|G'],
+  ['カノン進行（ベース下降）','定番進行｜ベースが1音ずつ下がる形','C*','pballad',72, 'C|G/B|Am|Em/G|F|C/E|F|G'],
+  ['下降ベースのバラード','定番進行｜弾き語りの定番','C*','pballad',70, 'C|G/B|Am|Am/G|F|C/E|Dm7|Gsus4 G'],
+  ['Just The Two of Us進行（丸サ進行）','定番進行｜例：丸の内サディスティック','C*','city',96, 'Fmaj7|E7|Am7|Gm7 C7|Fmaj7|E7|Am7|Gm7 C7'],
+  ['シティポップ進行','定番進行｜IVmaj7からおしゃれに回す','C*','city',104, 'Fmaj7|Em7|Am7|Gm7 C7|Fmaj7|Em7|Dm7|Gsus4 G'],
+  ['2516（ツーファイブで回す）','定番進行｜ジャズ寄りのポップス','C*','city',112, 'Dm7|G7|Cmaj7|Am7|Dm7|G7|Cmaj7|Am7'],
+  ['同主調の借用（IV→IVm）','定番進行｜IVmで切なく戻る','C*','pballad',72, 'C|C|F|Fm|C|Am|Dm7 G7|C'],
+  ['クリシェ（メジャー）','定番進行｜内声が半音で動く','C*','pballad',76, 'C|Cmaj7|C7|A7|Dm7|Fm6|C|G7'],
+  ['ゴスペル進行','定番進行｜ベースが上がっていく盛り上げ','C*','pballad',68, 'C|C/E|F|F#dim|C/G|A7|Dm7|G7'],
+  ['ロック進行（I→♭VII→IV）','定番進行｜ミクソリディアンの力強さ','C*','rock',128, 'C|Bb|F|C|C|Bb|F|C'],
+  ['勝利の進行（♭VI→♭VII→I）','定番進行｜ゲーム音楽・アニソンの盛り上げ','C*','rock',150, 'Am|F|G|C|Ab|Bb|C|C'],
+  ['アイドル進行（1345）','定番進行｜明るく上がっていく','C*','pop',160, 'C|Em|F|G|C|Em|F|G'],
+  ['ネオソウル進行','定番進行｜9th・13thでとろける響き','C*','city',78, 'Fmaj9|Em9|Dm9|G13|Cmaj9|Am9|Dm9|G13'],
+  ['Lo-fi ループ','定番進行｜下がっていくmaj7とm7','C*','city',80, 'Fmaj7|Em7|Dm7|Cmaj7'],
+  ['4つ打ちダンス（4-5-6）','定番進行｜ダンスポップのループ','C*','dance',124, 'Fmaj7|G|Am7|Am7|Fmaj7|G|Am7|Am7'],
+  ['カントリー（I・IV・V）','定番進行｜3つのコードだけで1コーラス','C*','pop',110, 'C|C|F|C|C|C|G7|G7|C|C|F|F|C|G7|C|C'],
+  ['ロックンロール（12小節）','定番進行｜ブルース形式のロック','C*','rock',160, 'C|F|C|C|F|F|C|C|G|F|C|G'],
+  ['J-POPバラード 1コーラス','定番進行｜Aメロ→Bメロ→サビ','C*','pballad',72, A('C|G/B|Am|Em/G|F|C/E|Dm7|G', 'F|G|Em|Am|Dm7|Em7|F|G', 'Fmaj7|G|Em7|Am|Fmaj7|G|C|C')],
+  ['アイドルポップ 1コーラス','定番進行｜Aメロ→Bメロ→サビ','C*','pop',150, A('C|Em|F|G|C|Em|F|G', 'Am|Em|F|G', 'F|G|Em|Am|Dm|G|C|C')],
+  ['シティポップ 1コーラス','定番進行｜Aメロ→Bメロ→サビ','C*','city',104, A('Fmaj7|Em7|Am7|Gm7 C7|Fmaj7|Em7|Am7|Gm7 C7', 'Dm7|Em7|Fmaj7|G7sus4 G7', 'Fmaj7|E7|Am7|Gm7 C7|Fmaj7|E7|Am7|Dm7 G7')],
+  ['洋楽ポップ 1コーラス','定番進行｜Verse→Pre-Chorus→Chorus','C*','pop',118, A('C|Am|F|G|C|Am|F|G', 'Dm|Em|F|G', 'C|G|Am|F|C|G|F|C')],
+  ['弾き語りフォーク 1コーラス','定番進行｜Aメロ→サビ','C*','pop',96, A('C|C/B|Am|Am/G|F|G|C|C', 'F|G|Em|Am|Dm|G|C|C')],
+  ['J-ROCK疾走 1コーラス','定番進行｜Aメロ→Bメロ→サビ','C*','rock',172, A('C|G|Am|Em|F|C|Dm|G', 'F|G|Em|Am|F|G|Esus4|E7', 'F|G|Em|Am|F|G|C|C')],
+  ['R&Bバラード','定番進行｜テンションで歌う','C*','city',70, 'Fmaj9|Em9|Dm9|G13|Cmaj9|Am9|Dm9|G13'],
+  // マイナーキーの定番
+  ['小室進行（6451）','定番進行｜例：Get Wild・LOVE LOVE LOVE・だから僕は音楽を辞めた','Am*','pop',128, 'Am|F|G|C|Am|F|G|C'],
+  ['6415進行','定番進行｜例：Zombie','Am*','rock',120, 'Am|F|C|G|Am|F|C|G'],
+  ['マイナーの疾走（i→VI→VII→i）','定番進行｜アニソン・ロックの定番','Am*','rock',170, 'Am|F|G|Am|Am|F|G|Am'],
+  ['アンダルシア進行','定番進行｜フラメンコ風に下がる','Am*','rock',120, 'Am|G|F|E|Am|G|F|E'],
+  ['和声的短音階のカデンツ','定番進行｜E7で強くAmへ戻る','Am*','pballad',80, 'Am|Dm|E7|Am|F|Dm|E7|Am'],
+  ['マイナーの循環（枯葉型）','定番進行｜ジャズ・ポップスの定番','Am*','pballad',96, 'Am7|Dm7|G7|Cmaj7|Fmaj7|Bm7b5|E7|Am7'],
+  ['哀愁のラインクリシェ','定番進行｜Am→Am/G→Fmaj7→E7','Am*','pballad',72, 'Am|Am/G|Fmaj7|E7|Am|Am/G|Fmaj7|E7'],
+  ['エモ・ボカロ進行','定番進行｜マイナーで切なく','Am*','rock',176, 'Am|F|G|E7|Am|F|Dm7|E7'],
+  ['ダンス・マイナー','定番進行｜EDMのループ','Am*','dance',126, 'Am|F|G|Em|Am|F|G|Em'],
+  ['ドリアン・ファンク','定番進行｜Im7とIV7を行き来','Am*','city',100, 'Am7|D7|Am7|D7|Am7|D7|Am7|D7'],
+  ['アニソン 1コーラス','定番進行｜Aメロ→Bメロ→サビ','Am*','rock',175, A('Am|F|G|Em|Am|F|G|E7', 'F|G|Em|Am|Dm|G|E7|E7', 'F|G|Em|Am|F|G|Am|Am')],
   // ---- swing standards ----
   ['Autumn Leaves','Joseph Kosma','Gm','swing',130, A(
     'Cm7|F7|Bbmaj7|Ebmaj7|Am7b5|D7|Gm6|Gm6', 'Cm7|F7|Bbmaj7|Ebmaj7|Am7b5|D7|Gm6|Gm6',
@@ -1299,12 +1383,12 @@ const L = [
   ['Cantaloupe Island','Herbie Hancock','Fm','funk',110, 'Fm7|Fm7|Fm7|Fm7|Db7|Db7|Db7|Db7|Dm7|Dm7|Dm7|Dm7|Fm7|Fm7|Fm7|Fm7'],
   ['Chameleon','Herbie Hancock','Bbm','funk',96, 'Bbm7|Eb7|Bbm7|Eb7|Bbm7|Eb7|Bbm7|Eb7'],
   // ---- practice progressions ----
-  ['ツーファイブ・ワン（メジャー）','練習用','C','practice',140, 'Dm7|G7|Cmaj7|Cmaj7'],
-  ['ツーファイブ・ワン（マイナー）','練習用','Cm','practice',140, 'Dm7b5|G7b9|Cm6|Cm6'],
-  ['裏コードのツーファイブ','練習用','C','practice',140, 'Dm7|Db7|Cmaj7|Cmaj7'],
-  ['バックドア進行','練習用','C','practice',120, 'Fmaj7|Fm7 Bb7|Cmaj7|Cmaj7'],
-  ['循環コード（I-VI-II-V）','練習用','C','practice',160, 'Cmaj7 A7|Dm7 G7|Cmaj7 A7|Dm7 G7'],
-  ['3-6-2-5','練習用','C','practice',160, 'Em7 A7|Dm7 G7|Cmaj7|Cmaj7'],
+  ['ツーファイブ・ワン（メジャー）','練習用','C*','practice',140, 'Dm7|G7|Cmaj7|Cmaj7'],
+  ['ツーファイブ・ワン（マイナー）','練習用','Cm*','practice',140, 'Dm7b5|G7b9|Cm6|Cm6'],
+  ['裏コードのツーファイブ','練習用','C*','practice',140, 'Dm7|Db7|Cmaj7|Cmaj7'],
+  ['バックドア進行','練習用','C*','practice',120, 'Fmaj7|Fm7 Bb7|Cmaj7|Cmaj7'],
+  ['循環コード（I-VI-II-V）','練習用','C*','practice',160, 'Cmaj7 A7|Dm7 G7|Cmaj7 A7|Dm7 G7'],
+  ['3-6-2-5','練習用','C*','practice',160, 'Em7 A7|Dm7 G7|Cmaj7|Cmaj7'],
   ['下降ツーファイブ（Tune Up型）','練習用','D','practice',180, 'Em7|A7|Dmaj7|Dmaj7|Dm7|G7|Cmaj7|Cmaj7|Cm7|F7|Bbmaj7|Bbmaj7'],
   ['ツーファイブで12キー一周','練習用','C','practice',140,
     'Dm7 G7|Cmaj7|Cm7 F7|Bbmaj7|Bbm7 Eb7|Abmaj7|Abm7 Db7|Gbmaj7|F#m7 B7|Emaj7|Em7 A7|Dmaj7|Ebm7 Ab7|Dbmaj7|C#m7 F#7|Bmaj7|Bm7 E7|Amaj7|Am7 D7|Gmaj7|Gm7 C7|Fmaj7|Fm7 Bb7|Ebmaj7'],
@@ -1313,11 +1397,34 @@ const L = [
   ['ジャズ・ブルース','練習用','F','blues',150, 'F7|Bb7|F7|Cm7 F7|Bb7|Bdim7|F7|Am7 D7|Gm7|C7|F7 D7|Gm7 C7'],
   ['ジャズ・ブルース','練習用','Bb','blues',150, 'Bb7|Eb7|Bb7|Fm7 Bb7|Eb7|Edim7|Bb7|Dm7 G7|Cm7|F7|Bb7 G7|Cm7 F7'],
   ['マイナー・ブルース','練習用','Cm','blues',150, 'Cm7|Fm7|Cm7|Cm7|Fm7|Fm7|Cm7|Cm7|Ab7|G7#9|Cm7|Dm7b5 G7b9'],
-  ['ドリアン・ヴァンプ','練習用','Dm','modal',120, 'Dm7|G7|Dm7|G7'],
-  ['ラインクリシェ（マイナー）','練習用','Am','ballad',80, 'Am|AmM7|Am7|Am6|Fmaj7|Bm7b5|E7|Am'],
-  ['ジャズ・ワルツの循環','練習用','Bb','waltz',150, 'Bbmaj7|Gm7|Cm7|F7|Dm7|G7|Cm7|F7'],
+  ['ドリアン・ヴァンプ','練習用','Dm*','modal',120, 'Dm7|G7|Dm7|G7'],
+  ['ラインクリシェ（マイナー）','練習用','Am*','ballad',80, 'Am|AmM7|Am7|Am6|Fmaj7|Bm7b5|E7|Am'],
+  ['ジャズ・ワルツの循環','練習用','Bb*','waltz',150, 'Bbmaj7|Gm7|Cm7|F7|Dm7|G7|Cm7|F7'],
 ];
-return L.map(([title, composer, key, feel, bpm, prog, mel], id) => ({id, title, composer, key, feel, bpm, prog, mel:mel || null, ts: feel === 'waltz' ? 3 : 4}));
+// キーに * が付いた曲（定番進行・練習用）は、全体でキーのかたよりが少なくなるように割り振る
+const NT = {C:0,'C#':1,Db:1,D:2,'D#':3,Eb:3,E:4,F:5,'F#':6,Gb:6,G:7,'G#':8,Ab:8,A:9,'A#':10,Bb:10,B:11};
+const SHN = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'], FLN = ['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
+const MAJ = ['G','D','A','E','C','F','Bb','Eb','Ab','B','Db','F#'], MIN = ['Em','Am','Bm','Dm','F#m','C#m','Gm','Cm','Fm','Bbm','G#m','Ebm'];
+const FLATK = new Set(['F','Bb','Eb','Ab','Db','Dm','Gm','Cm','Fm','Bbm','Ebm']);
+const tp = (s, n, flat) => s.replace(/(^|[\s|/])([A-G][#b]?)/g, (m, pre, r) => pre + (flat ? FLN : SHN)[(NT[r] + n + 120) % 12]);
+const cnt = {};
+for (const e of L) if (!e[2].endsWith('*')) cnt[e[2]] = (cnt[e[2]] || 0) + 1;
+// まず「どのキーを何曲ぶん埋めるか」を決めてから、弾きやすいキーを一覧の上の曲から順に渡す
+const want = {maj:[], min:[]};
+for (const e of L) {
+  if (!e[2].endsWith('*')) continue;
+  const minor = e[2].slice(0, -1).endsWith('m'), pool = minor ? MIN : MAJ;
+  let best = pool[0]; for (const k of pool) if ((cnt[k] || 0) < (cnt[best] || 0)) best = k;
+  cnt[best] = (cnt[best] || 0) + 1; want[minor ? 'min' : 'maj'].push(best);
+}
+want.maj.sort((a, b) => MAJ.indexOf(a) - MAJ.indexOf(b)); want.min.sort((a, b) => MIN.indexOf(a) - MIN.indexOf(b));
+for (const e of L) {
+  if (!e[2].endsWith('*')) continue;
+  const base = e[2].slice(0, -1), minor = base.endsWith('m'), best = want[minor ? 'min' : 'maj'].shift();
+  const n = NT[best.replace('m', '')] - NT[base.replace('m', '')];
+  e[2] = best; e[5] = tp(e[5], n, FLATK.has(best)); e.tmpl = true;
+}
+return L.map((e, id) => { const [title, composer, key, feel, bpm, prog, mel] = e; return {id, title, composer, key, feel, bpm, prog, mel:mel || null, tmpl:!!e.tmpl || composer === '練習用', ts: feel === 'waltz' ? 3 : 4}; });
 })();
 if (typeof module !== 'undefined') module.exports = SONGS;
 
@@ -1325,8 +1432,8 @@ if (typeof module !== 'undefined') module.exports = SONGS;
 const SL = (() => {
 const T = typeof TH !== 'undefined' ? TH : require('./theory.js');
 const SG = typeof SONGS !== 'undefined' ? SONGS : require('./songs.js');
-const FEEL = {swing:'スウィング', ballad:'バラード', blues:'ブルース', bossa:'ボサノバ', latin:'ラテン', waltz:'ワルツ', modal:'モーダル', funk:'ファンク', practice:'練習用'};
-const RID = {swing:'swing', ballad:'ballad', blues:'swing', bossa:'bossa', latin:'bossa', waltz:'waltz', modal:'comp', funk:'city', practice:'swing'};
+const FEEL = {swing:'スウィング', ballad:'バラード', blues:'ブルース', bossa:'ボサノバ', latin:'ラテン', waltz:'ワルツ', modal:'モーダル', funk:'ファンク', practice:'練習用', pop:'ポップス', rock:'ロック', pballad:'ポップ・バラード', city:'シティポップ・R&B', dance:'ダンス'};
+const RID = {swing:'swing', ballad:'ballad', blues:'swing', bossa:'bossa', latin:'bossa', waltz:'waltz', modal:'comp', funk:'city', practice:'swing', pop:'pop8', rock:'rock', pballad:'arp', city:'city', dance:'dance'};
 const keyOf = s => { const m = s.match(/^([A-G][b#]?)(m?)$/); const c = T.parse(m[1]); return {t: c.root, minor: m[2] === 'm'}; };
 function parseProg(str, ts) {
   const out = [], bad = [];
@@ -1499,8 +1606,16 @@ const RHY = [
   {id:'city', n:'シティポップ 16', d:'16分のカッティング＋跳ねるベース', bpb:4, sw:0, bpm:100, bars:1, tone:'clean', prefer:['r5','r6','r4','rootless'], chg:'cut',
    g:[[0,'cut',.8],[.75,'cut',.55],[1.5,'cutU',.6],[2,'cut',.8],[2.75,'cut',.55],[3.5,'cutU',.6]], b:'city',
    dr:[...hats(.32,.2,.25),[0,'kick',.9],[1.75,'kick',.6],[2.5,'kick',.7],[1,'snare',.8],[3,'snare',.8]]},
+  {id:'rock', n:'ロック 8ビート', d:'8分のダウンストローク＋ルートを刻むベース', bpb:4, sw:0, bpm:140, bars:1, tone:'steel', prefer:['r6','r5','open'], chg:'D',
+   g:[[0,'D',.9],[.5,'D',.55],[1,'D',.75],[1.5,'D',.55],[2,'D',.85],[2.5,'D',.55],[3,'D',.75],[3.5,'D',.6]], b:'eight',
+   dr:[...hats(.45,.3),[0,'kick',.95],[1.5,'kick',.55],[2,'kick',.85],[1,'snare',.9],[3,'snare',.9]]},
+  {id:'dance', n:'ダンス 4つ打ち', d:'4つ打ちのキック＋裏拍のカッティング', bpb:4, sw:0, bpm:124, bars:1, tone:'clean', prefer:['r5','r6','r4'], chg:'cut',
+   g:[[.5,'cut',.7],[1.5,'cut',.7],[2.5,'cut',.7],[3.5,'cut',.7]], b:'oct',
+   dr:[[0,'kick',.95],[1,'kick',.9],[2,'kick',.95],[3,'kick',.9],[.5,'hat',.45],[1.5,'hat',.45],[2.5,'hat',.45],[3.5,'hat',.45],[1,'snare',.55],[3,'snare',.55]]},
 ];
 const BASS = {
+  eight:[[0,'R',.5,.95],[.5,'R',.5,.7],[1,'R',.5,.8],[1.5,'R',.5,.7],[2,'R',.5,.9],[2.5,'R',.5,.7],[3,'R',.5,.8],[3.5,'R',.5,.7]],
+  oct:[[0,'R',.5,.9],[.5,'8',.5,.75],[1,'R',.5,.85],[1.5,'8',.5,.75],[2,'R',.5,.9],[2.5,'8',.5,.75],[3,'R',.5,.85],[3.5,'8',.5,.75]],
   two:[[0,'R',2,.9],[2,'F',2,.8]],
   pop:[[0,'R',1,.9],[1.5,'R',.5,.7],[2,'R',1,.85],[3,'5',.5,.7],[3.5,'8',.5,.7]],
   bossa:[[0,'R',1.5,.9],[1.5,'R',.5,.7],[2,'5',1.5,.85],[3.5,'5',.5,.7]],
@@ -4492,7 +4607,7 @@ const MENU = [
   ['copy', ICON.copy, 'コード進行をコピー'], ['key', ICON.key, 'キーを推定'],
   ['up', ICON.up, '半音上げる'], ['down', ICON.down, '半音下げる'],
   ['showsc', ICON.eye, ''], ['scall', ICON.reset, 'スケールを全部おすすめに'],
-  ['rec', ICON.mic, 'スキャット録音'], ['guide', ICON.bulb, '音楽の技・解説'], ['set', ICON.sliders, '伴奏・音の設定'], ['lib', ICON.book, 'スタンダード曲集'],
+  ['rec', ICON.mic, 'スキャット録音'], ['guide', ICON.bulb, '音楽の技・解説'], ['set', ICON.sliders, '伴奏・音の設定'], ['lib', ICON.book, '曲集'],
   ['clear', ICON.trash, '譜面をクリア'],
 ];
 function renderMenu() {
@@ -4703,8 +4818,9 @@ $('#adVol').addEventListener('input', e => { S.solo.vol = +e.target.value; $('#a
 document.addEventListener('pointerdown', () => { if (A.ctx && A.ctx.state !== 'running') A.ctx.resume().catch(() => {}); }, {passive:true});
 
 /* ---------- songbook ---------- */
-const FEELGRP = [['all','すべて'],['melody','♪メロディ付き'],['swing','スウィング'],['blues','ブルース'],['bossa','ボサ・ラテン'],['waltz','ワルツ'],['modal','モーダル・ファンク'],['practice','練習用']];
-const inGrp = (s, g) => g === 'all' || (g === 'melody' ? !!s.melody : (g === 'swing' ? ['swing','ballad'].includes(s.feel) : g === 'bossa' ? ['bossa','latin'].includes(s.feel) : g === 'modal' ? ['modal','funk'].includes(s.feel) : g === 'practice' ? s.composer === '練習用' : s.feel === g));
+const FEELGRP = [['all','すべて'],['pop','ポップス・ロック'],['tmpl','作曲の定番進行'],['melody','♪メロディ付き'],['swing','スウィング'],['blues','ブルース'],['bossa','ボサ・ラテン'],['waltz','ワルツ'],['modal','モーダル・ファンク'],['practice','練習用']];
+const inGrp = (s, g) => g === 'all' || (g === 'melody' ? !!s.melody : (g === 'swing' ? ['swing','ballad'].includes(s.feel) : g === 'bossa' ? ['bossa','latin'].includes(s.feel) : g === 'modal' ? ['modal','funk'].includes(s.feel) : g === 'practice' ? s.composer === '練習用' : g === 'tmpl' ? s.tmpl && s.composer !== '練習用' : g === 'pop' ? POPF.includes(s.feel) && !s.tmpl : s.feel === g));
+const POPF = ['pop', 'rock', 'pballad', 'city', 'dance'];
 const kid = k => (k.minor ? 'm' : 'M') + k.t;
 const kLabel = k => TH.keyName(k);
 const cxBar = cx => { const n = Math.round(cx / 2); return `<span class="cxm" aria-hidden="true">${[1,2,3,4,5].map(i => `<i${i <= n ? ' class="on"' : ''}></i>`).join('')}</span>`; };
@@ -4748,10 +4864,10 @@ function openSong(id) {
   sgId = id;
   const s = SL.LIB[id], m = s.m;
   $('#sgTitle').textContent = s.title;
-  $('#sgMeta').textContent = `${s.composer} ・ 原曲キー ${kLabel(s.k)} ・ ${s.bars}小節 ・ ${SL.FEEL[s.feel]} ・ ♩=${s.bpm}`;
-  $('#sgMelNote').textContent = s.melody ? '♪ メロディ付き（著作権の切れた曲）。再生バーの「メロディ」でオン・オフできます。' : 'メロディなし：著作権のある曲なのでコード進行だけを収録しています。';
+  $('#sgMeta').textContent = `${s.composer} ・ ${s.tmpl ? 'キー' : '原曲キー'} ${kLabel(s.k)} ・ ${s.bars}小節 ・ ${SL.FEEL[s.feel]} ・ ♩=${s.bpm}`;
+  $('#sgMelNote').textContent = s.melody ? '♪ メロディ付き（著作権の切れた曲）。再生バーの「メロディ」でオン・オフできます。' : s.tmpl ? '作曲用の定番進行です。下でキーを好きに変えて読み込めます。' : 'コード進行だけを収録しています（歌詞・メロディはありません）。';
   $('#sgFacts').innerHTML = `<div>複雑さ<b>${s.cx.toFixed(1)}</b></div><div>キー外のコード<b>${Math.round(m.out * 100)}%</b></div><div>コードの種類<b>${m.uniq}</b></div>`;
-  $('#sgKey').innerHTML = Array.from({length:12}, (_, i) => i).map(t => `<option value="${t}"${t === s.k.t ? ' selected' : ''}>${esc(kLabel({t, minor:s.k.minor}))}${t === s.k.t ? '（原曲）' : ''}</option>`).join('');
+  $('#sgKey').innerHTML = Array.from({length:12}, (_, i) => i).map(t => `<option value="${t}"${t === s.k.t ? ' selected' : ''}>${esc(kLabel({t, minor:s.k.minor}))}${t === s.k.t ? (s.tmpl ? '（基本）' : '（原曲）') : ''}</option>`).join('');
   const def = SL.RID[s.feel];
   $('#sgRhy').innerHTML = RHY.filter(r => r.bpb === s.ts).map(r => `<option value="${r.id}"${r.id === def ? ' selected' : ''}>${esc(r.n)}</option>`).join('');
   renderSongMini();
@@ -4763,6 +4879,7 @@ function loadSong(andPlay) {
   pushUndo(); touch();
   S.chart = SL.transpose(s.chords, mod(key.t - s.k.t), key).map(c => ({root:c.root, q:c.q, bass:c.bass ?? null, pref:c.pref || null, dur:c.dur, v:null}));
   S.key = key; S.rid = $('#sgRhy').value; S.bpm = s.bpm;
+  if (POPF.includes(s.feel)) S.style = 'pop'; else if (s.feel !== 'practice') S.style = 'jazz';
   S.mel = s.melody ? SL.transposeMel(s.melody, mod(key.t - s.k.t)) : null; S.melTitle = s.melody ? s.title : ''; S.title = s.title;
   if (S.mel) S.melOn = true;
   S.sel = S.chart.length - 1; S.page = 0; S.vpage = 0; S.scView = null;
