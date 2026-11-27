@@ -303,6 +303,53 @@ body.recording .sheet{pointer-events:none}
 .pc b{display:block;font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pc.on{background:var(--sel);border-color:#ff7a6688}.pc.edge{border-color:var(--red);box-shadow:inset 0 0 0 1px var(--red)}
 .pinfo{font-size:12.5px;margin:4px 0 0;color:var(--ink)}
+
+/* advanced mode: switches, technique ticker, guide page */
+.seg.lv{width:100%}.seg.lv button{flex:1;height:38px}
+.lvs{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;flex:none}
+.lvs button{border:0;background:transparent;height:26px;padding:0 7px;font-size:10.5px;font-weight:700;color:var(--mute)}
+.lvs button[aria-pressed=true]{background:var(--sel);color:#fff;box-shadow:inset 0 -2px 0 var(--red)}
+.qbtn{flex:none;width:26px;height:26px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--ink);font-weight:700;font-size:12px;padding:0}
+.cap .hint{min-width:0}
+@media (max-width:420px){.cap .hint{display:none}}
+.cd.pro{border-style:dashed;border-color:#ff7a6699}
+.cd.pro::after{content:'技';position:absolute;right:5px;bottom:7px;font-size:9px;font-weight:700;color:var(--red);background:#ff7a661f;border-radius:4px;padding:0 3px;line-height:14px}
+.cd.pro .cw{padding-right:18px}
+.cd .cn em{font-style:normal;font-size:10px;font-weight:700;color:var(--red);margin-left:3px;vertical-align:2px;font-family:inherit}
+.cd.pro .cr{width:100%;overflow:hidden;text-overflow:ellipsis}
+.dk.pro{position:relative}.dk.pro::after{content:'技';position:absolute;right:3px;top:3px;font-size:8.5px;font-weight:700;color:#fff;background:var(--red);border-radius:3px;padding:0 2px;line-height:12px}
+.tech{position:fixed;z-index:44;right:10px;bottom:calc(74px + env(safe-area-inset-bottom));max-width:min(78vw,420px);display:flex;align-items:center;gap:7px;padding:6px 10px 6px 7px;border-radius:12px;border:1px solid #ff7a6666;background:#141e31f2;color:var(--ink);font-size:11.5px;text-align:left;box-shadow:0 6px 22px #000a}
+.tech[hidden]{display:none}
+.tech b{flex:none;font-size:9.5px;color:#fff;background:var(--red);border-radius:5px;padding:2px 5px}
+.tech span{overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.35}
+.tech.flash{animation:tflash .5s ease-out}
+@keyframes tflash{from{transform:translateY(6px);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.tech.flash{animation:none}}
+.st-tech{min-height:1.3em;margin-top:6px;font-size:clamp(11px,3.4vw,15px);color:var(--pearl);opacity:.85}
+.guide{position:fixed;inset:0;z-index:47;background:var(--bg);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top)}
+.guide[hidden]{display:none}
+.gd-hd{display:flex;align-items:center;gap:8px;padding:8px 10px 6px;max-width:760px;width:100%;margin:0 auto}
+.gd-hd h2{margin:0;font-size:16px;flex:none}
+.gd-now{flex:1;min-width:0;font-size:11px;color:var(--red);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right}
+.gd-tabs{margin:0 10px 6px;max-width:740px;width:calc(100% - 20px);align-self:center}
+.gd-tabs button{flex:1;padding:0 4px;font-size:11.5px;height:36px}
+.gd-body{flex:1;overflow-y:auto;padding:4px 12px calc(20px + env(safe-area-inset-bottom));max-width:760px;width:100%;margin:0 auto;-webkit-overflow-scrolling:touch}
+.gi{font-size:12px;color:var(--mute);line-height:1.6;margin:4px 0 8px}
+.gsw{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;font-weight:700;margin:0 0 10px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--paper)}
+.gsw .lvs button{height:30px;padding:0 10px;font-size:11.5px}
+.gc{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:11px 12px;margin:0 0 9px;scroll-margin-top:8px;transition:box-shadow .3s}
+.gc.hl{box-shadow:0 0 0 2px var(--red)}
+.gc h3{margin:0 0 3px;font-size:15px;line-height:1.3}.gc h3 small{display:block;font-size:10.5px;color:var(--mute);font-weight:600;margin-top:1px}
+.gc p{margin:4px 0;font-size:12.5px;line-height:1.65}
+.gc .gs{font-weight:700;color:var(--pearl)}
+.gc .gx{font-size:12px;color:var(--ink);background:var(--paper);border-radius:8px;padding:6px 8px}.gc .gx b{color:var(--red);margin-right:6px;font-size:11px}
+.gb{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}.gb .btn{height:38px;font-size:12px;padding:0 12px;flex:1;min-width:120px}
+.gb .btn svg{width:12px;height:12px;margin-right:5px;vertical-align:-1px}
+.gb .btn.on{background:var(--sel);color:#fff;border-color:var(--red)}
+.glog{list-style:none;margin:0;padding:0}.glog li{margin:0 0 6px}
+.glog button{width:100%;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:center;text-align:left;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:8px 10px;color:var(--ink);font-size:12px}
+.glog b{font-size:10px;color:#fff;background:var(--red);border-radius:5px;padding:2px 5px}.glog i{font-style:normal;font-size:10px;color:var(--mute)}
+.gempty{font-size:12px;color:var(--mute);text-align:center;margin:30px 0}
 body:has(.bs.on) .toast{bottom:auto;top:calc(12px + env(safe-area-inset-top))}
 @media (max-width:380px){.recb{width:32px;height:32px}.dock{gap:3px;padding-left:8px;padding-right:8px}.rgo.three{grid-template-columns:1fr 1fr 1.2fr}.rgo.three .btn{font-size:12px;padding:0 6px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
@@ -339,6 +386,11 @@ body:has(.bs.on) .toast{bottom:auto;top:calc(12px + env(safe-area-inset-top))}
 </nav>
 </div>
 
+<section class="guide" id="guide" hidden aria-label="音楽の技・解説">
+  <div class="gd-hd"><button class="ib" id="gdBack" aria-label="戻る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button><h2>音楽の技・解説</h2><span class="gd-now" id="gdNow" aria-live="polite"></span></div>
+  <div class="seg gd-tabs" id="gdTabs" role="tablist"><button data-t="solo">アドリブ</button><button data-t="expr">表現</button><button data-t="comp">伴奏</button><button data-t="prog">コード進行</button><button data-t="log">鳴った技</button></div>
+  <div class="gd-body" id="gdBody"></div>
+</section>
 <section class="stage" id="stage" hidden aria-label="演奏モード">
   <div class="st-hd"><span id="stInfo"></span><button class="x" id="stClose" aria-label="閉じる">×</button></div>
   <div class="st-main">
@@ -346,6 +398,7 @@ body:has(.bs.on) .toast{bottom:auto;top:calc(12px + env(safe-area-inset-top))}
       <div class="st-lbl">NOW <span id="stBar"></span></div>
       <div class="st-big hand" id="stNow"></div>
       <div class="st-sc" id="stSc"></div>
+      <div class="st-tech" id="stTech"></div>
       <div class="st-beats" id="stBeats"></div>
     </div>
     <div class="st-next">
@@ -357,17 +410,21 @@ body:has(.bs.on) .toast{bottom:auto;top:calc(12px + env(safe-area-inset-top))}
   <div class="st-ctl"><button class="ib" id="stPrev" aria-label="前のコード"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg></button><button class="play" id="stPlay" aria-label="再生"></button><button class="ib" id="stNextBtn" aria-label="次のコード"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg></button></div>
 </section>
 <div class="rcount" id="recCount" hidden aria-hidden="true"><b></b><span></span></div>
+<button class="tech" id="techTick" hidden aria-label="いま使われた技（タップで解説）"><b></b><span></span></button>
 <div class="recbar" id="recBar" hidden role="status"><i class="rdot"></i><b id="recT">0:00</b><span id="recInfo"></span><span class="lv" aria-hidden="true"><i id="recLv"></i></span><button id="recStop">停止</button></div>
 <div class="scrim" id="scrim"></div>
 <section class="bs" id="bsAdl" aria-label="アドリブ">
   <div class="grab"></div>
   <div class="bs-hd"><h4>アドリブ（自動ソロ）</h4><button class="x" data-close aria-label="閉じる">×</button></div>
+  <div class="lbl">アプローチ</div><div class="seg lv" id="adLv"><button data-lv="easy">かんたん</button><button data-lv="pro">高度</button></div>
+  <p class="note" id="adLvNote"></p>
   <div class="lbl">鳴らすとき</div><div class="chips" id="adMode"></div>
   <div class="lbl">音色</div><div class="chips" id="adTone"></div>
   <div class="lbl">音数</div><div class="chips" id="adDens"></div>
   <div class="lbl">音量</div>
   <div class="vrow"><span id="adVolV">80</span><input type="range" id="adVol" min="0" max="1" step=".01" aria-label="アドリブの音量"><button class="btn ghost" id="adTry">試し弾き</button></div>
   <p class="note">再生中に動かすと、その場で音量が変わります。録音中に鳴らしたアドリブは、録ったあとにも音量を変えられます。</p>
+  <button class="btn ghost wide" data-guide="solo">アドリブの技と表現の解説を見る</button>
 </section>
 <section class="bs" id="bsRec" aria-label="スキャット録音">
   <div class="grab"></div>
@@ -393,6 +450,8 @@ body:has(.bs.on) .toast{bottom:auto;top:calc(12px + env(safe-area-inset-top))}
   <div class="grab"></div>
   <div class="bs-hd"><h4>伴奏・アドリブ・音</h4><button class="x" data-close aria-label="閉じる">×</button></div>
   <div class="rgrid" id="rhythms"></div>
+  <div class="lbl">コードの技（伴奏と候補）</div><div class="seg lv" id="cmpLv"><button data-cl="easy">かんたん</button><button data-cl="pro">高度</button></div>
+  <p class="note" id="cmpNote"></p>
   <div class="lbl">テンポ</div>
   <div class="trow"><button class="rnd" id="sDn" aria-label="テンポを下げる">−</button><span class="big" id="sBpm">140</span><input type="range" id="bpmRange" min="40" max="260" step="1" aria-label="テンポ"><button class="rnd" id="sUp" aria-label="テンポを上げる">＋</button></div>
   <div class="chips" id="bpmChips" style="margin-top:4px"></div>
@@ -981,9 +1040,81 @@ function scaleAvoid(id, root, ch) {
   return SC[id].iv.filter(n => !ct.includes(n) && !(dom && (n === 1 || n === 8)) && ct.some(c => mod(n - c) === 1));
 }
 
+/* ---------- 高度モードの候補：上級リハーモナイズ（複数コードの「技」もまとめて入れられる） ---------- */
+// dur: 'h' = 半小節（3拍子では1小節）, 'b' = 1小節
+const MIRQ = ['maj','m','7','maj7','m7','m6','6','m7b5','dim7','mMaj7'];
+function mirrorOf(ch, key) {
+  const set = new Set(pcs(ch).map(p => mod(2 * key.t + 7 - p)));
+  for (const q of MIRQ) for (let r = 0; r < 12; r++) {
+    const f = Q[q].f.filter(x => x < 12).map(x => mod(r + x));
+    if (f.length === set.size && f.every(x => set.has(x))) return {root:r, q};
+  }
+  return null;
+}
+function suggestPro(hist, following, key, style, base) {
+  const J = style === 'jazz', t = key.t, prev = hist[hist.length - 1], out = [];
+  if (!prev) return out;
+  const d = mod(prev.root - t), k = Q[prev.q].k, maj = !key.minor, T = J ? 'maj7' : 'maj';
+  const C = (r, q, dur, bass) => ({root:mod(r), q:!J && POPMAP[q] ? POPMAP[q] : q, dur, bass:bass == null ? null : mod(bass)});
+  const add = (tid, w, lab, seq) => {
+    seq = seq.slice();
+    if (following && seq.length > 1) { const l = seq[seq.length - 1]; if (l.root === following.root && Q[l.q].k === Q[following.q].k) seq.pop(); }
+    const f = seq[0];
+    if (seq.length === 1 && f.root === prev.root && f.q === prev.q) return;
+    out.push({root:f.root, q:f.q, bass:f.bass, pref:null, seq:seq.length > 1 ? seq : null, dur:f.dur, pro:true, tid, raw:w, score:w, why:[lab], tags:[{t:lab, w}]});
+  };
+  const onI = k === 'M' && d === 0, onII = k === 'm' && d === 2, onIV = k === 'M' && d === 5, onVI = k === 'm' && d === 9, onIII = k === 'm' && d === 4;
+  if (maj) {
+    if (J && (onII || onI)) add('coltrane', 62, 'コルトレーン・チェンジ（長3度ずつ3つの調を回ってIへ）',
+      [C(t + 3, '7', 'h'), C(t + 8, 'maj7', 'h'), C(t + 11, '7', 'h'), C(t + 4, 'maj7', 'h'), C(t + 7, '7', 'h'), C(t, 'maj7', 'b')]);
+    if (J && (onI || onVI || onIII)) add('subchain', 57, '裏コード連鎖（ドミナントが半音ずつ下がってIへ）',
+      [C(t + 4, '7', 'h'), C(t + 3, '7', 'h'), C(t + 2, '7', 'h'), C(t + 1, '7', 'h'), C(t, T, 'b')]);
+    if (J && (onI || onVI || onIII)) add('chromiiV', 58, '半音上のⅡ–Ⅴから入る（Ⅱ–Ⅴが半音ずつ下がる）',
+      [C(t + 3, 'm7', 'h'), C(t + 8, '7', 'h'), C(t + 2, 'm7', 'h'), C(t + 7, '7', 'h'), C(t, T, 'b')]);
+    if (onI || onIV || onII || onVI) add('backdoor', J ? 60 : 58, 'バックドア・ツーファイブ（Ⅳm7–♭Ⅶ7→Ⅰ）',
+      [C(t + 5, J ? 'm7' : 'm', 'h'), C(t + 10, J ? '7' : 'maj', 'h'), C(t, T, 'b')]);
+    if (J && onI) add('dameron', 55, 'タッド・ダメロン・ターンアラウンド（♭Ⅲ–♭Ⅵ–♭Ⅱ→Ⅰ）',
+      [C(t + 3, 'maj7', 'h'), C(t + 8, 'maj7', 'h'), C(t + 1, 'maj7', 'h'), C(t, 'maj7', 'h')]);
+    if (onII || onIV || (onI && hist.length > 1)) add('negative', 54, 'ネガティブ・ハーモニー（Ⅴ7を鏡に映すとⅣm6）', [C(t + 5, 'm6', 'b'), C(t, T, 'b')]);
+    if (onII || onIV || onI) {
+      if (J) add('pedal', 50, 'ドミナント・ペダル（ベースはⅤのまま上だけ動く）', [C(t + 2, 'm7', 'h', t + 7), C(t + 7, '7', 'h'), C(t, T, 'b')]);
+      else add('pedal', 56, 'Ⅳ/Ⅴ（ベースはⅤ、上はⅣ：サス系のドミナント）', [C(t + 5, 'maj', 'b', t + 7), C(t, T, 'b')]);
+    }
+    if (onI || onIII) add('cycle', 50, 'ドミナント・サイクル（Ⅲ7–Ⅵ7–Ⅱ7–Ⅴ7→Ⅰ）',
+      [C(t + 4, '7', 'b'), C(t + 9, '7', 'b'), C(t + 2, '7', 'b'), C(t + 7, '7', 'b'), C(t, T, 'b')]);
+    if (onIV || onII) add('aug6', 48, '増6の和音（♭Ⅵ7→Ⅴ7：ベースが半音で下がる）', [C(t + 8, '7', 'h'), C(t + 7, '7', 'h')]);
+  } else {
+    if (k === 'm' && (d === 0 || d === 5)) add('neapolitan', 52, 'ナポリの♭Ⅱ（♭Ⅱmaj7→Ⅴ7→Ⅰm）', [C(t + 1, T, 'h'), C(t + 7, J ? '7b9' : '7', 'h'), C(t, J ? 'm7' : 'm', 'b')]);
+    if (k === 'm' && (d === 0 || d === 5)) add('aug6', 50, '増6の和音（♭Ⅵ7→Ⅴ7）', [C(t + 8, '7', 'h'), C(t + 7, J ? '7b9' : '7', 'h')]);
+    if (k === 'm' && d === 0) add('picardy', 46, 'ピカルディ終止（短調の曲をⅠで明るく終える）', [C(t + 7, '7', 'h'), C(t, T, 'b')]);
+  }
+  if (k === 'M') {
+    add('mediant', 50, 'クロマチック・メディアント（長3度上の長調へワープ）', [C(prev.root + 4, T, 'b')]);
+    add('mediant', 47, 'クロマチック・メディアント（長3度下の長調へワープ）', [C(prev.root + 8, T, 'b')]);
+  }
+  if (J && ['M', 'm', '7'].includes(k)) {
+    add('constant', 45, 'コンスタント・ストラクチャー（同じ形のまま全音上へ）', [C(prev.root + 2, prev.q, 'b')]);
+    add('constant', 43, 'コンスタント・ストラクチャー（同じ形のまま半音下へ）', [C(prev.root - 1, prev.q, 'b')]);
+  }
+  const mr = mirrorOf(prev, key);
+  if (mr && !(mr.root === prev.root && Q[mr.q].k === Q[prev.q].k)) add('negative', 46, `ネガティブ・ハーモニー（${name(prev, key)} の鏡像）`, [C(mr.root, mr.q, 'b')]);
+  if (J && base) {
+    const fd = base.find(c => Q[c.q].k === '7' && c.score >= 45), fm = base.find(c => Q[c.q].k === 'M' && c.q !== '6' && c.score >= 45), fn = base.find(c => c.q === 'm7' && c.score >= 45);
+    if (fd) { const s = Math.min(57, fd.score - 6); add('colorc', s, 'オルタードで色付け（♭9・♯9・♭13で緊張を最大に）', [C(fd.root, '7alt', 'b')]); add('colorc', s - 3, 'リディアン・ドミナント（♯11で浮遊感）', [C(fd.root, '7#11', 'b')]); }
+    if (fm) add('colorc', Math.min(53, fm.score - 7), 'リディアンの響き（maj7に♯11）', [C(fm.root, 'maj7#11', 'b')]);
+    if (fn) add('colorc', Math.min(52, fn.score - 7), '4度の響き（m11：モーダルな広がり）', [C(fn.root, 'm11', 'b')]);
+  }
+  const seen = new Set(), res = [];
+  for (const c of out.sort((a, b) => b.raw - a.raw)) {
+    const id = c.tid + '|' + (c.seq ? c.seq.map(x => x.root + x.q).join(',') : c.root + c.q);
+    if (seen.has(id)) continue; seen.add(id); res.push(c);
+  }
+  return res;
+}
+
 return {mod, SH, FL, ROM, Q, BASIC, TENS, KEYMAJ, KEYMIN, TUNE, VCAT, SC,
   spell, keyName, name, parts, roman, pcs, parse, diatonic, matchDia, gen, suggest, estimateKey,
-  ivLabel, voicings, chordScales, keyScales, scaleAvoid};
+  ivLabel, voicings, chordScales, keyScales, scaleAvoid, suggestPro, mirrorOf};
 })();
 if (typeof module !== 'undefined') module.exports = TH;
 
@@ -1261,6 +1392,7 @@ const ICON = {
   reset: svgI('<path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/>'),
   sliders: svgI('<path d="M4 21V14M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/>'),
   book: svgI('<path d="M4 19.5V5a2 2 0 0 1 2-2h14v15H6a2 2 0 0 0-2 2 2 2 0 0 0 2 2h14"/>'),
+  bulb: svgI('<path d="M9 18h6M10 21.5h4M12 2.5a6.5 6.5 0 0 0-3.8 11.8c.5.4.8 1 .8 1.6V16h6v-.1c0-.6.3-1.2.8-1.6A6.5 6.5 0 0 0 12 2.5z"/>'),
   stage: svgI('<path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/>'),
 };
 
@@ -1307,7 +1439,7 @@ const sample = () => [['Fmaj7',4],['E7',4],['Am7',4],['Gm7',2],['C7',2]].map(([s
 const S = {chart:sample(), key:{t:0, minor:false}, style:'jazz', rid:'swing', bpm:140, vol:{g:.8, b:.75, d:.5},
   loop:true, cin:false, sample:true, sel:4, pan:'cand', page:0, vpage:0, follow:true, showSc:true, real:true, fbNames:false, scView:null,
   mel:null, melTitle:'', title:'', melOn:true, melInst:'vibes', melVol:.85,
-  inp:{root:0, q:'maj7'}, solo:{mode:'scale', tone:'guitar', dens:1, vol:.8}, sb:{q:'', feel:'all', key:'all', sort:'cx'}, undo:[], cur:[]};
+  inp:{root:0, q:'maj7'}, solo:{mode:'scale', tone:'guitar', dens:1, vol:.8, lv:'easy'}, cmp:'easy', sb:{q:'', feel:'all', key:'all', sort:'cx'}, undo:[], cur:[]};
 const STORE = 'chordnavi-v1';
 try {
   const d = JSON.parse(localStorage.getItem(STORE) || 'null');
@@ -1329,13 +1461,15 @@ try {
     if (typeof d.title === 'string') S.title = d.title.slice(0, 80);
     S.melOn = d.melOn !== false; if (['vibes','guitar','nylon'].includes(d.melInst)) S.melInst = d.melInst; if (d.melVol >= 0 && d.melVol <= 1) S.melVol = +d.melVol;
     S.sel = Number.isInteger(d.sel) ? Math.min(d.sel, S.chart.length - 1) : S.chart.length - 1;
-    if (d.solo && typeof d.solo === 'object') { const o = d.solo; if (['scale','always','off'].includes(o.mode)) S.solo.mode = o.mode; if (['guitar','vibes'].includes(o.tone)) S.solo.tone = o.tone; if ([0,1,2].includes(o.dens)) S.solo.dens = o.dens; if (o.vol >= 0 && o.vol <= 1) S.solo.vol = +o.vol; }
+    if (d.solo && typeof d.solo === 'object') { const o = d.solo; if (['scale','always','off'].includes(o.mode)) S.solo.mode = o.mode; if (['guitar','vibes'].includes(o.tone)) S.solo.tone = o.tone; if ([0,1,2].includes(o.dens)) S.solo.dens = o.dens; if (o.vol >= 0 && o.vol <= 1) S.solo.vol = +o.vol; if (o.lv === 'pro' || o.lv === 'easy') S.solo.lv = o.lv; }
+    if (d.cmp === 'pro' || d.cmp === 'easy') S.cmp = d.cmp;
     if (d.sb && typeof d.sb === 'object') { if (['cx','cxd','key','title'].includes(d.sb.sort)) S.sb.sort = d.sb.sort; if (typeof d.sb.feel === 'string') S.sb.feel = d.sb.feel; if (typeof d.sb.key === 'string') S.sb.key = d.sb.key; }
   }
 } catch (e) {}
-const save = () => { try { localStorage.setItem(STORE, JSON.stringify({chart:S.chart, key:S.key, style:S.style, rid:S.rid, bpm:S.bpm, vol:S.vol, loop:S.loop, cin:S.cin, sample:S.sample,
+const DM = {cur:null, saved:null};   // お手本の再生中だけ使う一時設定
+const save = () => { if (DM.cur) return; try { localStorage.setItem(STORE, JSON.stringify({chart:S.chart, cmp:S.cmp, key:S.key, style:S.style, rid:S.rid, bpm:S.bpm, vol:S.vol, loop:S.loop, cin:S.cin, sample:S.sample,
   showSc:S.showSc, real:S.real, follow:S.follow, pan:S.pan, sel:S.sel, solo:S.solo, mel:S.mel, melTitle:S.melTitle, title:S.title, melOn:S.melOn, melInst:S.melInst, melVol:S.melVol, sb:{feel:S.sb.feel, key:S.sb.key, sort:S.sb.sort}})); } catch (e) {} };
-const R = () => RHY.find(r => r.id === S.rid) || RHY[0];
+const R = () => RHY.find(r => r.id === (DM.cur && DM.cur.rid || S.rid)) || RHY[0];
 const bpb = () => R().bpb;
 const nm = (c, key = S.key) => TH.name(c, key);
 function chordHTML(c, key = S.key) {
@@ -1497,16 +1631,26 @@ function renderSeg() {
 /* ---------- panel: next-chord candidates ---------- */
 function renderCand() {
   const at = insAt(), h = S.chart.slice(0, at), f = S.chart[at] || null;
-  const list = TH.suggest(h, f, S.key, S.style, 24);
+  const pro = S.cmp === 'pro';
+  let list = TH.suggest(h, f, S.key, S.style, 24);
+  if (pro) {
+    const px = TH.suggestPro(h, f, S.key, S.style, list).filter(c => c.seq || !list.some(b => b.root === c.root && b.q === c.q));
+    const pick = [], cnt = {};
+    for (const c of px) { const g = c.tid === 'colorc' || c.tid === 'constant' || c.tid === 'mediant' || c.tid === 'negative' ? c.tid : c.id || c.tid + c.score; if (pick.length < 4 && !(cnt[g] >= 1)) { pick.push(c); cnt[g] = (cnt[g] || 0) + 1; } }
+    const rest = px.filter(c => !pick.includes(c));
+    const top = [...list.slice(0, 8), ...pick].sort((a, b) => b.score - a.score);
+    list = [...top, ...[...list.slice(8), ...rest].sort((a, b) => b.score - a.score)];
+  }
   S.cur = list;
   const pages = Math.max(1, Math.ceil(list.length / 12));
   S.page = Math.min(S.page, pages - 1);
   const show = list.slice(S.page * 12, S.page * 12 + 12);
   const cap = h.length ? `<b>${esc(nm(h[h.length - 1]))}</b> の次${f ? `（${esc(nm(f))} の前）` : ''}` : '<b>最初のコード</b>';
-  return `<div class="cap">${cap}<span>・タップで追加／長押しで試聴</span><span class="gap"></span>
+  return `<div class="cap">${cap}<span class="hint">・タップで追加／長押しで試聴</span><span class="gap"></span>
+    <span class="lvs" role="group" aria-label="コードの技"><button data-cl="easy" aria-pressed="${!pro}">かんたん</button><button data-cl="pro" aria-pressed="${pro}">高度</button></span>${pro ? '<button class="qbtn" data-guide="prog" aria-label="コードの技の解説">?</button>' : ''}
     <span class="pg"><button data-pg="-1" aria-label="前の候補"${S.page ? '' : ' disabled'}>‹</button><span>${S.page + 1}/${pages}</span><button data-pg="1" aria-label="次の候補"${S.page < pages - 1 ? '' : ' disabled'}>›</button></span></div>
-    <div class="cands">${show.map((c, k) => { const idx = S.page * 12 + k; return `<button class="cd${idx === 0 ? ' lead' : ''}" data-k="${idx}" style="--w:${c.score}%">
-      <span class="cn hand">${chordHTML(c)}</span><span class="cs">${c.score}</span><span class="cr">${esc(TH.roman(c, S.key))}</span><span class="cw">${esc(c.why[0] || '')}</span><i></i></button>`; }).join('')}</div>`;
+    <div class="cands">${show.map((c, k) => { const idx = S.page * 12 + k; return `<button class="cd${idx === 0 ? ' lead' : ''}${c.pro ? ' pro' : ''}" data-k="${idx}" style="--w:${c.score}%">
+      <span class="cn hand">${chordHTML(c)}${c.seq ? `<em>＋${c.seq.length - 1}</em>` : ''}</span><span class="cs">${c.score}</span><span class="cr">${esc(c.seq ? c.seq.map(x => nm(x)).join('→') : TH.roman(c, S.key))}</span><span class="cw">${esc(c.why[0] || '')}</span><i></i></button>`; }).join('')}</div>`;
 }
 
 /* ---------- panel: manual input ---------- */
@@ -1624,6 +1768,7 @@ function renderDock() {
   $('#melBtn').classList.toggle('dim', !S.mel);
   if ($('#stPlay')) $('#stPlay').innerHTML = P.ui ? ICON.stop : ICON.play;
   recDock();
+  $('#adlBtn').classList.toggle('pro', S.solo.lv === 'pro');
   $('#adlBtn').classList.toggle('on', P.ui ? soloOn() : S.solo.mode === 'always' || (S.solo.mode === 'scale' && S.pan === 'scale'));
 }
 /* ---------- stage (performance) view ---------- */
@@ -1648,7 +1793,7 @@ function updateStage() {
 function refresh() {
   assignScales();
   renderHead(); renderChart(); renderTb(); renderSeg(); renderPan(); renderDock(); updateStage();
-  if (P.ui) { P.tl = timeline(); P.melMap = buildMel(); }
+  if (P.ui && !DM.cur) { rebuildTL(); P.melMap = buildMel(); }
   save();
 }
 /* ---------- audio ---------- */
@@ -1747,14 +1892,23 @@ function loadInst(name) {
       applyTone(); sndStat();
     }).catch(() => { s.state = 'fail'; sndStat(); });
 }
-function smpNote(name, m, t, dur, vel, dest, rel = .08) {
+function pbFx(param, pr, t, end, rel, fx) {
+  if (!fx) return;
+  const ctx = A.ctx;
+  if (fx.sc) { param.setValueAtTime(pr * 2 ** (-fx.sc / 12), t); param.linearRampToValueAtTime(pr, t + .075); }
+  if (fx.vb && end - t > .38) { const o = ctx.createOscillator(), g = ctx.createGain(); o.frequency.value = 5.4; g.gain.setValueAtTime(0, t); g.gain.setValueAtTime(0, t + .2); g.gain.linearRampToValueAtTime(pr * .011, t + .42); o.connect(g); g.connect(param); o.start(t); o.stop(end + rel + .05); }
+  if (fx.fl) { param.setValueAtTime(pr, Math.max(t + .08, end - .12)); param.exponentialRampToValueAtTime(pr * 2 ** (-4 / 12), end + rel); }
+}
+function smpNote(name, m, t, dur, vel, dest, rel = .08, fx) {
   const s = SMP[name];
   if (!S.real || !s || s.state !== 'ready') return false;
   let k = s.keys[0];
   for (const x of s.keys) if (Math.abs(x - m) < Math.abs(k - m)) k = x;
   const e = s.notes.get(k), ctx = A.ctx, src = ctx.createBufferSource(), g = ctx.createGain();
-  src.buffer = e.buf; src.playbackRate.value = 2 ** ((m - k) / 12);
-  const life = (e.buf.duration - e.off) / src.playbackRate.value, end = t + Math.max(.04, dur), amp = vel * e.norm;
+  const pr = 2 ** ((m - k) / 12);
+  src.buffer = e.buf; src.playbackRate.value = pr;
+  const life = (e.buf.duration - e.off) / pr, end = t + Math.max(.04, dur), amp = vel * e.norm;
+  pbFx(src.playbackRate, pr, t, end, rel, fx);
   g.gain.setValueAtTime(amp, t);
   if (end < t + life) { g.gain.setValueAtTime(amp, end); g.gain.exponentialRampToValueAtTime(.0005, end + rel); }
   src.connect(g); g.connect(dest);
@@ -1864,8 +2018,8 @@ function drum(k, t, v = 1) {
 
 /* ---------- auto solo (adlib) ---------- */
 const SO = {last:64, dir:1, goal:70, left:0, rest:0, motif:null, first:false, reuse:false, hand:5};
-const soloOn = () => REC.on ? REC.adl : S.solo.mode === 'always' || (S.solo.mode === 'scale' && S.pan === 'scale');
-function soloReset() { Object.assign(SO, {last:62 + Math.floor(Math.random() * 6), dir:1, goal:70, left:0, rest:0, motif:null, hand:5}); P.solo = new Map(); }
+const soloOn = () => DM.cur ? !!DM.cur.solo : REC.on ? REC.adl : S.solo.mode === 'always' || (S.solo.mode === 'scale' && S.pan === 'scale');
+function soloReset() { Object.assign(SO, {last:62 + Math.floor(Math.random() * 6), dir:1, goal:70, left:0, rest:0, motif:null, hand:5}); spReset(); P.solo = new Map(); }
 function newGoal() { const mid = S.style === 'pop' ? 67 : 68, span = 4 + Math.floor(Math.random() * 6); SO.goal = SO.last + SO.dir * span; if (Math.abs(SO.goal - mid) > 11) { SO.dir = -SO.dir; SO.goal = SO.last + SO.dir * span; } }
 function scaleRow(c, nextCh) {
   if (c.sc && TH.SC[c.sc]) return {id:c.sc, root:c.scr ?? c.root};
@@ -1873,7 +2027,7 @@ function scaleRow(c, nextCh) {
 }
 function scaleInfo(seg) {
   if (seg.si) return seg.si;
-  const c = seg.ch, nx = segNext(seg), row = scaleRow(c, nx ? nx.ch : null), f = Q[c.q].f;
+  const c = seg.ch, nx = segNextReal(seg), row = scaleRow(c, nx ? nx.ch : null), f = Q[c.q].f;
   const ct = new Set(f.filter(x => x < 12).map(x => mod(c.root + x)));
   if (c.q === '7alt') ct.delete(mod(c.root + 7));
   const guide = new Set(f.filter(x => [3,4,9,10,11].includes(x)).map(x => mod(c.root + x)));
@@ -1955,6 +2109,7 @@ function soloBar(tick0) {
   for (const k of [...P.solo.keys()]) if (k >= tick0 && k < tick0 + span) P.solo.delete(k);
   setVols();
   if (!soloOn()) return;
+  if (PRO.solo()) { soloBarPro(tick0); return; }
   if (SO.rest > 0) { SO.rest--; return; }
   if (SO.left <= 0) {
     const opts = S.bpm >= 200 ? [1,2,2] : S.bpm < 100 ? [1,1,2] : [1,2,2,3];
@@ -1988,10 +2143,11 @@ function soloBar(tick0) {
   });
   if (ending) SO.rest = Math.random() < [.75, .45, .2][S.solo.dens] ? 1 : 0;
 }
-function lead(m, t, dur, vel) {
+function lead(m, t, dur, vel, ex) {
   const ctx = A.ctx;
+  if (ex && ex.gr) lead(m + ex.gr, Math.max(ctx.currentTime, t - .055), .05, vel * .7);
   if (S.solo.tone === 'vibes' && smpNote('vibes', m, t, dur < .3 ? dur + .25 : dur + .7, vel * 1.3, A.gS, .35)) return;
-  if (S.solo.tone !== 'vibes' && smpNote(leadInst(), m, t, dur, vel * 1.5, A.gS, .06)) return;
+  if (S.solo.tone !== 'vibes' && smpNote(leadInst(), m, t, dur, vel * 1.5, A.gS, .06, ex)) return;
   if (S.solo.tone === 'vibes') {
     const f = 440 * 2 ** ((m - 69) / 12), out = ctx.createGain(), trem = ctx.createGain(), lfo = ctx.createOscillator(), ld = ctx.createGain();
     const len = dur < .3 ? dur + .35 : Math.min(2.6, dur + .9);
@@ -2005,6 +2161,7 @@ function lead(m, t, dur, vel) {
   const {buf, rate} = pbuf(m, .6), s = ctx.createBufferSource(), g = ctx.createGain();
   s.buffer = buf; s.playbackRate.value = rate;
   const life = buf.duration / rate, end = t + Math.max(.06, dur);
+  pbFx(s.playbackRate, rate, t, end, .06, ex);
   g.gain.setValueAtTime(vel * 1.1, t);
   if (end < t + life) { g.gain.setValueAtTime(vel * 1.1, end); g.gain.exponentialRampToValueAtTime(.0005, end + .06); }
   s.connect(g); g.connect(A.gS);
@@ -2090,7 +2247,8 @@ function pickVoicing(c, prevC) {
 function timeline() {
   const n = bpb();
   let pos = 0, prevC = null;
-  const segs = S.chart.map((c, i) => {
+  const chart = DM.cur ? DM.cur.chart : S.chart;
+  const segs = chart.map((c, i) => {
     const v = pickVoicing(c, prevC); prevC = v.fr.some(f => f > 0) ? center(v) : prevC;
     const s = {i, ch:c, start:pos, len:c.dur, vo:v.midi.slice().sort((a, b) => a - b)};
     pos += c.dur; return s;
@@ -2099,8 +2257,8 @@ function timeline() {
   if (segs.length) segs[segs.length - 1].len += total - pos;
   return {segs, total};
 }
-function segAt(beat) { const s = P.tl.segs; let r = s[0]; for (const x of s) { if (x.start <= beat + 1e-6) r = x; else break; } return r; }
-function segNext(seg) { const s = P.tl.segs; return s[seg.i + 1] || (S.loop ? s[0] : null); }
+function segAt(beat) { const s = (P.hl || P.tl).segs; let r = s[0]; for (const x of s) { if (x.start <= beat + 1e-6) r = x; else break; } return r; }
+function segNext(seg) { const s = (P.hl || P.tl).segs; return s[(seg.k ?? seg.i) + 1] || (S.loop ? s[0] : null); }
 function compile(r) {
   const span = r.bars * r.bpb, map = new Map();
   const tk = b => { const fb = Math.floor(b + 1e-6), fr = b - fb; return Math.round((fb + (r.sw && Math.abs(fr - .5) < 1e-6 ? 2 / 3 : fr)) * TPB) % (span * TPB); };
@@ -2134,10 +2292,11 @@ function gtr(e, seg, beat, t) {
 }
 const fifthOf = c => { const f = Q[c.q].f; return f.includes(7) ? 7 : f.includes(6) ? 6 : f.includes(8) ? 8 : 7; };
 function near(pc, ref, lo = 31, hi = 50) { let best = null; for (let m = lo; m <= hi; m++) if (mod(m) === mod(pc) && (best === null || Math.abs(m - ref) < Math.abs(best - ref))) best = m; return best; }
-function walk(seg, beat, rem, nroot) {
+function walk(seg, beat, rem, nroot, apRoot) {
   const c = seg.ch, root = c.bass ?? c.root, pos = beat - seg.start;
   if (pos < .01) return near(root, P.last);
   if (rem <= 1.01) {
+    if (apRoot != null) { const a = near(apRoot, P.last); if (Math.abs(a - P.last) <= 7) return a; }
     const tg = near(nroot, P.last);
     if (Math.random() < .22) { const f = near(nroot + 7, P.last); if (Math.abs(f - P.last) <= 7) return f; }
     const o = [tg - 1, tg + 1].filter(x => x >= 29 && x <= 52).sort((a, b) => Math.abs(a - P.last) - Math.abs(b - P.last));
@@ -2152,14 +2311,14 @@ function walk(seg, beat, rem, nroot) {
 }
 function bass(e, seg, beat, t) {
   const spb = 60 / S.bpm, c = seg.ch, root = c.bass ?? c.root, rem = seg.start + seg.len - beat;
-  const nx = segNext(seg), nroot = nx ? (nx.ch.bass ?? nx.ch.root) : root;
+  const nx0 = segNext(seg), nx = segNextReal(seg), nroot = nx ? (nx.ch.bass ?? nx.ch.root) : root, apRoot = nx0 && nx0.ap === 'chrom' ? nx0.ch.root : null;
   let m, keep = false;
   switch (e.a) {
     case 'R': m = near(root, P.last); break;
     case '5': m = near(root + fifthOf(c), P.last); break;
     case '8': m = near(root, P.last); if (m + 12 <= 55) m += 12; keep = true; break;
     case 'F': if (rem <= 2.01 && nx && nx !== seg) { const tg = near(nroot, P.last); m = Math.abs(tg - 1 - P.last) < Math.abs(tg + 1 - P.last) ? tg - 1 : tg + 1; } else m = near(root + fifthOf(c), P.last); break;
-    default: m = walk(seg, beat, rem, nroot);
+    default: m = walk(seg, beat, rem, nroot, apRoot);
   }
   if (m == null) return;
   if (!keep) P.last = m;
@@ -2185,15 +2344,26 @@ function doTick(tick, t) {
   const mm = S.melOn && P.melMap ? P.melMap.get(tick) : null;
   if (mm) { const spt = 60 / S.bpm / TPB; for (const n of mm) { melNote(n.m, t, n.dT * spt * .95, n.v); P.vis.push({time:t, note:n.m, dur:n.dT * spt}); } }
   const sn = P.solo.get(tick);
-  if (sn && soloOn()) { const spt = 60 / S.bpm / TPB; lead(sn.m, t, sn.dT * spt * .94 + (sn.end ? .25 : 0), sn.v); P.vis.push({time:t, note:sn.m, dur:sn.dT * spt}); }
+  if (sn && soloOn()) {
+    const spt = 60 / S.bpm / TPB, pro = !!sn.ex;
+    lead(sn.m, t + (pro ? .006 : 0), sn.dT * spt * (sn.ex && sn.ex.gh ? .6 : .94) + (sn.end ? .25 : 0), sn.v, sn.ex);
+    P.vis.push({time:t, note:sn.m, dur:sn.dT * spt});
+    if (sn.tech) P.vis.push({time:t, tech:sn.tech});
+  }
   const evs = P.map.get(tick % (r.bars * n * TPB)) || [];
   let g = false, b = false;
+  const skipG = P.noG === tick;
+  if (chg && seg.tech && seg.lab) P.vis.push({time:t, tech:{kind:'cmp', id:seg.tech, txt:seg.lab}});
   for (const e of evs) {
-    if (e.p === 'g') { g = true; gtr(e, seg, beat, t); }
+    if (e.p === 'g') { if (skipG || (seg.ap && !chg)) continue; g = true; gtr(e, seg, beat, t); }
     else if (e.p === 'b') { b = true; bass(e, seg, beat, t); }
     else drum(e.a, t, e.v);
   }
-  if (chg) {
+  if (chg && seg.ap) {
+    const spb = 60 / S.bpm;
+    if (!g) strum(seg.vo, t, (seg.ap === 'push' ? seg.len + 1.2 : seg.len + .15) * spb, seg.ap === 'push' ? .74 : .66, .009);
+    if (seg.ap === 'push') P.noG = Math.round((seg.start + seg.len) * TPB) % (P.hl.total * TPB);
+  } else if (chg) {
     if (!g && r.chg) gtr({a:r.chg, v:.7, len:Math.min(seg.len, 1.5)}, seg, beat, t);
     if (!b) bass({a:'R', v:.85, len:Math.min(seg.len, 1)}, seg, beat, t);
   }
@@ -2205,7 +2375,7 @@ function sched() {
     if (P.endAt && P.next >= P.endAt - 1e-4) { P.on = false; clearInterval(P.timer); return; }
     if (P.cnt > 0) { doCount(-P.cnt, P.next); P.cnt--; P.next += spt; continue; }
     if (P.tick >= end) {
-      if (S.loop) P.tick = 0;
+      if (S.loop) { P.tick = 0; P.loopN = (P.loopN || 0) + 1; if (PRO.cmp()) P.hl = planHarm(P.tl, P.loopN); }
       else { P.vis.push({time:P.next, stop:true}); P.on = false; clearInterval(P.timer); return; }
     }
     doTick(P.tick, P.next);
@@ -2229,6 +2399,8 @@ function frame() {
   while (P.vis.length && P.vis[0].time <= now) {
     const v = P.vis.shift();
     if (v.stop) { stop(); return; }
+    if (v.tech) { techShow(v.tech); continue; }
+    if (DM.cur) continue;
     if (v.note != null) { hitNote(v.note, v.dur); continue; }
     if (v.i !== P.curI) setPlaying(v.i);
     setDot(v.beat);
@@ -2241,7 +2413,7 @@ function play(fromTick = 0) {
   if (!ctx) { toast('このブラウザは音の再生に対応していません'); return; }
   if (!S.chart.length) { toast('先にコードを追加してください'); return; }
   applyTone();
-  P.tl = timeline(); P.map = compile(R()); P.melMap = buildMel();
+  P.loopN = 0; P.noG = -1; rebuildTL(); P.map = compile(R()); P.melMap = buildMel();
   const cb = P.cinBars != null ? P.cinBars : S.cin ? 1 : 0, end = P.tl.total * TPB;
   P.tick = fromTick > 0 && fromTick < end ? Math.round(fromTick) : 0; P.cnt = cb * bpb() * TPB;
   P.next = ctx.currentTime + (P.lead || .1); P.t0 = P.next + cb * bpb() * 60 / S.bpm; P.vis = []; P.last = 40; P.dir = 1;
@@ -2253,6 +2425,7 @@ function play(fromTick = 0) {
 function stop() {
   P.on = false; P.ui = false; clearInterval(P.timer); P.vis = []; P.solo = new Map();
   if (A.ctx) { const g = A.master.gain, t = A.ctx.currentTime; g.cancelScheduledValues(t); g.setValueAtTime(g.value, t); g.linearRampToValueAtTime(0, t + .08); g.setValueAtTime(.9, t + .5); }
+  techHide(); if (DM.cur) demoEnd();
   setPlaying(-1); setDot(-1); clearBarNow(); renderDock(); updateStage();
   if (S.pan === 'scale') renderPan();
 }
@@ -2275,6 +2448,665 @@ function playScale(row, ch) {
   for (const m of seq) { pluck(m, t, step * 1.6, .75); t += step; }
 }
 
+/* ===== 高度モード：伴奏のリハーモナイズ／アドリブのジャズ語法と表現／鳴った技の表示／お手本 ===== */
+const PRO = {
+  solo:() => DM.cur ? !!DM.cur.solo : S.solo.lv === 'pro',
+  cmp:() => DM.cur ? DM.cur.cmp === 'pro' : S.cmp === 'pro',
+};
+const nmx = c => TH.name(c, S.key);
+const nn = m => TH.spell(mod(m), S.key);
+function mulberry(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const baseQ = q => ({maj9:'maj7', '69':'6', 'maj7#11':'maj7', m9:'m7', m11:'m7', '9':'7', '13':'7', '7b9':'7', '7#9':'7', '7#11':'7', '7b13':'7', '7alt':'7', add9:'maj'})[q] || q;
+
+/* ---------- 伴奏：テンポ中のリハーモナイズ（譜面はそのまま、鳴らし方だけ高度に） ---------- */
+function rebuildTL() { P.tl = timeline(); P.hl = planHarm(P.tl, P.loopN || 0); }
+function segNextReal(seg) { let x = segNext(seg), g = 0; while (x && x.ap && g++ < 4) x = segNext(x); return x; }
+function melPcs(a, b) {
+  if (!S.mel || !S.melOn || DM.cur) return null;
+  const s = new Set(); for (const n of S.mel) if (n.b < b - 1e-6 && n.b + n.d > a + 1e-6) s.add(mod(n.m));
+  return s;
+}
+function fitsMel(ch, a, b) {
+  const ms = melPcs(a, b); if (!ms || !ms.size) return true;
+  const row = TH.chordScales(ch, S.key, null)[0], sc = new Set((row ? TH.SC[row.id].iv : Q[ch.q].f).map(x => mod((row ? row.root : ch.root) + x)));
+  for (const pc of ms) if (!sc.has(pc)) return false;
+  return true;
+}
+const voOK = (root, q) => TH.voicings(root, q, S.style).length > 0;
+function colorQ(c, nc, J, rnd) {
+  const q = c.q, r = rnd();
+  const us = c.sc && c.scAuto === false && TH.SC[c.sc] ? new Set(TH.SC[c.sc].iv.map(x => mod((c.scr ?? c.root) + x))) : null;
+  const pick = opts => { let a = 0; for (const [nq, w] of opts) { a += w; if (r < a) return (!us || Q[nq].f.every(x => us.has(mod(c.root + x)))) && voOK(c.root, nq) ? nq : q; } return q; };
+  const d = mod(c.root - S.key.t), home = S.key.minor ? [3, 8] : [0, 5];
+  if (!J) { if (q === 'maj') return home.includes(d) ? pick([['add9', .35], ['maj7', .2]]) : (!S.key.minor && d === 7) ? pick([['7', .3]]) : q; if (q === 'm') return pick([['m7', .45]]); return q; }
+  if (q === 'maj7') return pick([['maj9', .4], ['69', .25], [!S.key.minor && (d === 5 || [1, 3, 8].includes(d)) ? 'maj7#11' : 'maj9', .15]]);
+  if (q === 'maj') return home.includes(d) ? pick([['69', .35], ['maj7', .35]]) : (!S.key.minor && d === 7) ? pick([['7', .5]]) : q;
+  if (q === '6') return pick([['69', .5]]);
+  if (q === 'm7') return pick(!S.key.minor && d === 4 ? [['m11', .35]] : [['m9', .42], ['m11', .2]]);
+  if (q === '7') {
+    const res = nc && mod(nc.root - c.root) === 5, toMin = res && 'mø'.includes(Q[nc.q].k);
+    if (toMin) return pick([['7b9', .45], ['7alt', .35], ['7b13', .2]]);
+    if (res) return pick([['13', .32], ['9', .2], ['7b9', .16], ['7alt', .16]]);
+    return pick([['9', .38], ['13', .3], ['7#11', .3]]);
+  }
+  return q;
+}
+function pickVoPro(ch, prev, ap) {
+  const r = R(); let vs = TH.voicings(ch.root, ch.q, S.style);
+  if (!vs.length) vs = TH.voicings(ch.root, baseQ(ch.q), S.style);
+  if (!vs.length) { const p = TH.pcs(ch); return p.map(pc => 52 + mod(pc - 4)).sort((a, b) => a - b); }
+  const pool = vs.filter(x => r.prefer.includes(x.cat) || x.cat === 'rootless'), cand = pool.length >= 2 ? pool : vs;
+  const avg = a => a.reduce((s, x) => s + x, 0) / a.length;
+  const pt = prev ? prev[prev.length - 1] : 66, pc = prev ? avg(prev) : 57;
+  let best = null, bp = 1e9;
+  for (const x of cand) {
+    const m = x.midi.slice().sort((a, b) => a - b), top = m[m.length - 1];
+    let pen = Math.abs(top - pt) * 1.5 + Math.abs(avg(m) - pc) * .7 + (top < 59 ? 8 : 0) + (top > 77 ? 5 : 0) + Math.random() * 1.2 - (x.sc || 0) * .3;
+    if (ap && Math.abs(top - pt) > 3) pen += 4;
+    if (pen < bp) { bp = pen; best = m; }
+  }
+  return best;
+}
+function quartalVo(root, prev) {
+  let b = root; while (b < 45) b += 12; while (b > 52) b -= 12;
+  const v = [0, 5, 10, 15, 19].map(x => b + x);
+  if (prev && prev[prev.length - 1] - v[4] > 7 && v[4] + 12 <= 79) return v.map(x => x + 12);
+  return v;
+}
+function planHarm(tl, seed) {
+  const segs0 = tl.segs;
+  const bluesy = segs0.length >= 3 && segs0.filter(s => Q[s.ch.q].k === '7').length / segs0.length >= .5;
+  if (!PRO.cmp() || !segs0.length) { segs0.forEach((s, k) => { s.k = k; }); return {segs:segs0, total:tl.total, pro:false, bluesy}; }
+  const J = S.style === 'jazz', n = bpb(), r = R(), N = segs0.length, aL = r.sw ? 1 / 3 : .5, full = n === 3 ? 3 : 4;
+  const rnd = mulberry((seed + 1) * 9973 + N * 31 + S.key.t * 7 + S.bpm), F = DM.cur && DM.cur.cforce;
+  const P_ = (id, p) => F ? (F === id ? 1 : 0) : p;   // お手本では、その技だけを必ず使う
+  const out = [];
+  for (let j = 0; j < N; j++) {
+    const s = segs0[j], c = s.ch, nxs = segs0[j + 1] || (S.loop || F === 'turn' ? segs0[0] : null), nc = nxs ? nxs.ch : null;
+    const k = Q[c.q].k, st = s.start, en = s.start + s.len, pin = !!c.v;
+    let pcs = [{start:st, len:s.len, ch:{...c}, orig:true, svo:s.vo}];
+    if (J && k === '7' && nc && mod(nc.root - c.root) === 5 && c.q !== '7sus4' && !pin) {
+      const toMin = 'mø'.includes(Q[nc.q].k), prevOut = out[out.length - 1];
+      const hasII = prevOut && mod(prevOut.ch.root - c.root) === 7 && 'mø'.includes(Q[prevOut.ch.q].k);
+      const x = rnd(), ch = F ? F : x < .3 ? 'twofive' : x < .62 ? 'tritone' : x < .76 ? 'backdoor' : '';
+      if (ch === 'twofive' && s.len >= full && !hasII) {
+        const h = Math.floor(s.len / 2), ii = {root:mod(c.root + 7), q:toMin ? 'm7b5' : 'm7', bass:null, pref:null};
+        const sub = !F && rnd() < .3, V = sub ? {root:mod(c.root + 6), q:toMin ? '7' : '7#11', bass:null, pref:'b'} : {...c};
+        if (fitsMel(ii, st, st + h) && fitsMel(V, st + h, en)) pcs = [{start:st, len:h, ch:ii, tech:'twofive', lab:`Ⅱ–Ⅴに分割：${nmx(ii)}–${nmx(V)}`}, {start:st + h, len:s.len - h, ch:V, orig:!sub, svo:s.vo, tech:sub ? 'tritone' : null, lab:sub ? `裏コード：${nmx(c)} の代わりに ${nmx(V)}` : ''}];
+      } else if (ch === 'tritone') {
+        const sub = {root:mod(c.root + 6), q:toMin ? '7' : (rnd() < .5 ? '7#11' : '9'), bass:null, pref:'b'};
+        if (fitsMel(sub, st, en)) pcs = [{start:st, len:s.len, ch:sub, tech:'tritone', lab:`裏コード：${nmx(c)} の代わりに ${nmx(sub)}`}];
+      } else if (ch === 'backdoor' && !toMin && !S.key.minor && mod(nc.root - S.key.t) === 0) {
+        const iv = {root:mod(S.key.t + 5), q:'m7', bass:null, pref:null}, b7 = {root:mod(S.key.t + 10), q:'9', bass:null, pref:'b'};
+        if (s.len >= full && fitsMel(iv, st, st + s.len / 2) && fitsMel(b7, st + s.len / 2, en)) pcs = [{start:st, len:s.len / 2, ch:iv, tech:'backdoor', lab:`バックドア：${nmx(iv)}–${nmx(b7)} → ${nmx(nc)}`}, {start:st + s.len / 2, len:s.len / 2, ch:b7}];
+        else if (fitsMel(b7, st, en)) pcs = [{start:st, len:s.len, ch:b7, tech:'backdoor', lab:`バックドア：${nmx(b7)} → ${nmx(nc)}`}];
+      }
+    }
+    if (pcs.length === 1 && pcs[0].orig && !pin && k === 'M' && nc && mod(nc.root - c.root) === 2 && 'mø'.includes(Q[nc.q].k) && s.len >= full && rnd() < P_('passdim', .45)) {
+      const dl = n === 3 ? 1 : 2, dm = {root:mod(c.root + 1), q:'dim7', bass:null, pref:'#'};
+      if (fitsMel(dm, en - dl, en)) pcs = [{start:st, len:s.len - dl, ch:{...c}, orig:true, svo:s.vo}, {start:en - dl, len:dl, ch:dm, tech:'passdim', lab:`パッシング・ディミニッシュ：${nmx(c)} → ${nmx(dm)} → ${nmx(nc)}`}];
+    }
+    if (j === N - 1 && (S.loop || F === 'turn') && (!DM.cur || F === 'turn') && pcs.length === 1 && pcs[0].orig && !pin && 'Mm'.includes(k) && s.len >= full && nc && rnd() < P_('turn', .5)) {
+      const tgt = segs0[0].ch, tl2 = n === 3 ? 1 : 2;
+      const V = J && rnd() < .45 ? {root:mod(tgt.root + 1), q:'7#11', bass:null, pref:'b'} : {root:mod(tgt.root + 7), q:J ? '13' : '7', bass:null, pref:null};
+      if (fitsMel(V, en - tl2, en)) pcs = [{start:st, len:s.len - tl2, ch:{...c}, orig:true, svo:s.vo}, {start:en - tl2, len:tl2, ch:V, tech:'turn', lab:`ターンアラウンド：${nmx(V)} で頭の ${nmx(tgt)} へ戻る`}];
+    }
+    pcs.forEach(p => { if (J && !(pin && p.orig) && ['m7', 'm9', 'm11'].includes(p.ch.q) && p.len >= 2 * full && rnd() < P_('quartal', .55)) { p.quartal = true; if (!p.tech) { p.tech = 'quartal'; p.lab = `4度積みボイシング（So What）：${nmx(p.ch)}`; } } });
+    pcs.forEach((p, m) => {
+      if (p.tech === 'passdim' || p.quartal || (pin && p.orig) || (F && F !== 'color' && F !== 'voicelead')) return;
+      const nx = pcs[m + 1] ? pcs[m + 1].ch : nc, q0 = p.ch.q;
+      p.ch.q = colorQ(p.ch, nx, J, F === 'color' ? () => .01 : rnd);
+      if (p.ch.q !== q0 && p.ch.scAuto !== false) { delete p.ch.sc; delete p.ch.scr; }
+      if (p.ch.q !== q0 && !p.tech && F === 'color') { p.tech = 'color'; p.lab = `テンションで色付け：${nmx({...p.ch, q:q0})} → ${nmx(p.ch)}`; }
+    });
+    const lp = pcs[pcs.length - 1];
+    if (nc && lp.len >= 2 && !(nc.root === lp.ch.root && Q[nc.q].k === Q[lp.ch.q].k)) {
+      const x = rnd(), pAp = P_('approach', J ? .34 : .18), pPush = P_('push', J ? .16 : .12);
+      if (x < pAp) {
+        const y = rnd(), fam = Q[nc.q].k, tq = fam === 'm' ? (J ? 'm7' : 'm') : fam === '7' ? '7' : fam === 'ø' ? 'm7b5' : fam === 'o' ? 'dim7' : (J ? 'maj7' : 'maj');
+        let ap, kind;
+        if (y < .6 || F) { ap = {root:mod(nc.root + 1), q:tq, pref:'b'}; kind = 'chrom'; }
+        else if (y < .8) { ap = {root:mod(nc.root - 1), q:tq, pref:'#'}; kind = 'chrom'; }
+        else { ap = {root:mod(nc.root + 7), q:J ? '9' : '7', pref:null}; kind = 'dom'; }
+        ap.bass = null;
+        if (!(kind === 'dom' && mod(lp.ch.root - nc.root) === 7 && Q[lp.ch.q].k === '7') && fitsMel(ap, en - aL, en)) {
+          lp.len -= aL;
+          pcs.push({start:en - aL, len:aL, ch:ap, ap:kind, tech:'approach', lab:`アプローチ・コード：${nmx(ap)} → ${nmx(nc)}`});
+        }
+      } else if (x < pAp + pPush) {
+        lp.len -= aL;
+        pcs.push({start:en - aL, len:aL, ch:{...nc}, ap:'push', tech:'push', lab:`アンティシペーション：${nmx(nc)} を8分前に`});
+      }
+    }
+    for (const p of pcs) out.push(Object.assign(p, {i:s.i}));
+  }
+  let prev = null;
+  out.forEach(p => { if (p.ap) return; p.vo = p.orig && p.ch.v && p.svo ? p.svo : p.quartal ? quartalVo(p.ch.root, prev) : pickVoPro(p.ch, prev); prev = p.vo; });
+  out.forEach((p, m) => {
+    if (!p.ap) return;
+    const nx = out.slice(m + 1).find(x => !x.ap) || out.find(x => !x.ap);
+    if (p.ap === 'push') { p.ch = {...nx.ch}; p.vo = nx.vo.slice(); }
+    else if (p.ap === 'chrom') { const dl = mod(p.ch.root - nx.ch.root + 6) - 6; p.vo = nx.vo.map(x => x + dl); }
+    else p.vo = pickVoPro(p.ch, nx.vo, true);
+  });
+  out.forEach((p, k) => { p.k = k; delete p.svo; });
+  return {segs:out, total:tl.total, pro:true, bluesy};
+}
+
+/* ---------- アドリブ（高度）：ジャズの語法でフレーズを組み立てる ---------- */
+const SP = {target:null, last:66, left:0, rest:0, mot:null, role:'call', prev:'', outT:0, n:0, pick:false};
+function spReset() { Object.assign(SP, {target:null, last:62 + Math.floor(Math.random() * 7), left:0, rest:0, mot:null, role:'resp', prev:'', outT:0, n:0, pick:false}); }
+const SLO = 55, SHI = 81;
+function nearPc(pc, ref, lo = SLO, hi = SHI) { let b = null; for (let m = lo; m <= hi; m++) if (mod(m) === mod(pc) && (b === null || Math.abs(m - ref) < Math.abs(b - ref))) b = m; return b ?? Math.max(lo, Math.min(hi, ref)); }
+function nearSet(set, ref, lo = SLO, hi = SHI) { let b = null; for (let m = lo; m <= hi; m++) if (set.has(mod(m)) && (b === null || Math.abs(m - ref) < Math.abs(b - ref))) b = m; return b ?? ref; }
+function stepIn(m, dir, set) { for (let x = m + dir, i = 0; i < 24; x += dir, i++) if (set.has(mod(x))) return x; return m + dir; }
+function moveSteps(m, k, set) { let x = m; for (let i = 0; i < Math.abs(k); i++) x = stepIn(x, Math.sign(k), set); return x; }
+function stepsBetween(a, b, set) { if (a === b) return 0; const d = Math.sign(b - a); let x = a, k = 0; while (k < 24 && (d > 0 ? x < b : x > b)) { x = stepIn(x, d, set); k++; } return k * d; }
+const pcsAt = (root, ivs) => new Set(ivs.map(x => mod(root + x)));
+function degOf(pc, c) {
+  const iv = mod(pc - c.root), k = Q[c.q].k;
+  return {0:'R', 1:'♭9', 2:'9', 3:'mø o'.includes(k) ? '♭3' : '♯9', 4:'3', 5:c.q.includes('sus') ? '4' : '11', 6:'øo'.includes(k) ? '♭5' : '♯11', 7:'5', 8:k === '+' ? '♯5' : '♭13', 9:k === '7' ? '13' : '6', 10:'♭7', 11:k === 'M' || c.q === 'mMaj7' || c.q === 'mel' ? '7' : '△7'}[iv];
+}
+function spanCtx(seg) {
+  const si = scaleInfo(seg), c = seg.ch, k = Q[c.q].k, nx = segNextReal(seg), vp = new Set((seg.vo || []).map(mod));
+  const res = !!nx && mod(nx.ch.root - c.root) === 5;
+  return {seg, si, c, k, root:c.root, dom:k === '7', res, toMin:res && 'mø'.includes(Q[nx.ch.q].k), bluesy:!!(P.hl && P.hl.bluesy), sid:si.row.id,
+    free:(!c.sc || c.scAuto !== false) && c.q === '7', long:seg.len >= 2 * bpb(), vo13:vp.has(mod(c.root + 9)), vo9:vp.has(mod(c.root + 2)), pop:S.style === 'pop'};
+}
+function bebopPass(x) {
+  const r = x.root, sc = x.si.sc;
+  const pc = x.k === '7' && ['mix', 'bebop', 'hmp5', 'mixb13', 'lyd7'].includes(x.sid) ? mod(r + 11)
+    : x.k === 'M' && ['ion', 'lyd'].includes(x.sid) ? mod(r + 8)
+    : x.k === 'm' && ['dor', 'mel', 'aeo'].includes(x.sid) ? mod(r + 4) : null;
+  return pc != null && !sc.has(pc) ? pc : null;
+}
+function bebopSet(x) { const s = new Set(x.si.sc), pc = bebopPass(x); if (pc != null) s.add(pc); return s; }
+const TPAIR = {dor:[[3, 'M'], [5, 'M']], aeo:[[8, 'M'], [10, 'M']], mix:[[10, 'M'], [0, 'M']], bebop:[[10, 'M'], [0, 'M']], ion:[[7, 'M'], [9, 'm']], lyd:[[2, 'M'], [4, 'm']], mel:[[5, 'M'], [7, 'M']], lyd7:[[0, 'M'], [2, 'M']], alt:[[6, 'M'], [8, 'M']], hw:[[0, 'M'], [3, 'M']]};
+const PENT = {dor:[2, 'm'], aeo:[0, 'm'], phr:[0, 'm'], ion:[7, 'M'], lyd:[2, 'M'], mix:[0, 'M'], bebop:[0, 'M'], lyd7:[0, 'M'], alt:[6, 'M'], mel:[5, 'M'], mpen:[0, 'M'], npen:[0, 'm'], blues:[0, 'm']};
+function ustFor(x) {
+  if (!x.dom) return null;
+  if (x.sid === 'lyd7') return {t:mod(x.root + 2), deg:'9・♯11・13'};
+  if (x.sid === 'alt' || (x.free && x.res && !x.vo13 && !x.vo9)) return Math.random() < .6 ? {t:mod(x.root + 8), deg:'♭13・R・♯9'} : {t:mod(x.root + 6), deg:'♭5・♭7・♭9'};
+  if (x.sid === 'hw') return {t:mod(x.root + 9), deg:'13・♭9・3'};
+  return null;
+}
+const altOK = x => x.dom && (x.sid === 'alt' || (x.free && x.res && !x.vo13 && !x.vo9));
+const dimOK = x => x.dom && (x.sid === 'hw' || (x.free && x.res && !x.toMin && !x.vo9));
+const triOK = x => x.dom && x.res && (x.sid === 'alt' || (x.free && !x.vo9 && !x.vo13));
+const DEVS = {
+  bebop:{w:3, ok:(x, L) => L >= 1.5 && !x.pop && bebopPass(x) != null},
+  arp:{w:2.4, ok:(x, L) => L >= 1.5 && !'o+'.includes(x.k)},
+  digital:{w:1.6, ok:(x, L) => L >= 1.5 && !x.pop && 'M m 7'.includes(x.k) && !['alt', 'hw'].includes(x.sid)},
+  ust:{w:2.4, ok:(x, L) => L >= 1.5 && !x.pop && !!ustFor(x)},
+  tri:{w:1.8, ok:(x, L) => L >= 1.5 && !x.pop && triOK(x)},
+  alt:{w:2.2, ok:(x, L) => L >= 1.5 && !x.pop && altOK(x)},
+  dim:{w:1.8, ok:(x, L) => L >= 1.5 && !x.pop && dimOK(x)},
+  triad:{w:1.7, ok:(x, L) => L >= 3 && !x.pop && !!TPAIR[x.sid]},
+  penta:{w:2, ok:(x, L) => L >= 1.5 && !!PENT[x.sid]},
+  side:{w:1.3, ok:(x, L) => L >= 4 && x.long && SP.outT <= 0 && !x.pop && !!PENT[x.sid]},
+  motif:{w:2.6, ok:(x, L) => !!SP.mot && L >= 2},
+  blues:{w:1.5, ok:(x, L) => L >= 2 && ((x.dom && (!x.res || x.bluesy)) || x.sid === 'blues' || (x.pop && 'Mm7'.includes(x.k)))},
+  guide:{w:1.3, ok:(x, L) => L >= 1.5},
+  double:{w:2.2, ok:(x, L) => L >= 2 && S.bpm < 110 && !x.pop && bebopPass(x) != null},
+  squartal:{w:1.4, ok:(x, L) => L >= 2 && !x.pop && ['dor', 'mix', 'lyd', 'aeo', 'mel'].includes(x.sid)},
+};
+function pickDev(x, L) {
+  const f0 = DM.cur && DM.cur.solo, f = f0 === 'disp' ? 'motif' : f0;
+  if (f && DEVS[f] && DEVS[f].ok(x, L)) return f;
+  const w = {}, b = S.bpm, d = S.solo.dens;
+  for (const [id, dv] of Object.entries(DEVS)) if (dv.ok(x, L)) w[id] = dv.w;
+  const mul = (id, k) => { if (w[id] != null) w[id] *= k; };
+  if (b >= 200) { mul('bebop', .7); mul('digital', 2); mul('arp', 1.4); mul('triad', .5); mul('ust', .8); mul('guide', 1.4); }
+  if (b < 100) { mul('guide', 1.8); mul('bebop', .8); mul('penta', 1.2); }
+  if (d === 0) { mul('guide', 2); mul('motif', 1.5); mul('bebop', .5); mul('double', .3); mul('digital', .6); }
+  if (d === 2) { mul('bebop', 1.5); mul('double', 1.5); mul('digital', 1.3); mul('guide', .5); }
+  if (x.pop) { mul('penta', 2.2); mul('blues', 1.6); mul('motif', 1.4); mul('arp', .8); }
+  if (x.bluesy) { mul('blues', 2.4); mul('penta', 1.3); }
+  if (L < 2) mul('guide', .5);
+  if (SP.role === 'resp' && SP.first) mul('motif', 3);
+  mul(SP.prev, .25);
+  if (f === 'encl' || f === 'chrom') { mul('bebop', 2); mul('arp', 2); }
+  const keys = Object.keys(w);
+  if (!keys.length) return 'guide';
+  let tot = 0; for (const k of keys) tot += w[k];
+  let r = Math.random() * tot;
+  for (const k of keys) { r -= w[k]; if (r <= 0) return k; }
+  return keys[0];
+}
+const E8 = (ps, b0 = 0, step = .5) => ps.map((m, i) => m == null ? null : {b:b0 + i * step, d:step, m}).filter(Boolean);
+function devBody(id, x, L, start) {
+  const N = Math.max(1, Math.round(L * 2)), ct = x.si.ct, sc = x.si.sc, r = x.root, cn = nmx(x.c);
+  const s0 = start ?? nearSet(ct, SP.last + (SP.last < 64 ? 3 : -2));
+  const ps = [];
+  switch (id) {
+    case 'bebop': {
+      const set = bebopSet(x), pass = bebopPass(x);
+      let y = s0; ps.push(y);
+      if (y < 63 && Math.random() < .6) { for (let i = 0; i < 3 && ps.length < N; i++) { y = stepIn(y, 1, ct); ps.push(y); } }
+      while (ps.length < N) { const z = stepIn(y, -1, set); y = z < SLO + 1 ? stepIn(y, 1, ct) : z; ps.push(y); }
+      const ev = E8(ps); ev.forEach(e => { if (!sc.has(mod(e.m)) && Math.random() < .55) e.ex = {gh:1}; });
+      return {ev, tech:{id, txt:`ビバップ・スケール：${cn} に経過音 ${TH.spell(pass, S.key)} を足して、拍の頭にコードトーン`}};
+    }
+    case 'arp': {
+      const tones = new Set(ct); if (sc.has(mod(r + 2)) && x.k !== 'o') tones.add(mod(r + 2)); if (x.sid === 'alt') { tones.add(mod(r + 3)); tones.add(mod(r + 8)); }
+      let y = s0 > 70 ? stepIn(s0 - 12, 1, tones) : s0; ps.push(y);
+      while (ps.length < Math.min(4, N)) { y = stepIn(y, 1, tones); ps.push(y); }
+      const top = ps.slice(); while (ps.length < N) { y = stepIn(y, -1, sc); ps.push(y); }
+      return {ev:E8(ps), tech:{id, txt:`アルペジオ：${top.map(m => degOf(m, x.c)).join('–')}（${cn} を${degOf(top[0], x.c) === 'R' ? 'ルート' : degOf(top[0], x.c) + '度'}から積み上げる）`}};
+    }
+    case 'digital': {
+      const third = mod(r + (x.k === 'm' || x.k === 'ø' ? 3 : 4)) - r, fifth = sc.has(mod(r + 7)) ? 7 : x.k === 'ø' ? 6 : 8;
+      const sec = sc.has(mod(r + 2)) ? 2 : 1, sev = sc.has(mod(r + 10)) && x.k !== 'M' ? 10 : 11;
+      const up = [0, sec, mod(third), fifth], hiCell = [mod(third), fifth, sev, 12 + sec];
+      let base = nearPc(r, SP.last - 4); if (base + 14 > SHI) base -= 12; if (base < SLO) base += 12;
+      const down = SP.last > 70 && Math.random() < .6;
+      const cells = down ? [[fifth, mod(third), sec, 0], up] : [up, hiCell];
+      for (let c = 0; ps.length < N; c++) for (const v of cells[c % 2]) if (ps.length < N) ps.push(base + v);
+      return {ev:E8(ps), tech:{id, txt:`1-2-3-5 パターン：${cn} を4つの音で素早く描く（コルトレーン流）`}};
+    }
+    case 'ust': {
+      const u = ustFor(x), set = new Set([u.t, mod(u.t + 4), mod(u.t + 7)]);
+      let y = nearSet(set, s0 - 2); if (y + 9 > SHI) y -= 12; if (y < SLO) y += 12;
+      const trip = S.bpm < 170, step = trip ? 1 / 3 : .5, cnt = Math.max(3, Math.floor((L + 1e-6) / step)), seq = [];
+      for (let g = 0; seq.length < cnt; g++) {
+        const grp = [y]; for (let i = 0; i < 2; i++) grp.push(stepIn(grp[grp.length - 1], g % 2 ? -1 : 1, set));
+        for (const m of grp) if (seq.length < cnt) seq.push(m);
+        y = g % 2 ? stepIn(grp[2], 1, set) : stepIn(grp[2], 1, set);
+        if (y > SHI) y = nearSet(set, SP.last - 5);
+      }
+      return {ev:E8(seq, 0, step), tech:{id, txt:`アッパーストラクチャー：${TH.spell(u.t, S.key)} トライアドを ${cn} の上に（${u.deg}）`}};
+    }
+    case 'tri': {
+      const sub = [6, 10, 1, 4].map(v => mod(r + v)), set = new Set(sub);
+      let y = nearSet(set, SP.last + 3); if (y - 9 < SLO) y += 12; if (y > SHI) y -= 12;
+      ps.push(y); while (ps.length < N) { y = stepIn(y, -1, ps.length < 4 ? set : pcsAt(r, [0, 1, 3, 4, 6, 8, 10])); ps.push(y); }
+      return {ev:E8(ps), tech:{id, txt:`裏コードのライン：${cn} の上で ${TH.spell(r + 6, S.key)}7 のアルペジオ`}};
+    }
+    case 'alt': {
+      const set = pcsAt(r, [0, 1, 3, 4, 6, 8, 10]);
+      let y = nearSet(pcsAt(r, [3, 8]), SP.last + 2); if (y - N < SLO) y += 12; if (y > SHI) y -= 12;
+      ps.push(y); while (ps.length < N) { y = stepIn(y, -1, set); ps.push(y); }
+      return {ev:E8(ps), tech:{id, txt:`オルタード・スケール：${cn} の ♭9・♯9・♯11・♭13 を通る`}};
+    }
+    case 'dim': {
+      let y = nearSet(pcsAt(r, [1, 4, 7, 10]), SP.last + 2); if (y - 1.5 * N < SLO) y += 12; if (y > SHI) y -= 12;
+      for (let i = 0; ps.length < N; i++) { const top = y - 3 * Math.floor(i / 2); ps.push(i % 2 ? top - 1 : top); }
+      return {ev:E8(ps), tech:{id, txt:`コンビネーション・ディミニッシュ：${nn(ps[0])}–${nn(ps[1])} の形を短3度ずつ下へ`}};
+    }
+    case 'triad': {
+      const [p1, p2] = TPAIR[x.sid], T = p => { const t = mod(r + p[0]); return [t, mod(t + (p[1] === 'm' ? 3 : 4)), mod(t + 7)]; };
+      const A = new Set(T(p1)), B = new Set(T(p2));
+      let cur = nearSet(A, SP.last - 5); if (cur + 12 > SHI) cur -= 12;
+      for (let g = 0, guard = 0; ps.length < N && guard < 40; g++, guard++) {
+        const set = g % 2 ? B : A; let y = nearSet(set, cur); if (y < cur) y = stepIn(y, 1, set);
+        const grp = [y, stepIn(y, 1, set), stepIn(stepIn(y, 1, set), 1, set)];
+        if (grp[2] > SHI) { cur -= 12; g--; continue; }
+        for (const m of grp) if (ps.length < N) ps.push(m);
+        cur = y + 1;
+      }
+      const tn = p => TH.spell(r + p[0], S.key) + (p[1] === 'm' ? 'm' : '');
+      return {ev:E8(ps), tech:{id, txt:`トライアド・ペア：${tn(p1)} と ${tn(p2)} を3音ずつ交互に（拍をまたいで聞こえる）`}};
+    }
+    case 'penta': case 'side': {
+      const [off, mm] = PENT[x.sid], pr = mod(r + off), set = pcsAt(pr, mm === 'm' ? [0, 3, 5, 7, 10] : [0, 2, 4, 7, 9]);
+      const arr = []; for (let m = SLO; m <= SHI; m++) if (set.has(mod(m))) arr.push(m);
+      let i = Math.max(0, arr.indexOf(nearSet(set, s0))), down = SP.last > 70 || (SP.last > 64 && Math.random() < .4);
+      if (down && i < 6) down = false; if (!down && i > arr.length - 7) down = true;
+      if (id === 'side') {
+        i = Math.max(0, Math.min(arr.length - 5, i)); const cell = arr.slice(i, i + 4);
+        const half = Math.max(2, Math.round(N / 2));
+        for (let k = 0; ps.length < N; k++) ps.push((k < half ? cell.map(m => m + 1) : cell)[k % 4]);
+        SP.outT = 4;
+        return {ev:E8(ps), tech:{id, txt:`サイドスリップ：${TH.spell(pr + 1, S.key)} に半音ずらして（アウト）→ ${TH.spell(pr, S.key)} に戻る（イン）`}};
+      }
+      for (let g = 0; ps.length < N; g++) {
+        const st = down ? Math.min(arr.length - 1, i - g) : Math.max(0, i + g);
+        for (let k = 0; k < 4 && ps.length < N; k++) { const ix = down ? st - k : st + k; ps.push(arr[Math.max(0, Math.min(arr.length - 1, ix))]); }
+      }
+      const degs = [...set].map(pc => ({pc, d:mod(pc - r)})).sort((a, b) => a.d - b.d).map(o => degOf(o.pc, x.c)).join('・');
+      return {ev:E8(ps), tech:{id, txt:`ペンタトニックの重ね：${TH.spell(pr, S.key)}${mm === 'm' ? 'マイナー' : 'メジャー'}・ペンタ（${cn} の ${degs}）`}};
+    }
+    case 'motif': {
+      const M = SP.mot, p0 = start ?? nearSet(ct, SP.last), disp = (M.disp || (DM.cur && DM.cur.solo === 'disp')) && L >= 2.5 ? .5 : 0, ev = [];
+      M.st.forEach((k, j) => { const b = M.rh[j].b + disp; if (b < L - .01) ev.push({b, d:Math.min(M.rh[j].d, L - b), m:Math.max(SLO, Math.min(SHI, moveSteps(p0, k, sc)))}); });
+      return {ev, tech:{id:disp ? 'disp' : 'motif', txt:disp ? `ディスプレイスメント：さっきのモチーフを8分ずらして ${cn} で` : `モチーフ展開：さっきのフレーズの形を ${cn} に移す`}};
+    }
+    case 'blues': {
+      const mi = x.k === 'm' || x.sid === 'blues' || x.sid === 'npen';
+      let b0 = nearPc(r, SP.last - 5); if (b0 + 12 > SHI) b0 -= 12; if (b0 < SLO) b0 += 12;
+      const A = [[0, .5, mi ? 3 : 4, mi ? {sc:1} : {gr:-1}], [.5, .5, 7], [1, .5, 10], [1.5, .5, 7], [2, .5, 6, {gh:1}], [2.5, .5, 5], [3, .5, mi ? 3 : 4, mi ? {} : {gr:-1}], [3.5, .5, 0]];
+      const B = [[0, 1, 10, {sc:1}], [1, .5, 7], [1.5, .5, 10], [2, .5, 12, {ac:1}], [2.5, .5, 10], [3, 1, 7, {gr:-1, vb:1}]];
+      const lk = Math.random() < .55 ? A : B;
+      const ev = lk.filter(e => e[0] < L - .01).map(([b, d, iv, ex]) => ({b, d:Math.min(d, L - b), m:b0 + iv, ex}));
+      return {ev, tech:{id, txt:`ブルーノート：♭3→3 のハンマリングと ♭5 の経過音（${cn}）`}};
+    }
+    case 'guide': {
+      const g = start != null && x.si.guide.has(mod(start)) ? start : nearSet(x.si.guide.size ? x.si.guide : ct, SP.last);
+      const ev = [{b:0, d:Math.min(2, L), m:g, ex:{sc:Math.random() < .4 ? 1 : 0, vb:1}}];
+      if (L >= 3) { const g2 = nearSet(new Set([...x.si.guide, mod(r + (sc.has(mod(r + 2)) ? 2 : 7))].filter(pc => pc !== mod(g))), g); ev.push({b:2, d:L - 2.5 > 0 ? L - 2.5 : 1, m:g2, ex:{vb:1}}); }
+      return {ev, tech:{id, txt:`ガイドトーン：${nn(g)}（${cn} の ${degOf(g, x.c)}）を長く歌う`}};
+    }
+    case 'double': {
+      const set = bebopSet(x); let y = s0; const seq = [y];
+      while (seq.length < 8) { const z = stepIn(y, -1, set); y = z < SLO ? stepIn(y, 1, ct) : z; seq.push(y); }
+      const ev = E8(seq, 0, .25);
+      let b = 2; while (b < L - .01) { y = stepIn(y, -1, sc); if (y < SLO) y = stepIn(y + 12, -1, sc); ev.push({b, d:.5, m:y}); b += .5; }
+      return {ev, tech:{id, txt:`倍テン：16分音符で ${cn} を一気に駆け下りる`}};
+    }
+    case 'squartal': {
+      const arr = []; for (let m = SLO; m <= SHI; m++) if (sc.has(mod(m))) arr.push(m);
+      let i = Math.max(0, arr.indexOf(nearSet(sc, SP.last - 7)));
+      if (arr.length < 8) return devBody('arp', x, L, start);
+      i = Math.min(i, arr.length - 8);
+      for (let g = 0; ps.length < N; g++) { const a = Math.min(arr.length - 7, i + g); for (const o of [0, 3, 6]) if (ps.length < N) ps.push(arr[a + o]); }
+      return {ev:E8(ps), tech:{id, txt:`4度積み：${nn(ps[0])}–${nn(ps[1])}–${nn(ps[2])} の形をスケールに沿って動かす`}};
+    }
+  }
+  return {ev:[{b:0, d:Math.min(1, L), m:s0}], tech:null};
+}
+function connector(tgt, last, xn, force) {
+  const set = xn.si.sc, r = Math.random(), up = stepIn(tgt, 1, set), dn = stepIn(tgt, -1, set);
+  const encl = force === 'encl' || (force !== 'chrom' && r < (S.style === 'pop' ? .2 : .48));
+  if (encl) {
+    const v = Math.random();
+    if (v < .45) return {len:1, ps:[up, tgt - 1], tech:{id:'encl', txt:`エンクロージャー：${nn(up)}–${nn(tgt - 1)} で ${nn(tgt)}（${nmx(xn.c)} の ${degOf(tgt, xn.c)}）をはさむ`}};
+    if (v < .7) return {len:1, ps:[tgt - 1, up], tech:{id:'encl', txt:`エンクロージャー：${nn(tgt - 1)}–${nn(up)} で ${nn(tgt)}（${nmx(xn.c)} の ${degOf(tgt, xn.c)}）をはさむ`}};
+    return {len:1.5, ps:[up, dn, tgt - 1], tech:{id:'encl', txt:`エンクロージャー：${nn(up)}–${nn(dn)}–${nn(tgt - 1)} → ${nn(tgt)}（${nmx(xn.c)} の ${degOf(tgt, xn.c)}）`}};
+  }
+  if (force === 'chrom' || r < .8) { const a = Math.random() < .72 ? tgt - 1 : tgt + 1; return {len:.5, ps:[a], tech:{id:'chrom', txt:`半音アプローチ：${nn(a)} → ${nn(tgt)}（${nmx(xn.c)} の ${degOf(tgt, xn.c)}）`}}; }
+  const dir = last > tgt ? 1 : -1, a1 = stepIn(tgt, dir, set), a2 = stepIn(a1, dir, set);
+  return {len:1, ps:[a2, a1], tech:null};
+}
+function chooseTarget(xn, ref) {
+  const r = Math.random(), c = xn.c;
+  const pref = r < .55 ? [3, 4] : r < .8 ? [10, 11] : [7, 2];
+  const set = new Set([...xn.si.ct, ...(xn.si.sc.has(mod(c.root + 2)) ? [mod(c.root + 2)] : [])].filter(pc => pref.includes(mod(pc - c.root))));
+  return nearSet(set.size ? set : xn.si.guide.size ? xn.si.guide : xn.si.ct, ref);
+}
+function soloBarPro(tick0) {
+  const r = R(), n = r.bpb, beat0 = tick0 / TPB, force = DM.cur && DM.cur.solo;
+  if (SP.outT > 0) SP.outT--;
+  const tot = P.hl.total;
+  // 小節内のコード区間（アプローチ・コードなど短い差し込みは無視して、本来のコードで考える）
+  const spans = [];
+  for (const s of P.hl.segs) {
+    if (s.ap) continue;
+    const a = s.start, nxt = P.hl.segs.slice(s.k + 1).find(z => !z.ap), b = nxt ? nxt.start : tot;
+    const lo = Math.max(a, beat0 % tot), hi = Math.min(b, beat0 % tot + n);
+    if (hi - lo > 1e-6) spans.push({seg:s, b0:lo - beat0 % tot, b1:hi - beat0 % tot});
+  }
+  if (!spans.length) return;
+  const nextBarSeg = segAt((beat0 + n) % tot), xNext = nextBarSeg ? spanCtx(nextBarSeg.ap ? segNextReal(nextBarSeg) || nextBarSeg : nextBarSeg) : null;
+  const evs = [];
+  const put = (b, d, m, ex, tech) => evs.push({b, d, m:Math.max(SLO - 3, Math.min(SHI + 2, m)), ex:ex || null, tech:tech || null});
+  if (!force && SP.rest > 0) {
+    SP.rest--; SP.target = null;
+    if (SP.rest === 0 && SP.left <= 0 && xNext && Math.random() < .45) {
+      const tgt = chooseTarget(xNext, SP.last), cn = connector(tgt, SP.last, xNext);
+      cn.ps.forEach((m, i) => put(n - cn.len + i * .5, .5, m, i === 0 ? {ac:1} : null, i === 0 ? cn.tech : null));
+      SP.target = tgt; SP.pick = true;
+    }
+    writeSolo(tick0, evs, false); return;
+  }
+  if (SP.left <= 0) {
+    const opts = S.bpm >= 200 ? [1, 2, 2] : S.bpm < 100 ? [1, 1, 2] : [1, 2, 2, 3];
+    SP.left = force ? 99 : opts[Math.floor(Math.random() * opts.length)];
+    SP.role = SP.role === 'call' ? 'resp' : 'call'; SP.first = true; SP.n++;
+  }
+  const ending = !force && SP.left === 1;
+  let pos = 0;
+  if (SP.first && SP.target == null) {
+    const o = Math.random(); pos = S.style === 'pop' ? (o < .5 ? 0 : o < .8 ? .5 : 1) : (o < .35 ? 0 : o < .65 ? .5 : o < .85 ? 1 : 1.5);
+  }
+  let first = true, recorded = false;
+  for (let si = 0; si < spans.length; si++) {
+    const sp = spans[si], x = spanCtx(sp.seg);
+    if (pos >= sp.b1 - 1e-6) continue;
+    const a = Math.max(pos, sp.b0), L = sp.b1 - a;
+    const lastSpan = si === spans.length - 1;
+    const xn = lastSpan ? xNext : spanCtx(spans[si + 1].seg);
+    const chg = xn && !(xn.c.root === x.c.root && xn.c.q === x.c.q);
+    if (ending && lastSpan) {
+      const fb = Math.max(a, Math.min(sp.b1 - 1, n - 2)), body = fb - a;
+      if (body >= 1) {
+        const dv = pickDev(x, body), res = devBody(dv, x, body, SP.target);
+        res.ev.forEach((e, i) => { if (e.b < body - 1e-6) put(a + e.b, Math.min(e.d, body - e.b), e.m, e.ex, i === 0 ? res.tech : null); });
+        SP.prev = dv; if (res.ev.length) SP.last = res.ev[res.ev.length - 1].m;
+      }
+      const fs = new Set([...x.si.ct].filter(pc => [3, 4, 7].includes(mod(pc - x.root))));
+      if (x.si.sc.has(mod(x.root + 2))) fs.add(mod(x.root + 2));
+      const fin = body < 1 && SP.target != null ? SP.target : nearSet(fs.size ? fs : x.si.ct, SP.last);
+      put(fb, Math.max(.75, Math.min(1.75, sp.b1 - fb - .25)), fin, {vb:1, fl:Math.random() < .35 ? 1 : 0, end:1});
+      SP.last = fin; SP.target = null;
+      break;
+    }
+    let conn = null, tgt = null;
+    const fc = force === 'encl' || force === 'chrom' ? force : null;
+    if (chg && xn && L >= 1.5 && (fc || Math.random() < (L <= 2.01 ? .45 : .85))) {
+      tgt = chooseTarget(xn, SP.last); conn = connector(tgt, SP.last, xn, fc);
+      if (conn.len > L - 1) conn = L >= 1.5 && fc !== 'encl' ? connector(tgt, SP.last, xn, 'chrom') : null;
+      if (!conn) tgt = null;
+    }
+    const bodyL = L - (conn ? conn.len : 0);
+    if (bodyL > .01) {
+      const dv = pickDev(x, bodyL), res = devBody(dv, x, bodyL, first ? SP.target : null);
+      res.ev.forEach((e, i) => { if (e.b < bodyL - 1e-6) put(a + e.b, Math.min(e.d, bodyL - e.b), e.m, e.ex, i === 0 ? res.tech : null); });
+      if (res.ev.length) SP.last = res.ev[res.ev.length - 1].m;
+      if (SP.first && !recorded && SP.role === 'call' && res.ev.length >= 3) {
+        const m0 = res.ev[0].m, b0 = res.ev[0].b;
+        SP.mot = {st:res.ev.slice(0, 6).map(e => stepsBetween(m0, e.m, x.si.sc)), rh:res.ev.slice(0, 6).map(e => ({b:e.b - b0, d:e.d})), disp:Math.random() < .35};
+        recorded = true;
+      }
+      SP.prev = dv;
+    }
+    if (conn) { conn.ps.forEach((m, i) => put(sp.b1 - conn.len + i * .5, .5, m, null, i === 0 ? conn.tech : null)); SP.last = conn.ps[conn.ps.length - 1]; SP.target = tgt; }
+    else SP.target = null;
+    pos = sp.b1; first = false;
+  }
+  SP.first = false;
+  if (!force) SP.left--;
+  if (ending) SP.rest = Math.random() < [.8, .5, .22][S.solo.dens] ? 1 : 0;
+  writeSolo(tick0, evs, true);
+}
+// 表現：フレーズの山・アクセント・ゴーストノート・スクープ・ビブラート、スウィングの跳ね具合はテンポで変える
+function writeSolo(tick0, evs, phrase) {
+  const r = R(), sw = r.sw ? (S.bpm < 120 ? .68 : S.bpm < 200 ? .64 : .58) : .5;
+  const tk = b => { const fb = Math.floor(b + 1e-6), fr = b - fb; return Math.round((fb + (Math.abs(fr - .5) < 1e-6 ? sw : fr)) * TPB); };
+  evs.sort((a, b) => a.b - b.b);
+  for (let k = 1; k < evs.length; k++) {   // 同じ音の連打はなるべく避けて、となりのスケール音へ
+    const e = evs[k];
+    if (e.m === evs[k - 1].m && e.d <= .5 && !(e.ex && e.ex.end)) { const seg = segAt((tick0 / TPB + e.b) % P.hl.total), nx = evs[k + 1]; e.m = stepIn(e.m, nx && nx.m > e.m ? 1 : -1, scaleInfo(seg).sc); }
+  }
+  const hi = Math.max(...evs.map(e => e.m), 0);
+  evs.forEach((e, k) => {
+    const t0 = tk(e.b), nx = evs[k + 1], t1 = nx ? tk(nx.b) : Infinity;
+    const dT = Math.max(2, Math.min(Math.round(e.d * TPB), t1 - t0));
+    const ex = Object.assign({}, e.ex || {});
+    const off = Math.abs(e.b % 1 - .5) < 1e-6;
+    let v = .58 + (e.m - 64) * .005;
+    if (e.m === hi && evs.length > 3) { v += .08; ex.ac = 1; }
+    if (off && r.sw && nx && e.m > nx.m && Math.random() < .5) { v += .07; ex.ac = 1; }
+    if (k === 0 && phrase && e.d >= .5 && Math.random() < .3) ex.sc = ex.sc || 1;
+    if (e.d >= 1) ex.vb = 1;
+    if (ex.gh) v *= .45;
+    if (ex.ac) v += .04;
+    if (ex.end) v = .74;
+    P.solo.set(tick0 + t0, {m:e.m, dT, v:Math.max(.2, Math.min(.95, v)), end:!!ex.end, ex, tech:e.tech ? {kind:'solo', id:e.tech.id, txt:e.tech.txt} : null});
+  });
+}
+
+/* ---------- 鳴った技の表示 ---------- */
+const TECH = {log:[], timer:0, lastAt:0};
+function techShow(e) {
+  const now = Date.now();
+  TECH.log.unshift({...e, at:now}); if (TECH.log.length > 40) TECH.log.length = 40;
+  if (GD.open && GD.tab === 'log') renderGuide();
+  const st = $('#stTech'); if (st) st.textContent = (e.kind === 'solo' ? 'アドリブ：' : '伴奏：') + e.txt;
+  if (DM.cur) { const g = $('#gdNow'); if (g) g.textContent = (e.kind === 'solo' ? 'アドリブ：' : '伴奏：') + e.txt; return; }
+  if (now - TECH.lastAt < 700 && e.kind === 'solo') return;
+  TECH.lastAt = now;
+  const el = $('#techTick'); if (!el || !$('#stage').hidden) return;
+  el.hidden = false; el.dataset.id = e.id;
+  el.firstElementChild.textContent = e.kind === 'solo' ? 'アドリブ' : '伴奏';
+  el.lastElementChild.textContent = e.txt;
+  el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
+  clearTimeout(TECH.timer); TECH.timer = setTimeout(() => { el.hidden = true; }, 2800);
+}
+function techHide() { clearTimeout(TECH.timer); const el = $('#techTick'); if (el) el.hidden = true; const st = $('#stTech'); if (st) st.textContent = ''; }
+
+/* ---------- お手本（解説ページの ▶） ---------- */
+const DCH = s => s.split(' ').map(tok => { const [c, d] = tok.split(':'); return {...TH.parse(c), dur:+(d || 4), v:null}; });
+function demoStart(spec) {
+  if (REC.on) { toast('録音中はお手本を鳴らせません'); return; }
+  const go = () => {
+    DM.saved = {key:S.key, bpm:S.bpm, loop:S.loop, cin:S.cin, melOn:S.melOn};
+    DM.cur = {...spec, chart:DCH(spec.prog)};
+    S.key = spec.key || {t:0, minor:false}; S.bpm = spec.bpm || 126; S.loop = false; S.cin = false; S.melOn = false;
+    spReset(); play(0); renderGuideBtns();
+  };
+  if (P.ui) { stop(); setTimeout(go, 540); } else go();
+}
+function demoEnd() {
+  if (!DM.cur) return;
+  Object.assign(S, DM.saved); DM.cur = null; DM.saved = null;
+  renderGuideBtns(); const g = $('#gdNow'); if (g) g.textContent = '';
+}
+if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) window.__pro = {rebuildTL, SP, S, P, TH, scaleInfo, segAt, segNextReal, planHarm, devBody, spanCtx, DEVS, TECH, DM, demoStart, soloBarPro};
+/* ===== 解説ページ：アドリブの技・表現・伴奏の技・コード進行の技（お手本つき） ===== */
+const GD = {open:false, tab:'solo'};
+const S1 = (prog, solo, o = {}) => ({a:{prog, solo, cmp:'easy', bpm:o.bpm || 132, rid:o.rid || 'swing', key:o.key}});
+const AB = (b, a, o = {}) => ({b:{prog:b, cmp:'easy', bpm:o.bpm || 120, rid:o.rid || 'swing', key:o.key}, a:{prog:a, cmp:'easy', bpm:o.bpm || 120, rid:o.rid || 'swing', key:o.key}});
+const CF = (prog, cf, o = {}) => ({b:{prog, cmp:'easy', bpm:o.bpm || 120, rid:o.rid || 'comp', key:o.key}, a:{prog, cmp:'pro', cforce:cf, bpm:o.bpm || 120, rid:o.rid || 'comp', key:o.key}, bl:'かんたん', al:'この技'});
+const CMIN = {t:0, minor:true};
+const GUIDE = {
+  solo:[
+    {id:'encl', t:'エンクロージャー', en:'Enclosure', s:'狙った音を、上と下からはさんで着地する。', b:'着地させたい音（次のコードの3度など）の、ひとつ上のスケール音と半音下の音を先に弾いてから本命に入ります。ビバップの定番で、コードが変わる瞬間がはっきり聞こえます。高度モードでは、コードが変わる手前で自動的に使います。', ex:'Cmaj7の3度Eを狙う → F–D♯–E（D♯–F–E、F–D–D♯–E の形も）', demo:S1('Dm7:4 G7:4 Cmaj7:4 A7:4 Dm7:4 G7:4 Cmaj7:8', 'encl')},
+    {id:'chrom', t:'半音アプローチ', en:'Chromatic approach', s:'目的の音へ、半音となりから入る。', b:'いちばん小さな「外して→解決」。拍の裏で目的の音の半音下（または上）を弾き、次の拍の頭でコードトーンに着地します。', ex:'G7→Cmaj7 で D♯→E', demo:S1('Dm7:4 G7:4 Cmaj7:4 A7:4 Dm7:4 G7:4 Cmaj7:8', 'chrom')},
+    {id:'guide', t:'ガイドトーン', en:'Guide tones', s:'3度と7度を、なめらかにつなぐ。', b:'3度と7度はコードの性格（メジャーかマイナーか、ドミナントか）を決める音です。コードが変わるたびにこれらを半音か全音でつなぐと、伴奏がなくても進行が聞こえる「骨組み」のメロディになります。', ex:'Dm7→G7→Cmaj7 で C→B→B、F→F→E（7度→3度が半音でつながる）', demo:S1('Dm7:4 G7:4 Cmaj7:8', 'guide', {bpm:84, rid:'ballad'})},
+    {id:'bebop', t:'ビバップ・スケール', en:'Bebop scale', s:'7音のスケールに経過音を1つ足して8音に。', b:'ミクソリディアンに長7度を足すと8音になり、コードトーンから8分音符で下降すると拍の頭に必ずコードトーンが来ます。流れるようなジャズのラインの土台です。メジャーには♯5、マイナー（ドリアン）には長3度を足します。', ex:'G7で G–F♯–F–E–D–C–B–A（F♯が経過音）', demo:S1('G7:8 Cmaj7:8', 'bebop')},
+    {id:'arp', t:'3度から積むアルペジオ', en:'Arpeggio 3–5–7–9', s:'ルートを飛ばして、3度から9度まで。', b:'ベースが弾くルートを避けて3度から積み上げると、Dm7の上ではFmaj7、G7の上ではBm7(♭5)の形が浮かび、テンションの9度まで自然に届きます。', ex:'Dm7で F–A–C–E', demo:S1('Dm7:4 G7:4 Cmaj7:8', 'arp')},
+    {id:'digital', t:'1-2-3-5 パターン', en:'Digital patterns', s:'コードを4つの音で素早く描く。', b:'ジョン・コルトレーンが速い曲で多用した型です。ルート・2度・3度・5度を8分音符で並べ、コードが変わるたびに移します。速いテンポでも和声がはっきり伝わります。', ex:'Cmaj7で C–D–E–G、Fmaj7で F–G–A–C', demo:S1('Cmaj7:2 Am7:2 Dm7:2 G7:2 Em7:2 A7:2 Dm7:2 G7:2 Cmaj7:4', 'digital', {bpm:196})},
+    {id:'ust', t:'アッパーストラクチャー', en:'Upper-structure triads', s:'ドミナントの上に、別の三和音を重ねる。', b:'G7の上でAメジャーの三和音を弾くと9・♯11・13、E♭なら♭13・R・♯9、D♭なら♭5・♭7・♭9が鳴ります。シンプルな三和音なのに、高級なテンションの響きになるのがポイントです。', ex:'D7(♯11)の上で E–G♯–B ／ G7altの上で E♭–G–B♭', demo:S1('Cmaj7:4 D7#11:4 Dm7:4 G7alt:4 Cmaj7:8', 'ust')},
+    {id:'tri', t:'裏コードのライン', en:'Tritone-sub line', s:'G7の上で D♭7 を弾く。', b:'G7とD♭7は3度と7度（BとF）を共有しているので入れ替えが効きます。G7の上でD♭7のアルペジオを弾くと♭5・♭9のスパイスが入り、半音下のCへ滑らかに解決します。', ex:'G7で C♭(B)–A♭–F–D♭ → C', demo:S1('Dm7:4 G7:4 Cmaj7:8', 'tri')},
+    {id:'alt', t:'オルタード・スケール', en:'Altered scale', s:'ドミナントで、いちばん緊張の強い音階。', b:'♭9・♯9・♯11(♭5)・♭13をすべて含むスケールです。解決直前のドミナントで弾き、次のコードの3度や5度に半音で着地すると、緊張→解放がくっきりします。', ex:'G7で A♭–B♭–B–D♭–E♭–F → Cm の E♭ へ', demo:S1('Dm7b5:4 G7alt:4 Cm7:8', 'alt', {key:CMIN})},
+    {id:'dim', t:'コンビネーション・ディミニッシュ', en:'Half-whole diminished', s:'短3度ずつ、同じ形をずらせる対称的な音階。', b:'半音・全音が交互に並ぶスケールは、短3度ずらしても同じ形になります。2音の型を短3度ずつ下げていくと、メカニカルで鋭いラインになります。G7(♭9)や13(♭9)の響きに合います。', ex:'G7(♭9)で A♭–G、F–E、D–C♯、B–B♭', demo:S1('Dm7:4 G7b9:4 Cmaj7:8', 'dim')},
+    {id:'triad', t:'トライアド・ペア', en:'Triad pairs', s:'となり合う2つの三和音を交互に。', b:'スケールの中から音がかぶらない2つの三和音を選び、3音ずつ交互に弾きます。8分音符の4つ割りに3音のかたまりが乗るので、拍をまたいだ独特のうねりが出ます。現代ジャズの定番です。', ex:'Dm7（ドリアン）で F（F–A–C）と G（G–B–D）', demo:S1('Dm7:16', 'triad')},
+    {id:'penta', t:'ペンタトニックの重ね', en:'Pentatonic superimposition', s:'ルート以外から始まるペンタで、テンションを自然に。', b:'Dm7の上でEマイナー・ペンタを弾くと 9・11・5・13・R になり、ブルースっぽさが消えて洗練された響きになります。Cmaj7ならGやDのメジャー・ペンタ、オルタードのドミナントなら♭5のメジャー・ペンタが合います。', ex:'Dm7 → Eマイナー・ペンタ（E–G–A–B–D）', demo:S1('Dm7:8 Cmaj7:8', 'penta')},
+    {id:'side', t:'サイドスリップ', en:'Side-slipping', s:'一瞬だけ半音ずらして、戻る。', b:'同じ形のフレーズをわざと半音上で弾き（アウト）、すぐ元の位置に戻します（イン）。同じコードが長く続くところで使うと、緊張と解放のスリルが生まれます。', ex:'Dm7で、Eマイナー・ペンタの形をまずFマイナー・ペンタで弾いてから戻す', demo:S1('Dm7:16', 'side')},
+    {id:'motif', t:'モチーフ展開', en:'Motivic development', s:'短いフレーズを、形を保って次のコードへ移す。', b:'最初のフレーズ（問い）の音の動きとリズムを覚えておき、次のフレーズ（答え）で次のコードに合わせて移します。聴き手が「さっきのだ」と気づくので、アドリブに物語が生まれます。', ex:'Cmaj7の E–G–A–G を、Dm7で F–A–B–A に移す', demo:S1('Cmaj7:4 Am7:4 Dm7:4 G7:4 Cmaj7:4 Am7:4 Dm7:4 G7:4', 'motif')},
+    {id:'disp', t:'ディスプレイスメント', en:'Rhythmic displacement', s:'同じモチーフを、8分音符ぶんずらす。', b:'音の並びは同じまま、始まる位置を8分音符1つずらして繰り返します。強拍と弱拍が入れ替わるので、同じフレーズなのに違って聞こえます。', ex:'1拍目から弾いた4音を、次は1拍目の裏から', demo:S1('Cmaj7:4 Am7:4 Dm7:4 G7:4 Cmaj7:4 Am7:4 Dm7:4 G7:4', 'disp')},
+    {id:'blues', t:'ブルーノート', en:'Blue notes', s:'♭3から3へ、♭5を経過して。', b:'ドミナント7thやブルースで、♭3から3へハンマリングでずり上げたり、♭5を経過音に使ったりすると、ジャズの「泣き」や土臭さが出ます。', ex:'C7で E♭→E（ハンマリング）–G–B♭–G–G♭–F', demo:S1('C7:8 F7:8 C7:8', 'blues', {bpm:116})},
+    {id:'double', t:'倍テン', en:'Double-time', s:'ゆったりした曲で、一瞬だけ倍の速さに。', b:'バラードの途中で16分音符の速いフレーズを入れると、ゆったりした流れにアクセントがつきます。すぐ元の速さに戻すのがコツです。', ex:'4分音符＝68のバラードで、2拍だけ16分音符で駆け下りる', demo:S1('Dm7:4 G7:4 Cmaj7:8', 'double', {bpm:68, rid:'ballad'})},
+    {id:'squartal', t:'4度積みのフレーズ', en:'Quartal patterns', s:'4度ずつ重ねた形を、スケールに沿って動かす。', b:'3度ではなく4度で積むと、調性があいまいで広がりのある響きになります。マッコイ・タイナーやモーダル・ジャズの定番で、ドリアンなど長く続くマイナーコードで効果的です。', ex:'Dm7で D–G–C、E–A–D、F–B–E…', demo:S1('Dm7:16', 'squartal')},
+  ],
+  expr:[
+    {id:'arc', t:'フレーズの山', en:'Phrase arc', s:'いちばん高い音に向かって盛り上げる。', b:'フレーズの中の最高音に向かって少しずつ強くし、終わりに向けて落ち着かせます。高度モードでは、最高音に自動でアクセントをつけています。'},
+    {id:'callresp', t:'コール＆レスポンス', en:'Call and response', s:'問いかけて、答える。', b:'問いかけのフレーズのあと、それに答えるフレーズを置きます。高度モードでは、問いで弾いた形を答えで変形して使います（モチーフ展開）。'},
+    {id:'space', t:'休符で呼吸する', en:'Space', s:'弾かない時間が、次のフレーズを引き立てる。', b:'高度モードでは、フレーズを拍の裏から始めたり、1小節まるごと休んで、次の小節の頭へアプローチ音だけで入ったりします。'},
+    {id:'accent', t:'裏拍のアクセント', en:'Off-beat accents', s:'「1と2と」の「と」を少し強く。', b:'スウィングでは裏拍を少し強く弾くと、前に進むノリが出ます。高度モードでは、裏拍で音が上がるところにアクセントをつけます。'},
+    {id:'ghost', t:'ゴーストノート', en:'Ghost notes', s:'ほとんど聞こえないくらい弱く弾く音。', b:'経過音を弱く弾くと、ラインに立体感と軽さが出ます。ビバップ・スケールの経過音などに使っています。'},
+    {id:'scoop', t:'スクープ（しゃくり）', en:'Scoop', s:'半音下からすべり上がって入る。', b:'歌うような入り方になります。フレーズの頭や、長く伸ばす音で効果的です。'},
+    {id:'vib', t:'ビブラート', en:'Vibrato', s:'長い音の後半に、少しだけ揺れを。', b:'音が伸びている間も「歌っている」感じが続きます。高度モードでは1拍以上の音にかけています。'},
+    {id:'fall', t:'フォール', en:'Fall-off', s:'最後の音を、下へすべらせて終える。', b:'言い切った感じの締めくくりになります。フレーズの最後の長い音にときどき使っています。'},
+    {id:'grace', t:'装飾音（ハンマリング）', en:'Grace notes', s:'本命の音の直前に、半音下をごく短く。', b:'ブルースの ♭3→3 が代表例です。弦を叩いて音を変えるギターのハンマリングと同じ効果です。'},
+    {id:'swing', t:'スウィングの跳ね具合', en:'Swing feel', s:'テンポで跳ね方を変える。', b:'8分音符の長短の比は、テンポが遅いほど大きく（はっきり跳ねる）、速いほど均等に近づきます。高度モードではテンポに合わせて跳ね具合を変え、ほんの少しだけ後ろ（レイドバック）で弾いています。'},
+  ],
+  comp:[
+    {id:'color', t:'テンションで色付け', en:'Tension colors', s:'同じコードでも、9度・11度・13度で響きが豊かに。', b:'maj7→maj9や6(9)、m7→m9・m11、ドミナントは行き先が長調なら9・13、短調なら♭9・オルタードと、行き先に合ったテンションを選びます。自分でスケールを決めたコードには、そのスケールに合うテンションだけを使います。', ex:'Cmaj7→Cmaj9、Dm7→Dm11、G7→G13', demo:CF('Cmaj7:4 Am7:4 Dm7:4 G7:4 Cmaj7:8', 'color')},
+    {id:'voicelead', t:'トップノートを歌わせる', en:'Voice leading', s:'いちばん上の音が、なめらかにつながる形を選ぶ。', b:'コードが変わっても、ボイシングのいちばん上の音がなるべく近い音へ動くように押さえ方を選びます。伴奏の中に、もうひとつのメロディが生まれます。', demo:CF('Dm7:4 G7:4 Cmaj7:4 A7:4 Dm7:4 G7:4 Cmaj7:8', 'voicelead')},
+    {id:'tritone', t:'裏コード（トライトーン代理）', en:'Tritone substitution', s:'G7 を D♭7 に置き換える。', b:'G7とD♭7は3度と7度が同じ（B=C♭とF）なので、入れ替えても機能が保たれます。ベースがD→D♭→Cと半音で下がり、なめらかで都会的な響きになります。', ex:'Dm7–G7–Cmaj7 → Dm7–D♭7–Cmaj7', demo:CF('Dm7:4 G7:4 Cmaj7:4 A7:4 Dm7:4 G7:4 Cmaj7:8', 'tritone')},
+    {id:'twofive', t:'Ⅱ–Ⅴに分割', en:'Related ii', s:'1小節のドミナントを、Ⅱm7–Ⅴ7に分ける。', b:'A7が1小節続くところを Em7–A7 に分けると、コードの動きが増えて前に進む感じが強まります。', ex:'Cmaj7–A7–Dm7 → Cmaj7–Em7 A7–Dm7', demo:CF('Cmaj7:4 A7:4 Dm7:4 G7:4 Cmaj7:8', 'twofive')},
+    {id:'backdoor', t:'バックドア', en:'Backdoor ii–V', s:'G7→C の代わりに、B♭7→C（裏口から帰る）。', b:'Ⅳm7–♭Ⅶ7（Fm7–B♭7）からⅠへ戻る進行です。ドミナントの鋭さがなく、ふわっと柔らかく帰ってきます。高度モードの伴奏でも、候補の「技」でも使います。', ex:'Dm7–G7–Cmaj7 → Fm7–B♭7–Cmaj7', demo:CF('Am7:4 Dm7:4 G7:4 Cmaj7:8', 'backdoor')},
+    {id:'passdim', t:'パッシング・ディミニッシュ', en:'Passing diminished', s:'2つのコードの間に、半音上のdim7をはさむ。', b:'C→Dm7 の間に C♯dim7 を入れると、ベースがC→C♯→Dと半音で上がり、つなぎ目がなめらかになります。', ex:'Cmaj7–Dm7 → Cmaj7 C♯dim7–Dm7', demo:CF('Cmaj7:4 Dm7:4 G7:4 Cmaj7:8', 'passdim')},
+    {id:'approach', t:'アプローチ・コード', en:'Approach chords', s:'次のコードの8分前に、半音上の同じ形を。', b:'コードが変わる直前の裏拍で、行き先のコードの半音上（または下）の同じ形のコードを一瞬鳴らしてから着地します。ギターでは押さえ方をそのまま1フレットずらすだけです。', ex:'…G7 | Cmaj7 → …G7 D♭maj7 | Cmaj7', demo:CF('Dm7:4 G7:4 Cmaj7:4 A7:4 Dm7:4 G7:4 Cmaj7:8', 'approach')},
+    {id:'push', t:'アンティシペーション（食い）', en:'Anticipation', s:'次のコードを、8分音符ぶん前倒しで。', b:'小節の頭を待たずに、前の小節の最後の裏拍で次のコードを弾いて伸ばします。伴奏に前のめりの勢いが出ます。', demo:CF('Dm7:4 G7:4 Cmaj7:4 A7:4 Dm7:4 G7:4 Cmaj7:8', 'push')},
+    {id:'turn', t:'ターンアラウンド', en:'Turnaround', s:'繰り返しの直前に、頭へ戻る推進力を。', b:'最後の小節がⅠのまま止まっているとき、後半にⅤ7（またはその裏コード）を入れて、曲の頭へ引っぱり戻します。ループ再生のときに使います。', demo:CF('Cmaj7:4 Am7:4 Dm7:4 Cmaj7:4', 'turn')},
+    {id:'quartal', t:'4度積みボイシング（So What）', en:'Quartal voicings', s:'マイナーコードを、4度の積み重ねで。', b:'D–G–C–F–A のように4度を重ねたボイシングです（マイルス・デイヴィス「So What」の和音）。長く続くマイナーコードで使うと、モーダル・ジャズの広がった響きになります。', demo:CF('Dm7:8 Ebm7:8 Dm7:8', 'quartal')},
+  ],
+  prog:[
+    {id:'coltrane', t:'コルトレーン・チェンジ', en:'Coltrane changes', s:'長3度ずつ3つの調を回ってから着地。', b:'ジョン・コルトレーン「Giant Steps」の発想です。Ⅱ–Ⅴ–Ⅰの途中で、C→A♭→E と長3度ずつ離れた調へ、それぞれのⅤ7で一瞬ずつ転調します。めまぐるしく景色が変わる、もっとも有名な上級リハーモナイズです。', ex:'Dm7–G7–Cmaj7 → Dm7 E♭7–A♭maj7 B7–Emaj7 G7–Cmaj7', demo:AB('Dm7:4 G7:4 Cmaj7:8', 'Dm7:2 Eb7:2 Abmaj7:2 B7:2 Emaj7:2 G7:2 Cmaj7:4')},
+    {id:'subchain', t:'裏コード連鎖', en:'Chain of tritone subs', s:'ドミナントが半音ずつ下がっていく。', b:'E7–A7–D7–G7（セカンダリー・ドミナントの連鎖）を、ひとつおきに裏コードにすると E7–E♭7–D7–D♭7 と半音で下がる進行になります。ベースラインがなめらかで、強い推進力があります。', demo:AB('Cmaj7:4 E7:2 A7:2 D7:2 G7:2 Cmaj7:4', 'Cmaj7:4 E7:2 Eb7:2 D7:2 Db7:2 Cmaj7:4')},
+    {id:'chromiiV', t:'半音下降のⅡ–Ⅴ', en:'Chromatic ii–Vs', s:'Ⅱ–Ⅴを、半音上から入る。', b:'本来のⅡ–Ⅴ（Dm7–G7）の前に、半音上のⅡ–Ⅴ（E♭m7–A♭7）を置きます。同じ形が半音でずり落ちてくるので、緊張感と洒落た響きが同時に得られます。', demo:AB('Cmaj7:4 Dm7:2 G7:2 Cmaj7:4', 'Cmaj7:4 Ebm7:2 Ab7:2 Dm7:2 G7:2 Cmaj7:4')},
+    {id:'dameron', t:'タッド・ダメロン・ターンアラウンド', en:'Tadd Dameron turnaround', s:'Ⅰ–♭Ⅲ–♭Ⅵ–♭Ⅱ → Ⅰ。', b:'よくある Ⅰ–Ⅵ–Ⅱ–Ⅴ を、全部メジャー7thの ♭Ⅲ–♭Ⅵ–♭Ⅱ に置き換えたものです。ルートが4度ずつ動くので自然に聞こえつつ、響きはがらりと変わります。', demo:AB('Cmaj7:2 Am7:2 Dm7:2 G7:2 Cmaj7:4', 'Cmaj7:2 Ebmaj7:2 Abmaj7:2 Dbmaj7:2 Cmaj7:4')},
+    {id:'mediant', t:'クロマチック・メディアント', en:'Chromatic mediant', s:'長3度離れた長調へ、いきなりワープ。', b:'C→E、C→A♭ のように、長3度離れたメジャーコードへ直接動きます。共通音が1つだけ残るので、映画音楽のような劇的で明るい転調感が出ます。', demo:AB('Cmaj7:4 Am7:4 Cmaj7:4', 'Cmaj7:4 Emaj7:4 Cmaj7:4')},
+    {id:'negative', t:'ネガティブ・ハーモニー', en:'Negative harmony', s:'和音を、キーの軸で鏡に映す。', b:'キーの中心（CとGのまん中）を軸に音を反転させる考え方です。G7（G–B–D–F）を映すと C–A♭–F–D、つまりFm6になり、Ⅴ7の代わりにⅣm6でⅠへ帰れます。ほかのコードも「鏡像」に置き換えられます。', demo:AB('Dm7:4 G7:4 Cmaj7:8', 'Dm7:4 Fm6:4 Cmaj7:8')},
+    {id:'neapolitan', t:'ナポリの♭Ⅱ', en:'Neapolitan chord', s:'短調で、Ⅴの前に半音上のメジャーを。', b:'短調で♭Ⅱ（Cマイナーなら D♭）を置いてからⅤ7へ行くと、クラシック由来の悲劇的で深い響きになります。', demo:AB('Cm7:4 G7:4 Cm7:8', 'Cm7:4 Dbmaj7:2 G7b9:2 Cm7:8', {key:CMIN})},
+    {id:'aug6', t:'増6の和音（♭Ⅵ7→Ⅴ）', en:'Augmented sixth', s:'Ⅴの半音上のドミナントから落ちる。', b:'♭Ⅵ7（A♭7）からⅤ7（G7）へ。ベースが半音で下がり、内声も半音で動きます。クラシックの増6の和音と同じ響きで、Ⅴ7/Ⅴ（D7）の裏コードとも言えます。', demo:AB('Fmaj7:4 G7:4 Cmaj7:8', 'Fmaj7:4 Ab7:2 G7:2 Cmaj7:8')},
+    {id:'constant', t:'コンスタント・ストラクチャー', en:'Constant structure', s:'同じ形のまま、平行移動。', b:'キーにとらわれず、同じ種類のコード（maj7ならmaj7）をそのまま上下にずらします。ハービー・ハンコックなどが使った、浮遊感のある書き方です。', demo:AB('Cmaj7:4 Dm7:4 Em7:4 Dm7:4', 'Cmaj7:4 Dmaj7:4 Bbmaj7:4 Cmaj7:4')},
+    {id:'pedal', t:'ペダルポイント', en:'Pedal point', s:'ベースを止めたまま、上だけ動かす。', b:'ベースをⅤ（G）に固定したまま、上で Dm7→G7 と動かします（Dm7/G）。ポップスの F/G（Ⅳ/Ⅴ）も同じ仲間で、ふわっとしたサスの響きになります。', demo:AB('Dm7:4 G7:4 Cmaj7:8', 'Dm7/G:4 G7:4 Cmaj7:8')},
+    {id:'cycle', t:'ドミナント・サイクル', en:'Dominant cycle', s:'Ⅲ7–Ⅵ7–Ⅱ7–Ⅴ7 と、5度ずつ解決を連ねる。', b:'セカンダリー・ドミナントを連鎖させ、5度下へ解決し続けてⅠに戻ります。「リズム・チェンジ」のブリッジでおなじみの、ぐんぐん進む進行です。', demo:AB('Cmaj7:4 Am7:4 Dm7:4 G7:4 Cmaj7:4', 'Cmaj7:4 E7:4 A7:4 D7:4 G7:4 Cmaj7:4')},
+    {id:'colorc', t:'カラー・コード', en:'Color chords', s:'同じルートで、テンションの色を選ぶ。', b:'G7をG7alt（緊張最大）やG7(♯11)（浮遊感）に、Cmaj7をCmaj7(♯11)（リディアン）に、Dm7をDm11（4度の広がり）に。進行は同じでも景色が変わります。', demo:AB('Dm7:4 G7:4 Cmaj7:8', 'Dm11:4 G7alt:4 Cmaj7#11:8')},
+    {id:'picardy', t:'ピカルディ終止', en:'Picardy third', s:'短調の曲を、長調のⅠで明るく終える。', b:'短調のまま進んで、最後のⅠだけをメジャーにします。バロック音楽由来の、雲が晴れるような終わり方です。', demo:AB('Fm7:4 G7:4 Cm7:8', 'Fm7:4 G7:4 Cmaj7:8', {key:CMIN})},
+  ],
+};
+const GIDX = {};
+for (const [tab, arr] of Object.entries(GUIDE)) for (const it of arr) GIDX[it.id] = {...it, tab};
+const GTABS = {solo:'アドリブ', expr:'表現', comp:'伴奏', prog:'コード進行', log:'鳴った技'};
+function gcard(it) {
+  const d = it.demo;
+  const btn = (v, l, cls) => `<button class="btn ${cls}" data-demo="${it.id}" data-v="${v}">${ICON.play}${l}</button>`;
+  const btns = !d ? '' : d.b ? btn('b', d.bl || '元の進行', 'ghost') + btn('a', d.al || 'この技', 'red') : btn('a', 'お手本を聴く', 'red');
+  return `<article class="gc" id="g-${it.id}"><h3>${esc(it.t)}<small>${esc(it.en)}</small></h3><p class="gs">${esc(it.s)}</p><p>${esc(it.b)}</p>${it.ex ? `<p class="gx"><b>例</b>${esc(it.ex)}</p>` : ''}${btns ? `<div class="gb">${btns}</div>` : ''}</article>`;
+}
+function renderGuide() {
+  const T = GD.tab, B = $('#gdBody');
+  document.querySelectorAll('#gdTabs button').forEach(b => b.setAttribute('aria-pressed', b.dataset.t === T));
+  const sw = (lbl, attr, cur) => `<div class="gsw"><span>${lbl}</span><span class="lvs"><button ${attr}="easy" aria-pressed="${cur === 'easy'}">かんたん</button><button ${attr}="pro" aria-pressed="${cur === 'pro'}">高度</button></span></div>`;
+  const intro = {
+    solo:`<p class="gi">アドリブを「高度」にしたときに使う技です。▶で、その技だけを使ったお手本を鳴らします（キーはC）。再生中に使われた技は、画面右下に小さく表示されます。</p>${sw('いまのアドリブ', 'data-lvg', S.solo.lv)}`,
+    expr:`<p class="gi">「高度」のアドリブでは、音の選び方に加えて、歌い方（表現）もつけています。</p>${sw('いまのアドリブ', 'data-lvg', S.solo.lv)}`,
+    comp:`<p class="gi">コードの技を「高度」にすると、譜面はそのままで伴奏の弾き方がこう変わります。「かんたん」と「この技」で聴き比べられます。</p>${sw('いまのコードの技', 'data-clg', S.cmp)}`,
+    prog:`<p class="gi">コードの技が「高度」のとき、次のコード候補に「技」マーク付きで出てくる上級リハーモナイズです。タップすると、まとめて複数のコードを入れられます。</p>${sw('いまのコードの技', 'data-clg', S.cmp)}`,
+  };
+  if (T === 'log') {
+    const now = Date.now();
+    B.innerHTML = `<p class="gi">高度モードで再生したときに使われた技が、新しい順にたまります。タップすると解説に飛びます。</p>` + (TECH.log.length ? `<ul class="glog">${TECH.log.map(e => `<li><button data-goto="${esc(e.id)}"><b>${e.kind === 'solo' ? 'アドリブ' : '伴奏'}</b><span>${esc(e.txt)}</span><i>${Math.max(0, Math.round((now - e.at) / 1000))}秒前</i></button></li>`).join('')}</ul>` : '<p class="gempty">まだありません。アドリブかコードの技を「高度」にして再生してみてください。</p>');
+  } else B.innerHTML = intro[T] + GUIDE[T].map(gcard).join('');
+  renderGuideBtns();
+}
+function renderGuideBtns() {
+  if (!GD.open) return;
+  document.querySelectorAll('#gdBody [data-demo]').forEach(b => {
+    const on = DM.cur && DM.cur.gid === b.dataset.demo && DM.cur.gv === b.dataset.v, it = GIDX[b.dataset.demo], d = it.demo;
+    const l = d.b ? (b.dataset.v === 'b' ? d.bl || '元の進行' : d.al || 'この技') : 'お手本を聴く';
+    b.innerHTML = on ? `${ICON.stop}止める` : `${ICON.play}${l}`;
+    b.classList.toggle('on', !!on);
+  });
+}
+function openGuide(target) {
+  const it = GIDX[target] || (target === 'disp' ? GIDX.motif : null);
+  GD.tab = it ? it.tab : GTABS[target] ? target : 'solo';
+  GD.open = true; closeBS(); $('#guide').hidden = false; renderGuide();
+  if (it) { const el = $('#g-' + it.id); if (el) { el.scrollIntoView({block:'start'}); el.classList.add('hl'); setTimeout(() => el.classList.remove('hl'), 1600); } }
+  else $('#gdBody').scrollTop = 0;
+}
+function closeGuide() { GD.open = false; $('#guide').hidden = true; if (DM.cur) stop(); }
+function setSoloLv(v) {
+  S.solo.lv = v; spReset(); save(); renderDock(); if ($('#bsAdl').classList.contains('on')) renderAdl(); if (GD.open) renderGuide();
+  toast(v === 'pro' ? 'アドリブ：高度（ジャズの語法と表現で弾きます）' : 'アドリブ：かんたん');
+}
+function setCmp(v) {
+  S.cmp = v; save(); refresh();
+  if (P.ui && !DM.cur) P.hl = planHarm(P.tl, P.loopN || 0);
+  if ($('#bsSet').classList.contains('on')) renderSet();
+  if (GD.open) renderGuide();
+  toast(v === 'pro' ? 'コードの技：高度（候補に上級の技、伴奏もテンションや裏コードで）' : 'コードの技：かんたん');
+}
+$('#gdBack').addEventListener('click', closeGuide);
+$('#gdTabs').addEventListener('click', e => { const b = e.target.closest('[data-t]'); if (!b) return; GD.tab = b.dataset.t; renderGuide(); $('#gdBody').scrollTop = 0; });
+$('#gdBody').addEventListener('click', e => {
+  const d = e.target.closest('[data-demo]');
+  if (d) {
+    const it = GIDX[d.dataset.demo], v = d.dataset.v;
+    if (DM.cur && DM.cur.gid === it.id && DM.cur.gv === v) { stop(); return; }
+    demoStart({...(v === 'b' ? it.demo.b : it.demo.a), gid:it.id, gv:v});
+    return;
+  }
+  const g = e.target.closest('[data-goto]'); if (g) { openGuide(g.dataset.goto); return; }
+  const lv = e.target.closest('[data-lvg]'); if (lv) { setSoloLv(lv.dataset.lvg); return; }
+  const cl = e.target.closest('[data-clg]'); if (cl) { setCmp(cl.dataset.clg); return; }
+});
+$('#techTick').addEventListener('click', () => openGuide($('#techTick').dataset.id || 'solo'));
 /* ===== スキャット録音：収録 → 試聴 → 保存（動画MP4／音声MP4／MP3）・区間の録り直し ===== */
 const REC = {on:false, mode:'', take:null, adl:false, cap:null, stream:null, stems:[], timer:0, view:'', out:null, busy:null, saved:{}, pv:null, pvPos:0, pr:null, pu:null, undo:null};
 const RP = (() => { let o = {}; try { o = JSON.parse(localStorage.getItem('chordnavi-rec') || '{}') || {}; } catch (e) {}
@@ -3129,9 +3961,19 @@ function defDur(at) {
   const pos = S.chart.reduce((a, c) => a + c.dur, 0) % n;
   return pos ? n - pos : n;
 }
+function previewSeq(seq) { seq.forEach((x, j) => setTimeout(() => previewChord(x), j * 470)); }
 function addChord(c, quiet) {
   pushUndo(); touch();
   const at = insAt();
+  if (c.seq) {
+    const n = bpb(), dd = x => x === 'b' ? n : x === 'h' ? (n === 4 ? 2 : n) : (+x > 0 ? +x : n);
+    c.seq.forEach((x, j) => S.chart.splice(at + j, 0, {root:x.root, q:x.q, bass:x.bass ?? null, pref:x.pref || null, dur:dd(x.dur), v:null}));
+    S.sel = at + c.seq.length - 1; S.page = 0; S.vpage = 0; S.scView = null;
+    if (!quiet) previewSeq(c.seq);
+    refresh(); revealSel();
+    toast(`${c.seq.length}コード入れました：${(c.why[0] || '').replace(/（.*$/, '')}`, '元に戻す', undo);
+    return;
+  }
   const nc = {root:c.root, q:c.q, bass:c.bass ?? null, pref:c.pref || null, dur:defDur(at), v:null};
   S.chart.splice(at, 0, nc);
   S.sel = at; S.page = 0; S.vpage = 0; S.scView = null;
@@ -3214,7 +4056,7 @@ const MENU = [
   ['copy', ICON.copy, 'コード進行をコピー'], ['key', ICON.key, 'キーを推定'],
   ['up', ICON.up, '半音上げる'], ['down', ICON.down, '半音下げる'],
   ['showsc', ICON.eye, ''], ['scall', ICON.reset, 'スケールを全部おすすめに'],
-  ['rec', ICON.mic, 'スキャット録音'], ['set', ICON.sliders, '伴奏・音の設定'], ['lib', ICON.book, 'スタンダード曲集'],
+  ['rec', ICON.mic, 'スキャット録音'], ['guide', ICON.bulb, '音楽の技・解説'], ['set', ICON.sliders, '伴奏・音の設定'], ['lib', ICON.book, 'スタンダード曲集'],
   ['clear', ICON.trash, '譜面をクリア'],
 ];
 function renderMenu() {
@@ -3232,6 +4074,7 @@ $('#menu').addEventListener('click', e => {
   if (k === 'scall') { pushUndo(); S.chart.forEach(c => { c.scAuto = true; }); refresh(); closeBS(); toast('全コードをおすすめのスケールに戻しました', '元に戻す', undo); }
   if (k === 'set') { renderSet(); bs('#bsSet'); }
   if (k === 'rec') recOpen();
+  if (k === 'guide') openGuide('solo');
   if (k === 'lib') { renderSongs(); bs('#bsLib'); }
   if (k === 'clear') { if (!S.chart.length) return; pushUndo(); S.chart = []; S.sel = -1; S.mel = null; S.melTitle = ''; S.title = ''; touch(); if (P.ui) stop(); closeBS(); refresh(); toast('譜面をクリアしました', '元に戻す', undo); }
 });
@@ -3250,6 +4093,8 @@ $('#bulk').addEventListener('submit', e => {
 /* settings */
 function renderSet() {
   $('#rhythms').innerHTML = RHY.map(r => `<button class="rc" data-r="${r.id}" aria-pressed="${r.id === S.rid}"><b>${esc(r.n)}</b><span>${r.bpb}/4・${r.sw ? 'スウィング' : 'イーブン'}・♩${r.bpm}</span></button>`).join('');
+  document.querySelectorAll('#cmpLv button').forEach(b => b.setAttribute('aria-pressed', b.dataset.cl === S.cmp));
+  $('#cmpNote').textContent = S.cmp === 'pro' ? '高度：伴奏がテンション・裏コード・アプローチコードなどを使い、次のコード候補にもコルトレーン・チェンジなどの上級の技が出ます（譜面はそのまま）。' : 'かんたん：譜面のコードをそのまま、素直な押さえ方で伴奏します。';
   $('#sBpm').textContent = S.bpm; $('#bpmRange').value = S.bpm;
   $('#bpmChips').innerHTML = [60,80,100,120,140,160,200,240].map(b => `<button data-b="${b}" aria-pressed="${b === S.bpm}">${b}</button>`).join('');
   $('#loopSw').setAttribute('aria-pressed', S.loop); $('#cinSw').setAttribute('aria-pressed', S.cin); $('#realSw').setAttribute('aria-pressed', S.real);
@@ -3331,7 +4176,7 @@ pan.addEventListener('pointerdown', e => {
   clearTimeout(LP.t);
   LP.t = setTimeout(() => {
     LP.fired = true; el.classList.remove('press');
-    if (el.dataset.k != null) { const c = S.cur[+el.dataset.k]; if (c) { previewChord(c); toast(nm(c) + ' を試聴中（タップで追加）'); } }
+    if (el.dataset.k != null) { const c = S.cur[+el.dataset.k]; if (c && c.seq) { previewSeq(c.seq); toast(c.seq.map(x => nm(x)).join(' → ') + '（タップでまとめて追加）'); } else if (c) { previewChord(c); toast(nm(c) + ' を試聴中（タップで追加）'); } }
     else { const r = SROWS[+el.dataset.sc]; if (r) { S.scView = {id:r.id, root:r.root}; renderPan(); playScale(r, cur().ch); } }
     try { navigator.vibrate && navigator.vibrate(8); } catch (x) {}
   }, 380);
@@ -3343,6 +4188,8 @@ pan.addEventListener('contextmenu', e => { if (e.target.closest('[data-k],[data-
 pan.addEventListener('click', e => {
   if (LP.fired) { LP.fired = false; return; }
   const {ch, i} = cur();
+  const cl = e.target.closest('[data-cl]'); if (cl) { if (S.cmp !== cl.dataset.cl) setCmp(cl.dataset.cl); return; }
+  const gd = e.target.closest('[data-guide]'); if (gd) { openGuide(gd.dataset.guide); return; }
   const k = e.target.closest('[data-k]'); if (k) { const c = S.cur[+k.dataset.k]; if (c) addChord(c); return; }
   const pg = e.target.closest('[data-pg]'); if (pg && !pg.disabled) { S.page += +pg.dataset.pg; renderPan(); return; }
   const vpg = e.target.closest('[data-vpg]'); if (vpg && !vpg.disabled) { S.vpage += +vpg.dataset.vpg; renderPan(); return; }
@@ -3390,6 +4237,8 @@ function playFrom(i) {
 }
 function renderAdl() {
   const ch = (opts, cur, attr) => opts.map(([v, l]) => `<button ${attr}="${v}" aria-pressed="${cur === v}">${l}</button>`).join('');
+  document.querySelectorAll('#adLv button').forEach(b => b.setAttribute('aria-pressed', b.dataset.lv === S.solo.lv));
+  $('#adLvNote').textContent = S.solo.lv === 'pro' ? '高度：エンクロージャー、ビバップ・スケール、アッパーストラクチャー、裏コードのラインなどジャズの語法と、スクープやゴーストノートなどの表現で弾きます。使った技は画面に表示されます。' : 'かんたん：スケールの音でなめらかに歌う、シンプルなアドリブです。';
   $('#adMode').innerHTML = ch([['scale', 'スケール画面のとき'], ['always', 'いつも'], ['off', '鳴らさない']], S.solo.mode, 'data-sm');
   $('#adTone').innerHTML = ch([['guitar', 'ギター'], ['vibes', 'ビブラフォン']], S.solo.tone, 'data-st');
   $('#adDens').innerHTML = ch([[0, '少なめ'], [1, 'ふつう'], [2, '多め']], S.solo.dens, 'data-sd');
@@ -3398,6 +4247,7 @@ function renderAdl() {
 function adlDemo() {
   if (P.ui || !ac()) return;
   const t = A.ctx.currentTime + .03;
+  if (S.solo.lv === 'pro') { [[65, 0, .26, {}], [63, .3, .22, {gh:1}], [64, .52, .9, {sc:1, vb:1}]].forEach(([m, d, l, ex]) => lead(m, t + d, l, ex.gh ? .35 : .72, ex)); toast('エンクロージャー：F–D♯ で E をはさんで、スクープとビブラート'); return; }
   [[67, 0, .3], [69, .3, .3], [71, .6, .3], [74, .9, .9]].forEach(([m, d, l]) => lead(m, t + d, l, .7));
 }
 $('#bsAdl').addEventListener('click', e => {
@@ -3406,6 +4256,8 @@ $('#bsAdl').addEventListener('click', e => {
   if (b.dataset.st) { S.solo.tone = b.dataset.st; if (A.ctx) applyTone(); save(); adlDemo(); }
   if (b.dataset.sd != null) { S.solo.dens = +b.dataset.sd; save(); }
   if (b.id === 'adTry') adlDemo();
+  if (b.dataset.lv) { if (S.solo.lv !== b.dataset.lv) setSoloLv(b.dataset.lv); return; }
+  if (b.dataset.guide) { openGuide(b.dataset.guide); return; }
   renderAdl();
 });
 $('#adVol').addEventListener('input', e => { S.solo.vol = +e.target.value; $('#adVolV').textContent = Math.round(S.solo.vol * 100); setVols(); save(); });
@@ -3495,6 +4347,7 @@ $('#sgPlay').addEventListener('click', () => loadSong(true));
 if (S.pan === 'input') syncInp();
 refresh(); revealSel();
 if (S.sample) setTimeout(() => toast('サンプル進行（丸サ進行）が入っています。メニューからクリアできます'), 600);
+$('#cmpLv').addEventListener('click', e => { const b = e.target.closest('[data-cl]'); if (b && S.cmp !== b.dataset.cl) setCmp(b.dataset.cl); });
 }
 
 </script>
