@@ -607,6 +607,25 @@ html.lite .bs,html.lite .scrim{transition:none}
   .bs{max-width:720px}
   .hgrid{grid-template-columns:repeat(4,1fr)}
 }
+
+/* scales v7 */
+.scs button.out{border-style:dashed}
+.scbar{display:flex;gap:6px;margin:8px 0 4px;flex-wrap:wrap}.scbar .btn{flex:1;min-width:140px;height:38px;font-size:12px}
+.scd{border:1px solid var(--line);background:var(--paper);border-radius:12px;padding:8px 11px 6px;margin:6px 0 4px}
+.scdh{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:2px}.scdh b{font-size:14px}.scdh small{color:var(--mute);font-size:11px}
+.scd p{margin:3px 0;font-size:12.5px;line-height:1.55}.scd p b{display:inline-block;min-width:5.4em;font-size:11px;color:var(--mc)}
+.scd .scw{color:var(--red);font-size:11.5px}
+.lnk{border:0;background:none;color:var(--mc);font-weight:700;font-size:12px;padding:6px 0}
+.scrw{display:flex;align-items:stretch;gap:6px;border-bottom:1px solid var(--line);padding:4px 0}
+.scrw.on .scnm b{color:var(--red)}
+.scpl{width:40px;flex:none;border:0;border-radius:10px;background:var(--sel);display:grid;place-items:center}.scpl svg{width:15px;height:15px}
+.scnm{flex:1;display:flex;flex-direction:column;align-items:flex-start;text-align:left;border:0;background:none;padding:4px 2px;gap:1px}
+.scnm b{font-size:13.5px}.scnm small{font-size:10.5px;color:var(--mute)}.scf{font-size:11px;color:var(--mute);line-height:1.4}
+.rcm{font-style:normal;font-size:9.5px;color:#fff;background:var(--red);border-radius:5px;padding:0 5px;margin-left:6px;vertical-align:2px}
+.fit{font-size:10.5px;font-weight:700}.fit.ok{color:#3ccf91}.fit.mid{color:#e0b341}.fit.ng{color:var(--red)}
+.scuse{border:1px solid var(--line);border-radius:10px;padding:6px 10px;margin:8px 0;background:var(--paper)}
+.scuse summary{font-weight:700;font-size:12.5px;cursor:pointer}.scuse ol{margin:6px 0 2px;padding-left:1.3em;font-size:12px;line-height:1.6}
+.htab{width:100%;border-collapse:collapse;font-size:11.5px;margin:8px 0}.htab th,.htab td{border:1px solid var(--line);padding:4px 5px;vertical-align:top;text-align:left}.htab th{background:var(--soft)}
 </style>
 </head>
 <body>
@@ -681,6 +700,7 @@ html.lite .bs,html.lite .scrim{transition:none}
   <div class="lbl">鳴らすとき</div><div class="chips" id="adMode"></div>
   <div class="lbl">音色</div><div class="chips" id="adTone"></div>
   <div class="lbl">音数</div><div class="chips" id="adDens"></div>
+  <div class="tg"><span>選んだスケールの音だけで弾く<small class="sub">スケール画面で自分で選んだコードでは、経過音や「外し」を使わず、そのスケールの音だけでアドリブします</small></span><button class="sw" id="adStrict"></button></div>
   <div class="lbl">音量</div>
   <div class="vrow"><span id="adVolV">80</span><input type="range" id="adVol" min="0" max="1" step=".01" aria-label="アドリブの音量"><button class="btn ghost" id="adTry">試し弾き</button></div>
   <p class="note">再生中に動かすと、その場で音量が変わります。録音中に鳴らしたアドリブは、録ったあとにも音量を変えられます。</p>
@@ -1263,28 +1283,72 @@ function voicings(root, q, style) {
 
 /* ---------- scales ---------- */
 const SC = {
-  ion:{n:'アイオニアン',e:'Ionian / メジャー',iv:[0,2,4,5,7,9,11]},
-  dor:{n:'ドリアン',e:'Dorian',iv:[0,2,3,5,7,9,10]},
-  phr:{n:'フリジアン',e:'Phrygian',iv:[0,1,3,5,7,8,10]},
-  lyd:{n:'リディアン',e:'Lydian',iv:[0,2,4,6,7,9,11]},
-  mix:{n:'ミクソリディアン',e:'Mixolydian',iv:[0,2,4,5,7,9,10]},
-  aeo:{n:'エオリアン',e:'Aeolian / ナチュラル・マイナー',iv:[0,2,3,5,7,8,10]},
-  loc:{n:'ロクリアン',e:'Locrian',iv:[0,1,3,5,6,8,10]},
-  loc2:{n:'ロクリアン♮2',e:'Locrian ♮2',iv:[0,2,3,5,6,8,10]},
-  mel:{n:'メロディック・マイナー',e:'Melodic minor',iv:[0,2,3,5,7,9,11]},
-  har:{n:'ハーモニック・マイナー',e:'Harmonic minor',iv:[0,2,3,5,7,8,11]},
-  hmp5:{n:'HMP5↓',e:'Phrygian dominant',iv:[0,1,4,5,7,8,10]},
-  lyd7:{n:'リディアン・ドミナント',e:'Lydian ♭7',iv:[0,2,4,6,7,9,10]},
-  alt:{n:'オルタード',e:'Altered',iv:[0,1,3,4,6,8,10]},
-  mixb13:{n:'ミクソリディアン♭13',e:'Mixolydian ♭13',iv:[0,2,4,5,7,8,10]},
-  hw:{n:'コンビネーション・オブ・ディミニッシュ',e:'Half-whole diminished',iv:[0,1,3,4,6,7,9,10]},
-  wh:{n:'ディミニッシュ',e:'Whole-half diminished',iv:[0,2,3,5,6,8,9,11]},
-  wt:{n:'ホールトーン',e:'Whole tone',iv:[0,2,4,6,8,10]},
-  bebop:{n:'ビバップ・ドミナント',e:'Bebop dominant',iv:[0,2,4,5,7,9,10,11]},
-  mpen:{n:'メジャー・ペンタトニック',e:'Major pentatonic',iv:[0,2,4,7,9]},
-  npen:{n:'マイナー・ペンタトニック',e:'Minor pentatonic',iv:[0,3,5,7,10]},
-  blues:{n:'ブルース・スケール',e:'Blues',iv:[0,3,5,6,7,10]},
+  // ---- 基本（チャーチ・モード） ----
+  ion:{n:'アイオニアン', s:'アイオニアン', e:'Ionian / メジャー', iv:[0,2,4,5,7,9,11], cat:'base', feel:'明るく安定した「ドレミ」の響き。', use:'メジャーキーのⅠ（Cmaj7 など）。', tip:'4度（ファ）はコードとぶつかるので、通り過ぎる音に。伸ばすなら3度・5度・7度へ。'},
+  dor:{n:'ドリアン', s:'ドリアン', e:'Dorian', iv:[0,2,3,5,7,9,10], cat:'base', feel:'暗すぎない、クールでおしゃれなマイナー。', use:'Ⅱm7（Dm7 など）、ジャズ・ファンクのマイナー一発。', tip:'特徴は6度（ラ♮）。エオリアンとの違いはこの1音だけなので、6度を目立たせると「らしさ」が出る。'},
+  phr:{n:'フリジアン', s:'フリジアン', e:'Phrygian', iv:[0,1,3,5,7,8,10], cat:'base', feel:'エキゾチックで暗い、スペイン風。', use:'Ⅲm7（Em7）、メタルやフラメンコ風のマイナー。', tip:'♭2（半音上の音）からルートへ降りると一気にスパニッシュになる。'},
+  lyd:{n:'リディアン', s:'リディアン', e:'Lydian', iv:[0,2,4,6,7,9,11], cat:'base', feel:'ふわっと浮遊する、映画音楽のような明るさ。', use:'Ⅳmaj7（Fmaj7）、maj7(♯11)、ゲーム・映画音楽。', tip:'♯4（＝♯11）が主役。アボイドがないので、どの音を伸ばしてもOK。'},
+  mix:{n:'ミクソリディアン', s:'ミクソリディアン', e:'Mixolydian', iv:[0,2,4,5,7,9,10], cat:'base', feel:'明るいけど少し土っぽい、ロック・ブルースの響き。', use:'Ⅴ7（G7）などのドミナント7th、ロックのメジャー一発。', tip:'4度はアボイド。♭7（ファ）→3度（シ）の動きを意識すると解決感が出る。'},
+  aeo:{n:'エオリアン', s:'エオリアン', e:'Aeolian / ナチュラル・マイナー', iv:[0,2,3,5,7,8,10], cat:'base', feel:'切なく、まっすぐな「ラシドレミ」のマイナー。', use:'Ⅵm7（Am7）、マイナーキーのⅠm。J-POPのマイナー全般。', tip:'♭6はm7と半音でぶつかりやすいので、伸ばさずに5度へ降りる。'},
+  loc:{n:'ロクリアン', s:'ロクリアン', e:'Locrian', iv:[0,1,3,5,6,8,10], cat:'base', feel:'不安定で宙ぶらりんな響き。', use:'Ⅶm7(♭5)（Bm7♭5）。', tip:'♭2は濁りやすい。9度を使いたいときはロクリアン♮2へ。'},
+  // ---- ペンタトニック・ブルース ----
+  mpen:{n:'メジャー・ペンタトニック', s:'メジャーペンタ', e:'Major pentatonic', iv:[0,2,4,7,9], cat:'pen', feel:'素朴で明るい、歌いやすい5音。', use:'メジャーコード全般、ポップス・カントリー・メロディ作り。', tip:'ぶつかる音がないので、まずはこれ。メジャーキー全体にも使える。'},
+  npen:{n:'マイナー・ペンタトニック', s:'マイナーペンタ', e:'Minor pentatonic', iv:[0,3,5,7,10], cat:'pen', feel:'ロック・ブルースの王道。泣きのギター。', use:'m7、マイナーキー全体、ロックのソロ。', tip:'ボックス型（ポジション1）を覚えると即戦力。チョーキングは♭3→3度、4度→5度が定番。'},
+  blues:{n:'ブルース・スケール', s:'ブルース', e:'Blues', iv:[0,3,5,6,7,10], cat:'pen', feel:'マイナーペンタに♭5（ブルーノート）を足した、ブルージーな響き。', use:'ブルース進行、ドミナント7th、ファンク。', tip:'♭5は「通り過ぎる音」。4度→♭5→5度と半音で抜けるのが定番フレーズ。'},
+  mblues:{n:'メジャー・ブルース', s:'メジャーブルース', e:'Major blues', iv:[0,2,3,4,7,9], cat:'pen', feel:'明るいのにブルージー。カントリーやジャンプ・ブルース。', use:'メジャーキーのブルース、ドミナント7th（とくにⅠ7）。', tip:'♭3→3度と半音でずり上げると一気にそれっぽくなる。'},
+  dpen:{n:'ドミナント・ペンタトニック', s:'ドミナントペンタ', e:'Dominant pentatonic', iv:[0,2,4,7,10], cat:'pen', feel:'1・2・3・5・♭7。ドミナントの芯だけを鳴らす。', use:'ドミナント7th（G7 など）。', tip:'3度と♭7（ガイドトーン）が入っているので、コード感がはっきり出る。'},
+  m6pen:{n:'マイナー6ペンタトニック', s:'m6ペンタ', e:'Minor 6th pentatonic', iv:[0,3,5,7,9], cat:'pen', feel:'ドリアン寄りの、少し明るいマイナーペンタ。', use:'m6、m7（ドリアンの場面）、ジャズ・ボッサのマイナー。', tip:'マイナーペンタの♭7を6度に変えただけ。6度が明るさのポイント。'},
+  spen:{n:'サスペンデッド・ペンタトニック', s:'サスペンタ', e:'Suspended pentatonic (Egyptian)', iv:[0,2,5,7,10], cat:'pen', feel:'3度がない、中立で開放的な響き。', use:'7sus4、sus4、モーダルな曲。', tip:'3度を弾かないので、メジャーにもマイナーにも聞こえる。4度を伸ばしてOK。'},
+  lpen:{n:'マイナー♭5ペンタトニック', s:'m♭5ペンタ', e:'Locrian pentatonic', iv:[0,3,5,6,10], cat:'pen', feel:'m7(♭5)の音だけを並べた、かげりのある5音。', use:'m7(♭5)（Ⅱø）。', tip:'マイナーペンタの5度を♭5にしただけ。マイナーのⅡ–Ⅴで使いやすい。'},
+  mb6pen:{n:'メジャー♭6ペンタトニック', s:'M♭6ペンタ', e:'Major ♭6 pentatonic', iv:[0,2,4,7,8], cat:'pen', feel:'明るさに♭6のかげりが混ざる、ジャズの裏ワザ。', use:'7(♭13)、マイナーへ解決するドミナント。', tip:'G7→Cm なら G の M♭6ペンタ。♭6（♭13）から5度へ降りると解決感が強い。'},
+  // ---- メロディック・マイナー系 ----
+  mel:{n:'メロディック・マイナー', s:'メロディック', e:'Melodic minor', iv:[0,2,3,5,7,9,11], cat:'mm', feel:'マイナーなのに明るさもある、ジャズの響き。', use:'mM7・m6、ジャズのトニック・マイナー。', tip:'上がっても下がっても同じ形で使うのがジャズ流。♮6と♮7がポイント。'},
+  dorb2:{n:'ドリアン♭2', s:'ドリアン♭2', e:'Dorian ♭2 / Phrygian ♮6', iv:[0,1,3,5,7,9,10], cat:'mm', feel:'フリジアンの暗さとドリアンの明るさの中間。', use:'7sus4(♭9)、フリジアン的なマイナー。', tip:'メロディック・マイナーの2番目のモード。♭2と♮6を両方使うと独特。'},
+  lydaug:{n:'リディアン・オーギュメント', s:'リディアン♯5', e:'Lydian augmented', iv:[0,2,4,6,8,9,11], cat:'mm', feel:'キラキラと浮き上がる、未来的な明るさ。', use:'maj7(♯5)。', tip:'♯4と♯5の2つで浮遊感。普通のmaj7で使うと外れて聞こえるので注意。'},
+  lyd7:{n:'リディアン・ドミナント', s:'リディアン♭7', e:'Lydian ♭7 (Lydian dominant)', iv:[0,2,4,6,7,9,10], cat:'mm', feel:'明るく突き抜けるドミナント。',use:'解決しない7th（♭Ⅶ7・Ⅳ7）、裏コード、7(♯11)。', tip:'♯11が主役。G7 なら D♭7 の裏コードと同じ音が多い。'},
+  mixb13:{n:'ミクソリディアン♭13', s:'ミクソ♭13', e:'Mixolydian ♭13 (Aeolian dominant)', iv:[0,2,4,5,7,8,10], cat:'mm', feel:'メジャーとマイナーの間で揺れる、切ないドミナント。', use:'7(♭13)、マイナーへ向かう Ⅴ7。', tip:'♭13→5度の半音の動きがおいしい。'},
+  loc2:{n:'ロクリアン♮2', s:'ロクリアン♮2', e:'Locrian ♮2', iv:[0,2,3,5,6,8,10], cat:'mm', feel:'ロクリアンの濁りをやわらげた、なめらかなかげり。', use:'マイナーキーの Ⅱm7(♭5)。', tip:'9度が使えるので、m7(♭5)でもメロディを作りやすい。'},
+  alt:{n:'オルタード', s:'オルタード', e:'Altered (Super Locrian)', iv:[0,1,3,4,6,8,10], cat:'mm', feel:'テンション全部入りの、最大級の緊張感。', use:'7alt・7(♯9)・7(♭13)など、解決直前のドミナント。', tip:'♭9・♯9・♯11・♭13を使い、次のコードの3度・5度へ半音で着地させる。'},
+  // ---- ハーモニック・マイナー／メジャー系 ----
+  har:{n:'ハーモニック・マイナー', s:'ハーモニック', e:'Harmonic minor', iv:[0,2,3,5,7,8,11], cat:'hm', feel:'クラシック・ネオクラシカルな、劇的なマイナー。', use:'マイナーキーで Ⅴ7 が入るところ、mM7。', tip:'♭6→7度の1音半の跳躍が特徴。速弾きのアルペジオにも。'},
+  loc6:{n:'ロクリアン♮6', s:'ロクリアン♮6', e:'Locrian ♮6', iv:[0,1,3,5,6,9,10], cat:'hm', feel:'暗く不安定だが、♮6で少し光が差す。', use:'m7(♭5)（ハーモニック・マイナーの流れの中）。', tip:'ハーモニック・マイナーの2番目のモード。マイナーのⅡ–Ⅴで「同じ音の集まり」として使える。'},
+  ionaug:{n:'アイオニアン♯5', s:'アイオニアン♯5', e:'Ionian ♯5', iv:[0,2,4,5,8,9,11], cat:'hm', feel:'明るいのに不思議な、ゆがんだメジャー。', use:'maj7(♯5)、メジャーの経過的な場面。', tip:'♯5が目立つ音。普通のメジャーで使うと外れて聞こえるので、短く。'},
+  dor4:{n:'ドリアン♯4', s:'ドリアン♯4', e:'Dorian ♯4 (Ukrainian Dorian)', iv:[0,2,3,6,7,9,10], cat:'hm', feel:'東欧・クレズマー風の哀愁。', use:'m7(♯11)、民族風のマイナー一発。', tip:'♯4→5度の半音を何度も行き来すると、らしさが出る。'},
+  hmp5:{n:'ハーモニック・マイナー・パーフェクト5th・ビロウ', s:'HMP5↓', e:'Phrygian dominant (Spanish)', iv:[0,1,4,5,7,8,10], cat:'hm', feel:'スパニッシュ・アラビアンな、情熱的なドミナント。', use:'マイナーへ解決する Ⅴ7（E7→Am など）、7(♭9)、フラメンコ。', tip:'♭9と3度の1音半がポイント。ルートから♭2へ上がって戻るだけでもスペイン風。'},
+  lyd2:{n:'リディアン♯2', s:'リディアン♯2', e:'Lydian ♯2', iv:[0,3,4,6,7,9,11], cat:'hm', feel:'まぶしく、どこか異国風の明るさ。', use:'maj7(♯11)の飛び道具、映画・ゲーム音楽。', tip:'♯2（＝♭3）から3度へずり上げると独特。'},
+  sloc7:{n:'ウルトラ・ロクリアン', s:'ウルトラロクリアン', e:'Super Locrian 𝄫7 (Ultralocrian)', iv:[0,1,3,4,6,8,9], cat:'hm', feel:'とても暗く、緊張感の強い響き。', use:'dim7、♭9系のドミナントの代わり。', tip:'ハーモニック・マイナーの7番目のモード。dim7の上でアルペジオ的に使う。'},
+  hmaj:{n:'ハーモニック・メジャー', s:'ハーモニックM', e:'Harmonic major', iv:[0,2,4,5,7,8,11], cat:'hm', feel:'メジャーに♭6のかげりが入った、ロマンティックな響き。', use:'maj7、Ⅳ→Ⅳm（サブドミナント・マイナー）の流れ。', tip:'♭6を伸ばすと切なさが出る。Ⅳm6の音を含んでいる。'},
+  // ---- ビバップ ----
+  bebop:{n:'ビバップ・ドミナント', s:'ビバップ', e:'Bebop dominant', iv:[0,2,4,5,7,9,10,11], cat:'bop', feel:'8音で、8分音符のラインが拍にきれいに収まる。', use:'ドミナント7th、ジャズのアドリブライン。', tip:'♭7と7度の間の半音が経過音。拍の頭にコードの音が来るように下降する。'},
+  bebopM:{n:'ビバップ・メジャー', s:'ビバップM', e:'Bebop major (Major 6th diminished)', iv:[0,2,4,5,7,8,9,11], cat:'bop', feel:'なめらかで洗練されたメジャーのライン。', use:'maj7・6のコード。バリー・ハリスの「6thディミニッシュ」。', tip:'♯5（♭6）が経過音。6と dim7 のアルペジオを交互に弾く練習にも。'},
+  bebopm:{n:'ビバップ・ドリアン', s:'ビバップm', e:'Bebop Dorian (minor)', iv:[0,2,3,4,5,7,9,10], cat:'bop', feel:'ドリアンに経過音を足した、ジャズのマイナーライン。', use:'m7（Ⅱm7）。', tip:'♭3と3度の間の半音が経過音。'},
+  bebopmel:{n:'ビバップ・メロディック・マイナー', s:'ビバップmel', e:'Bebop melodic minor (Minor 6th diminished)', iv:[0,2,3,5,7,8,9,11], cat:'bop', feel:'m6の洗練されたライン。', use:'m6・mM7、マイナーのトニック。', tip:'♭6が経過音。m6とdim7のアルペジオを組み合わせる。'},
+  // ---- 対称スケール ----
+  hw:{n:'コンビネーション・オブ・ディミニッシュ', s:'コンディミ', e:'Half-whole diminished', iv:[0,1,3,4,6,7,9,10], cat:'sym', feel:'半音・全音の交互。ジャズらしい緊張感。', use:'7(♭9)・7(13)のドミナント。', tip:'短3度ずつ同じ形がくり返すので、1つのフレーズを3フレットずつずらして使える。'},
+  wh:{n:'ディミニッシュ', s:'ディミニッシュ', e:'Whole-half diminished', iv:[0,2,3,5,6,8,9,11], cat:'sym', feel:'全音・半音の交互。不安で神秘的。', use:'dim7。', tip:'コンディミと同じく短3度ごとに同じ形。dim7のアルペジオを軸に。'},
+  wt:{n:'ホールトーン', s:'ホールトーン', e:'Whole tone', iv:[0,2,4,6,8,10], cat:'sym', feel:'全部全音。夢の中のような、ふわふわした響き。', use:'aug・7(♯5)・7(♭13)。', tip:'2フレットずつ同じ形。長く使うと酔うので、ドミナントの一瞬に。'},
+  aug:{n:'オーギュメント・スケール', s:'オーギュメント', e:'Augmented (symmetric)', iv:[0,3,4,7,8,11], cat:'sym', feel:'短3度と半音の交互。モダンジャズの浮遊感。', use:'maj7(♯5)、aug、モダンなメジャー。', tip:'2つのオーギュメント・トライアドの組み合わせ。長3度ずつ同じ形。'},
+  // ---- 和風（日本の音階） ----
+  yo:{n:'陽音階（民謡音階）', s:'陽音階', e:'Yo scale', iv:[0,2,5,7,9], cat:'jp', feel:'明るく素朴な、わらべ歌・民謡の響き。', use:'和風の明るい曲、祭り囃子風。', tip:'ルートを「レ」にした「レミソラシ」が基本形。半音がないので歌いやすい。'},
+  miyako:{n:'都節音階（陰音階）', s:'都節', e:'Miyako-bushi (In scale)', iv:[0,1,5,7,8], cat:'jp', feel:'しっとり暗い、さくらさくら・演歌の響き。', use:'和風のマイナー、演歌、ボカロの和風曲。', tip:'半音（ルート→♭2、5度→♭6）が2か所。そこを行き来すると一気に和風。'},
+  insen:{n:'陰旋法（インセン）', s:'陰旋法', e:'In-sen', iv:[0,1,5,7,10], cat:'jp', feel:'琴のような、凛とした暗さ。', use:'和風のマイナー、m7(♭9)風の場面。', tip:'都節の♭6を♭7に変えた形。ロックでも使える和風スケール。'},
+  hira:{n:'平調子', s:'平調子', e:'Hirajoshi', iv:[0,2,3,7,8], cat:'jp', feel:'琴の調弦。はかなく美しい和の響き。', use:'和風のマイナー、映画・ゲームの和風BGM。', tip:'マイナーのⅠで使える。♭6を伸ばすと琴らしさが出る。'},
+  iwato:{n:'岩戸音階', s:'岩戸', e:'Iwato', iv:[0,1,5,6,10], cat:'jp', feel:'張りつめた、神秘的な暗さ。', use:'m7(♭5)風の場面、和風ホラー・神事の雰囲気。', tip:'♭5を含むので、マイナーで使うときは短く。'},
+  kumoi:{n:'雲井調子', s:'雲井', e:'Kumoi', iv:[0,2,3,7,9], cat:'jp', feel:'少し明るさのある、上品な和のマイナー。', use:'m6、ドリアン的なマイナー。', tip:'平調子の♭6を6度に変えた形。'},
+  ryukyu:{n:'琉球音階（沖縄音階）', s:'琉球', e:'Ryukyu', iv:[0,4,5,7,11], cat:'jp', feel:'のどかで明るい、沖縄の響き。', use:'メジャーキーのⅠ（maj7）、島唄風。', tip:'「ドミファソシ」。3度→4度、7度→ルートの半音がポイント。2度と6度は弾かない。'},
+  // ---- 世界の音階 ----
+  sp8:{n:'スパニッシュ8音', s:'スパニッシュ8音', e:'Spanish 8-tone', iv:[0,1,3,4,5,6,8,10], cat:'world', feel:'フラメンコの情熱的な響き。', use:'フラメンコ風のⅠ（E7 など）、フリジアンの場面。', tip:'HMP5↓に♭3を足した形。♭3と3度を両方使える。'},
+  dbl:{n:'ダブル・ハーモニック', s:'アラビック', e:'Double harmonic (Arabic / Byzantine)', iv:[0,1,4,5,7,8,11], cat:'world', feel:'中東・アラビアンな、妖しい響き。', use:'メジャーⅠの飛び道具、中東風のBGM。', tip:'1音半の跳躍が2か所。♭2→3度、♭6→7度を強調する。'},
+  hungm:{n:'ハンガリアン・マイナー', s:'ハンガリアンm', e:'Hungarian minor (Gypsy minor)', iv:[0,2,3,6,7,8,11], cat:'world', feel:'ジプシー・東欧の、哀愁あるドラマチックなマイナー。', use:'mM7、マイナーのⅠ、ネオクラシカル。', tip:'♯4と7度、2か所の1音半が特徴。'},
+  hungM:{n:'ハンガリアン・メジャー', s:'ハンガリアンM', e:'Hungarian major', iv:[0,3,4,6,7,9,10], cat:'world', feel:'明るさと妖しさが同居するドミナント。', use:'7(♯9)(♯11)、エキゾチックなドミナント。', tip:'♯2（♯9）→3度の動きがポイント。'},
+  napm:{n:'ナポリタン・マイナー', s:'ナポリタンm', e:'Neapolitan minor', iv:[0,1,3,5,7,8,11], cat:'world', feel:'クラシカルで重厚、暗く劇的。', use:'マイナーのⅠ、ネオクラシカルの速弾き。', tip:'ハーモニック・マイナーの2度を♭2にした形。'},
+  napM:{n:'ナポリタン・メジャー', s:'ナポリタンM', e:'Neapolitan major', iv:[0,1,3,5,7,9,11], cat:'world', feel:'暗い出だしから明るく抜ける、不思議な響き。', use:'mM7の飛び道具。', tip:'メロディック・マイナーの2度を♭2にした形。'},
+  pers:{n:'ペルシャ音階', s:'ペルシャ', e:'Persian', iv:[0,1,4,5,6,8,11], cat:'world', feel:'とても妖しく、緊張感のある異国の響き。', use:'中東風BGM、ドミナントの飛び道具。', tip:'♭5を含むので、ルートや3度に戻って安定させる。'},
+  pelog:{n:'ペロッグ（バリ）', s:'ペロッグ', e:'Pelog (Balinese)', iv:[0,1,3,7,8], cat:'world', feel:'ガムラン風の、きらびやかで神秘的な響き。', use:'マイナーの一発、民族風BGM。', tip:'都節に似た5音。グロッケンやピアノの高音で映える。'},
+  prom:{n:'プロメテウス', s:'プロメテウス', e:'Prometheus (Mystic chord)', iv:[0,2,4,6,9,10], cat:'world', feel:'スクリャービンの神秘和音。浮遊する不思議な明るさ。', use:'7(♯11)・13のドミナント。', tip:'ホールトーンの5度を6度に変えた形。'},
+  enig:{n:'エニグマティック', s:'エニグマ', e:'Enigmatic', iv:[0,1,4,6,8,10,11], cat:'world', feel:'謎めいた、どこにも着地しない響き。', use:'実験的な曲、ホラーBGM。', tip:'7度→ルートの半音で落ち着かせると使いやすい。'},
 };
+const SCCAT = [['base', '基本（チャーチ・モード）'], ['pen', 'ペンタトニック・ブルース'], ['mm', 'メロディック・マイナー系'], ['hm', 'ハーモニック・マイナー／メジャー系'], ['bop', 'ビバップ'], ['sym', '対称スケール'], ['jp', '和風（日本の音階）'], ['world', '世界の音階']];
 function chordScales(ch, key, next) {
   const q = ch.q, k = Q[q].k, d = mod(ch.root - key.t), L = [];
   const add = (id, why) => { if (!L.find(x => x.id === id)) L.push({id, why}); };
@@ -1295,7 +1359,12 @@ function chordScales(ch, key, next) {
     else if (!key.minor && d === 5) add('lyd', 'IV度はリディアンが基本');
     else if (key.minor && d === 3) add('ion', '平行長調のI度');
     else if ([1,3,8].includes(d) || (key.minor && d === 8)) add('lyd', '♭系のメジャーはリディアンが合う');
+    if (q === 'maj7#5' || q === 'aug') { add('lydaug', '♯5を含むmaj7'); add('ionaug', ''); add('aug', '対称的な浮遊感'); }
     add('ion', 'メジャーコードの基本'); add('lyd', 'モダンな響き'); add('mpen', 'メロディ作りの定番');
+    if (q === 'sus4' || q === 'sus2') add('spen', '3度のないペンタ');
+    add('bebopM', 'ジャズのメジャーライン'); add('hmaj', '♭6のかげりを足す'); add('mblues', 'ブルージーに');
+    if (d === 0 || (key.minor && d === 3)) { add('ryukyu', '沖縄風に'); add('yo', '和風・民謡風に'); }
+    add('lyd2', '異国風の飛び道具'); add('dbl', 'アラビアン風の飛び道具');
   } else if (k === '7') {
     const toMinor = next && mod(next.root - ch.root) === 5 && ['m','ø'].includes(Q[next.q].k);
     const nonFn = (next && mod(next.root - ch.root) === 11) || (!key.minor && (d === 10 || d === 1));
@@ -1310,6 +1379,13 @@ function chordScales(ch, key, next) {
     else if (nonFn) { add('lyd7', '解決しないドミナント (♭VII7・裏コード)'); add('mix', ''); }
     else { add('mix', 'ドミナントの基本。4度はアボイド'); add('alt', '解決前の緊張感'); add('bebop', 'ジャズのライン作りに'); add('hw', '13と♭9を使う'); }
     add('blues', 'ブルージーに'); add('mix', '');
+    if (q === '7sus4') { add('spen', '3度のないペンタ'); add('dorb2', '7sus4(♭9)の響き'); }
+    add('dpen', 'ガイドトーン入りの5音'); add('mblues', 'メジャー・ブルース');
+    if (toMinor || q === '7b13') add('mb6pen', '♭13を生かすペンタ');
+    if (!toMinor) add('mixb13', 'マイナーっぽさを混ぜる');
+    add('bebop', 'ジャズのライン'); add('lyd7', '♯11で明るく'); add('alt', '最大の緊張感'); add('hw', '♭9と13'); add('wt', '♯5・♭13の浮遊感');
+    if (toMinor) { add('sp8', 'フラメンコ風に'); add('mixb13', ''); }
+    add('hungM', '♯9・♯11のエキゾチック'); add('prom', '神秘的な響き');
   } else if (k === 'm') {
     if (q === 'mMaj7') { add('mel', 'mM7の基本'); add('har', ''); }
     if (q === 'm6') { add('mel', 'm6はメロディック・マイナー'); add('dor', ''); }
@@ -1324,18 +1400,30 @@ function chordScales(ch, key, next) {
       else if (d === 7) add('phr', '');
     }
     add('dor', 'm7の基本'); add('npen', 'メロディ作りの定番'); add('blues', 'ブルージーに'); add('aeo', '');
+    if (q === 'mMaj7' || q === 'm6') { add('bebopmel', 'ジャズのマイナーライン'); add('hungm', 'ジプシー風'); add('napM', ''); }
+    add('m6pen', 'ドリアン寄りのペンタ'); add('bebopm', 'ジャズのマイナーライン'); add('phr', 'スパニッシュな暗さ');
+    if (!['mMaj7', 'm6'].includes(q)) add('dorb2', '');
+    add('dor4', '東欧風の哀愁'); add('hira', '和風（琴の響き）'); add('miyako', '和風（演歌・都節）'); add('insen', '和風（陰旋法）'); add('kumoi', '和風（明るめ）');
+    if (key.minor && d === 0) { add('har', 'マイナーキーのドラマ'); add('hungm', 'ジプシー風'); add('napm', 'クラシカル'); }
+    add('pelog', 'ガムラン風');
   } else if (k === 'ø') {
     if (!key.minor && d === 11) { add('loc', 'VIIm7(♭5)はロクリアン'); add('loc2', '9thを使いたいとき'); }
     else { add('loc2', 'マイナーのIIm7(♭5)で定番'); add('loc', 'm7(♭5)の基本'); }
-  } else if (k === 'o') add('wh', 'dim7の基本 (全・半の順)');
-  else if (k === '+') add('wt', 'augの基本');
+    add('lpen', 'm7(♭5)の音だけの5音'); add('loc6', 'ハーモニック・マイナーの流れで'); add('iwato', '和風の緊張感');
+  } else if (k === 'o') { add('wh', 'dim7の基本 (全・半の順)'); add('sloc7', 'ハーモニック・マイナーの7番目'); add('hw', ''); }
+  else if (k === '+') { add('wt', 'augの基本'); add('aug', 'オーギュメント・スケール'); add('lydaug', ''); }
   return L.map(x => ({...x, root: ch.root}));
 }
 function keyScales(key) {
   const L = key.minor
-    ? [{id:'aeo',why:'キーの基本スケール'},{id:'har',why:'V7が入るときに'},{id:'mel',why:'ジャズ・マイナー'},{id:'npen',why:'メロディ作りの定番'}]
-    : [{id:'ion',why:'キーの基本スケール'},{id:'mpen',why:'メロディ作りの定番'},{id:'blues',why:'ブルージーに (6度から)'}];
-  return L.map(x => ({...x, root: x.id === 'blues' ? mod(key.t + 9) : key.t}));
+    ? [{id:'aeo',why:'キーの基本スケール'},{id:'npen',why:'メロディ作りの定番'},{id:'blues',why:'ブルージーに'},{id:'har',why:'V7が入るときに'},{id:'mel',why:'ジャズ・マイナー'},{id:'dor',why:'おしゃれなマイナー'},{id:'hira',why:'和風に'},{id:'miyako',why:'演歌・和風に'}]
+    : [{id:'ion',why:'キーの基本スケール'},{id:'mpen',why:'メロディ作りの定番'},{id:'blues',why:'ブルージーに (6度から)', rt:9},{id:'npen',why:'マイナーペンタで (6度から)', rt:9},{id:'mblues',why:'明るいブルース'},{id:'lyd',why:'浮遊感のあるメジャー'},{id:'yo',why:'民謡風に (2度から)', rt:2},{id:'ryukyu',why:'沖縄風に'}];
+  return L.map(x => ({id:x.id, why:x.why, root:mod(key.t + (x.rt || 0))}));
+}
+function scaleFit(id, root, ch) {
+  const s = new Set(SC[id].iv.map(x => mod(root + x))), f = Q[ch.q].f.filter(x => x < 12 && !(ch.q === '7alt' && x === 7));
+  const miss = f.filter(x => !s.has(mod(ch.root + x))), core = miss.filter(x => [0, 3, 4, 10, 11].includes(x) || (x === 6 && 'øo'.includes(Q[ch.q].k)) || (x === 8 && Q[ch.q].k === '+'));
+  return {miss, core, ok:!miss.length};
 }
 function scaleAvoid(id, root, ch) {
   if (!ch || ch.root !== root) return [];
@@ -1416,7 +1504,7 @@ function suggestPro(hist, following, key, style, base) {
   return res;
 }
 
-return {mod, SH, FL, ROM, Q, BASIC, TENS, KEYMAJ, KEYMIN, TUNE, VCAT, SC,
+return {mod, SH, FL, ROM, Q, BASIC, TENS, KEYMAJ, KEYMIN, TUNE, VCAT, SC, SCCAT, scaleFit,
   spell, keyName, name, parts, roman, pcs, parse, diatonic, matchDia, gen, suggest, estimateKey,
   ivLabel, voicings, chordScales, keyScales, scaleAvoid, suggestPro, mirrorOf};
 })();
@@ -1939,7 +2027,7 @@ const sample = () => [['Fmaj7',4],['E7',4],['Am7',4],['Gm7',2],['C7',2]].map(([s
 const S = {chart:sample(), key:{t:0, minor:false}, style:'jazz', rid:'swing', bpm:140, vol:{g:.8, b:.75, d:.5},
   loop:true, cin:false, sample:true, sel:4, pan:'cand', page:0, vpage:0, follow:true, showSc:true, real:true, fbNames:false, scView:null,
   mel:null, melTitle:'', title:'', melOn:true, melInst:'vibes', melVol:.85,
-  inp:{root:0, q:'maj7'}, solo:{mode:'scale', tone:'guitar', dens:1, vol:.8, lv:'easy'}, cmp:'easy', sb:{q:'', feel:'all', key:'all', sort:'cx'}, undo:[], cur:[],
+  inp:{root:0, q:'maj7'}, solo:{mode:'scale', tone:'guitar', dens:1, vol:.8, lv:'easy', strict:true}, cmp:'easy', sb:{q:'', feel:'all', key:'all', sort:'cx'}, undo:[], cur:[],
   mode:'make', pans:{}, inst:'auto', groove:{sw:null, lb:0, hu:0}, mix:{}, ui:{fz:1, theme:'dark', perf:'auto', home:true, swipe:true}, songId:null, mood:{b:0, c:0}, secFx:true};
 const STORE = 'chordnavi-v1';
 try {
@@ -1972,7 +2060,7 @@ try {
     if (typeof d.title === 'string') S.title = d.title.slice(0, 80);
     S.melOn = d.melOn !== false; if (['vibes','guitar','nylon'].includes(d.melInst)) S.melInst = d.melInst; if (d.melVol >= 0 && d.melVol <= 1) S.melVol = +d.melVol;
     S.sel = Number.isInteger(d.sel) ? Math.min(d.sel, S.chart.length - 1) : S.chart.length - 1;
-    if (d.solo && typeof d.solo === 'object') { const o = d.solo; if (['scale','always','off'].includes(o.mode)) S.solo.mode = o.mode; if (['guitar','vibes'].includes(o.tone)) S.solo.tone = o.tone; if ([0,1,2].includes(o.dens)) S.solo.dens = o.dens; if (o.vol >= 0 && o.vol <= 1) S.solo.vol = +o.vol; if (o.lv === 'pro' || o.lv === 'easy') S.solo.lv = o.lv; }
+    if (d.solo && typeof d.solo === 'object') { const o = d.solo; if (['scale','always','off'].includes(o.mode)) S.solo.mode = o.mode; if (['guitar','vibes'].includes(o.tone)) S.solo.tone = o.tone; if ([0,1,2].includes(o.dens)) S.solo.dens = o.dens; S.solo.strict = o.strict !== false; if (o.vol >= 0 && o.vol <= 1) S.solo.vol = +o.vol; if (o.lv === 'pro' || o.lv === 'easy') S.solo.lv = o.lv; }
     if (d.cmp === 'pro' || d.cmp === 'easy') S.cmp = d.cmp;
     if (d.sb && typeof d.sb === 'object') { if (['cx','cxd','key','title'].includes(d.sb.sort)) S.sb.sort = d.sb.sort; if (typeof d.sb.feel === 'string') S.sb.feel = d.sb.feel; if (typeof d.sb.key === 'string') S.sb.key = d.sb.key; }
   }
@@ -2004,9 +2092,9 @@ function toast(msg, act, fn) {
 /* ---------- scales recorded on the chart ---------- */
 const SCS = {ion:'Ion', dor:'Dor', phr:'Phr', lyd:'Lyd', mix:'Mix', aeo:'Aeo', loc:'Loc', loc2:'Loc♮2', mel:'MelMin', har:'HarMin',
   hmp5:'HMP5↓', lyd7:'Lyd♭7', alt:'Alt', mixb13:'Mix♭13', hw:'ComDim', wh:'Dim', wt:'WT', bebop:'Bebop', mpen:'MajPent', npen:'mPent', blues:'Blues'};
-const SCJ = {ion:'アイオニアン', dor:'ドリアン', phr:'フリジアン', lyd:'リディアン', mix:'ミクソリディアン', aeo:'エオリアン', loc:'ロクリアン', loc2:'ロクリアン♮2',
-  mel:'メロディック', har:'ハーモニック', hmp5:'HMP5↓', lyd7:'リディアン♭7', alt:'オルタード', mixb13:'ミクソ♭13', hw:'コンディミ', wh:'ディミニッシュ',
-  wt:'ホールトーン', bebop:'ビバップ', mpen:'メジャーペンタ', npen:'マイナーペンタ', blues:'ブルース'};
+Object.assign(SCS, {mblues:'MajBlues', dpen:'DomPent', m6pen:'m6Pent', spen:'SusPent', lpen:'m♭5Pent', mb6pen:'M♭6Pent', dorb2:'Dor♭2', lydaug:'Lyd♯5', loc6:'Loc♮6', ionaug:'Ion♯5', dor4:'Dor♯4', lyd2:'Lyd♯2', sloc7:'UltraLoc', hmaj:'HarMaj', bebopM:'BebopM', bebopm:'Bebopm', bebopmel:'BebopMel', aug:'Aug', yo:'陽', miyako:'都節', insen:'陰旋', hira:'平調子', iwato:'岩戸', kumoi:'雲井', ryukyu:'琉球', sp8:'Span8', dbl:'Arabic', hungm:'HungMin', hungM:'HungMaj', napm:'NeapMin', napM:'NeapMaj', pers:'Persian', pelog:'Pelog', prom:'Prom', enig:'Enigma'});
+for (const k in TH.SC) if (!SCS[k]) SCS[k] = TH.SC[k].e.split(/[ /(]/)[0];
+const SCJ = Object.fromEntries(Object.entries(TH.SC).map(([k, v]) => [k, v.s || v.n]));
 function assignScales() {
   const n = S.chart.length;
   S.chart.forEach((c, i) => {
@@ -2222,6 +2310,7 @@ function fretboard(notes) {
   }
   return s + '</svg>';
 }
+function degName(x, ch) { const k = Q[ch.q].k; return {0:'R', 1:'♭9', 2:'9', 3:'mø o'.includes(k) ? '♭3' : '♯9', 4:'3', 5:'4', 6:'øo'.includes(k) ? '♭5' : '♯11', 7:'5', 8:k === '+' ? '♯5' : '♭13', 9:k === 'o' ? '𝄫7' : '6', 10:'♭7', 11:'7'}[x]; }
 function renderScaleP() {
   const {ch, i} = cur(), n = S.chart.length;
   const next = i >= 0 && n > 1 ? S.chart[(i + 1) % n] : null;
@@ -2235,14 +2324,20 @@ function renderScaleP() {
   const notes = scaleNotes(view, ch);
   const vName = `${TH.spell(view.root, S.key, view.root === ch.root ? ch.pref : null)} ${SCJ[view.id]}`;
   const status = i < 0 ? 'コードを選ぶと、そのコードに記録できます' : same(view, rec) ? (ch.scAuto === false ? `${nm(ch)} に記録済み（自分で選択）` : `${nm(ch)} に記録中（おすすめ）`) : 'プレビュー中';
-  const chip = (r, k) => `<button data-sc="${k}" class="${same(r, rec) && i >= 0 ? 'rec' : ''}${same(r, view) ? ' view' : ''}" title="${esc(r.why || '')}">${r.root !== ch.root ? esc(TH.spell(r.root, S.key)) + ' ' : ''}${esc(SCJ[r.id])}${k === 0 && r.grp === 'c' ? '<span class="st" title="おすすめ"></span>' : ''}</button>`;
+  const chip = (r, k) => { const ft = TH.scaleFit(r.id, r.root, ch); return `<button data-sc="${k}" class="${same(r, rec) && i >= 0 ? 'rec' : ''}${same(r, view) ? ' view' : ''}${ft.core.length ? ' out' : ''}" title="${esc(r.why || '')}">${r.root !== ch.root ? esc(TH.spell(r.root, S.key)) + ' ' : ''}${esc(SCJ[r.id])}${k === 0 && r.grp === 'c' ? '<span class="st" title="おすすめ"></span>' : ''}</button>`; };
+  const SV = TH.SC[view.id], vf = TH.scaleFit(view.id, view.root, ch);
   return `<div class="sch"><div class="t"><b>${esc(vName)}</b><small>${esc(status)}${view.why ? ' ・ ' + esc(view.why) : ''}</small></div>
       <button class="btn ghost" data-scplay aria-label="音階を鳴らす">${ICON.play}音階</button>
       <div class="seg"><button data-fb="deg" aria-pressed="${!S.fbNames}">度数</button><button data-fb="name" aria-pressed="${S.fbNames}">音名</button></div></div>
     <div class="notes">${notes.map(n => `<span class="nt f-${n.fam}${n.ct || n.rt ? ' ct' : ''}${n.av ? ' av' : ''}"><b>${esc(n.name)}</b>${esc(n.lb)}</span>`).join('')}</div>
     ${fretboard(notes)}${FAM_LEG}
     <div class="scs">${rows.map((r, k) => chip(r, k)).join('')}${keys.length ? `<span class="lb">キー全体（Key of ${esc(TH.keyName(S.key))}）</span>` + keys.map((r, k) => chip(r, rows.length + k)).join('') : ''}
-      ${i >= 0 && ch.scAuto === false ? `<button data-scauto>${ICON.reset.replace('<svg', '<svg width="12" height="12" style="vertical-align:-2px"')} おすすめに戻す</button>` : ''}</div>`;
+      ${i >= 0 && ch.scAuto === false ? `<button data-scauto>${ICON.reset.replace('<svg', '<svg width="12" height="12" style="vertical-align:-2px"')} おすすめに戻す</button>` : ''}</div>
+    <div class="scbar"><button class="btn ghost" data-scall2>すべてのスケール（${Object.keys(TH.SC).length}種）</button>${S.chart.length ? `<button class="btn ghost" data-scsong="${view.id}:${view.root}">曲全体でこれを使う</button>` : ''}</div>
+    <div class="scd"><div class="scdh"><b>${esc(SV.n)}</b><small>${esc(SV.e)}</small></div>
+      <p><b>響き</b>${esc(SV.feel)}</p><p><b>使いどころ</b>${esc(SV.use)}</p><p><b>コツ</b>${esc(SV.tip)}</p>
+      ${vf.miss.length ? `<p class="scw">このコードの ${vf.miss.map(x => esc(degName(x, ch))).join('・')} がスケールに入っていません。アドリブは${vf.core.length ? 'コードの音と少しぶつかる、' : ''}スケールの音を優先して弾きます。</p>` : ''}
+      <button class="lnk" data-schelp>スケールの使い方（解説）を読む ›</button></div>`;
 }
 
 /* ---------- panel: voicings ---------- */
@@ -2643,7 +2738,12 @@ function scaleInfo(seg) {
   const guide = new Set(f.filter(x => [3,4,9,10,11].includes(x)).map(x => mod(c.root + x)));
   const sc = new Set(TH.SC[row.id].iv.map(x => mod(row.root + x)));
   const avoid = new Set(TH.scaleAvoid(row.id, row.root, c).map(x => mod(row.root + x)));
-  return seg.si = {row, ct, guide, sc, avoid};
+  // コードの音のうちスケールに入っている音だけを着地先に（入っていなければスケールの1・3・5度あたり）
+  const ct2 = new Set([...ct].filter(x => sc.has(x)));
+  if (ct2.size < 2) TH.SC[row.id].iv.filter((x, k) => k % 2 === 0).slice(0, 3).forEach(x => ct2.add(mod(row.root + x)));
+  const g2 = new Set([...guide].filter(x => sc.has(x)));
+  const strict = !!(c.sc && c.scAuto === false && TH.SC[c.sc] && S.solo.strict !== false);
+  return seg.si = {row, ct:ct2, guide:g2.size ? g2 : ct2, sc, avoid, strict};
 }
 const CELL = {
   q:{len:1, ev:[[0,1]]}, e2:{len:1, ev:[[0,.5],[.5,.5]]}, re:{len:1, ev:[[.5,.5]]}, er:{len:1, ev:[[0,.5]]},
@@ -2697,7 +2797,7 @@ function pickPitch(si, strong, end, nextT, long, root) {
     }
     return best;
   }
-  if (nextT != null && !pop && Math.random() < .24) { const a = nextT + (Math.random() < .7 ? -1 : 1); if (a >= lo && a <= hi && a !== L) return a; }
+  if (nextT != null && !pop && Math.random() < .24) { const a = nextT + (Math.random() < .7 ? -1 : 1); if (a >= lo && a <= hi && a !== L && (!si.strict || si.sc.has(mod(a)))) return a; }
   const sc = [];
   for (let m = lo; m <= hi; m++) if (si.sc.has(mod(m))) sc.push(m);
   if (!sc.length) return L;
@@ -3352,7 +3452,7 @@ function spanCtx(seg) {
   const si = scaleInfo(seg), c = seg.ch, k = Q[c.q].k, nx = segNextReal(seg), vp = new Set((seg.vo || []).map(mod));
   const res = !!nx && mod(nx.ch.root - c.root) === 5;
   return {seg, si, c, k, root:c.root, dom:k === '7', res, toMin:res && 'mø'.includes(Q[nx.ch.q].k), bluesy:!!(P.hl && P.hl.bluesy), sid:si.row.id,
-    free:(!c.sc || c.scAuto !== false) && c.q === '7', long:seg.len >= 2 * bpb(), vo13:vp.has(mod(c.root + 9)), vo9:vp.has(mod(c.root + 2)), pop:S.style === 'pop'};
+    strict:!!si.strict, free:(!c.sc || c.scAuto !== false) && c.q === '7', long:seg.len >= 2 * bpb(), vo13:vp.has(mod(c.root + 9)), vo9:vp.has(mod(c.root + 2)), pop:S.style === 'pop'};
 }
 function bebopPass(x) {
   const r = x.root, sc = x.si.sc;
@@ -3396,7 +3496,8 @@ function pickDev(x, L) {
   const f0 = DM.cur && DM.cur.solo, f = f0 === 'disp' ? 'motif' : f0;
   if (f && DEVS[f] && DEVS[f].ok(x, L)) return f;
   const w = {}, b = S.bpm, d = S.solo.dens;
-  for (const [id, dv] of Object.entries(DEVS)) if (dv.ok(x, L)) w[id] = dv.w;
+  const SAFE = ['lyric', 'arp', 'digital', 'motif', 'guide', 'triad', 'penta', 'squartal', ...(x.sid === 'blues' ? ['blues'] : [])];
+  for (const [id, dv] of Object.entries(DEVS)) if (dv.ok(x, L) && (!x.strict || SAFE.includes(id))) w[id] = dv.w;
   const mul = (id, k) => { if (w[id] != null) w[id] *= k; };
   if (b >= 200) { mul('bebop', .7); mul('digital', 2); mul('arp', 1.4); mul('triad', .5); mul('ust', .8); mul('guide', 1.4); mul('lyric', .8); }
   if (b < 100) { mul('guide', 1.8); mul('bebop', .8); mul('penta', 1.2); }
@@ -3720,6 +3821,10 @@ function writeSolo(tick0, evs, phrase) {
     if (e.m === evs[k - 1].m && e.d <= .5 && !(e.ex && e.ex.end)) { const seg = segAt((tick0 / TPB + e.b) % P.hl.total), nx = evs[k + 1]; e.m = stepIn(e.m, nx && nx.m > e.m ? 1 : -1, scaleInfo(seg).sc); }
   }
   const n = bpb();
+  for (const e of evs) {   // 選んだスケールだけで弾く設定：外の音をとなりのスケール音へ
+    const si = scaleInfo(segAt((tick0 / TPB + e.b) % P.hl.total));
+    if (si.strict && !si.sc.has(mod(e.m))) { e.m = nearSet(si.sc, e.m); if (e.ex) { delete e.ex.out; delete e.ex.cn; } }
+  }
   for (const e of evs) {
     const ab = (tick0 / TPB + e.b) % P.hl.total, onStrong = Math.abs(e.b % 1) < 1e-6 && Math.round(e.b) % (n === 3 ? 3 : 2) === 0;
     if (!onStrong || (e.ex && (e.ex.out || e.ex.cn))) continue;
@@ -4237,6 +4342,21 @@ const HELP = [
     <li><b>色の枠だけの丸</b>＝スケールの3度・5度・7度だけど、コードには入っていない音（例：C の3和音での 7度）。</li>
     <li><b>小さい白枠の丸</b>＝テンション（9・11・13など）。<b>点線</b>＝長く伸ばすとぶつかりやすい音。</li></ul>
     <p>${HK('度数')}${HK('音名')}で表示を切り替え。下のスケール名をタップするとそのコードに記録、長押しで試聴。赤い点がおすすめです。</p>`, go:[['scale', 'スケールを見る']]},
+  {id:'scaleuse', t:'スケールの使い方', h:`<p><b>スケール</b>は「ドレミ…」のような音の並びです。コードの上で、どの音を弾けば合うかを教えてくれる地図だと思ってください。このアプリには${Object.keys(TH.SC).length}種類あります。</p>
+    <ul><li><b>考え方は2つ</b>：① <b>キー全体で1つ</b>のスケールを使う（ペンタトニックなど。かんたんで、ポップス・ロック向き）。② <b>コードごとに切りかえる</b>（ジャズやおしゃれな曲向き）。</li></ul>
+    <table class="htab"><tr><th>コード</th><th>まずはこれ</th><th>慣れたら</th><th>飛び道具</th></tr>
+    <tr><td>maj7</td><td>メジャーペンタ・アイオニアン</td><td>リディアン・ビバップM</td><td>琉球・アラビック</td></tr>
+    <tr><td>m7</td><td>マイナーペンタ・ドリアン</td><td>エオリアン・ビバップm・m6ペンタ</td><td>平調子・都節・フリジアン</td></tr>
+    <tr><td>7</td><td>ブルース・ミクソリディアン</td><td>オルタード・コンディミ・リディアン♭7</td><td>HMP5↓・スパニッシュ8音</td></tr>
+    <tr><td>m7(♭5)</td><td>ロクリアン</td><td>ロクリアン♮2・m♭5ペンタ</td><td>岩戸</td></tr>
+    <tr><td>dim7</td><td>ディミニッシュ</td><td>ウルトラロクリアン</td><td>—</td></tr>
+    <tr><td>aug</td><td>ホールトーン</td><td>オーギュメント</td><td>—</td></tr></table>
+    <ul><li><b>弾き方のコツ</b>：① 1拍目・3拍目などの強い拍は<b>コードの音</b>（とくに3度と7度）に着地。② <b>点線の丸（アボイド）</b>はぶつかりやすいので伸ばさない。③ コードが変わる直前に、次のコードの3度・7度へ半音で近づくと、なめらかにつながる。④ 気に入った短いフレーズを、スケールに合わせて形を変えながらくり返す。</li>
+    <li><b>アプリでの使い方</b>：スケール画面で名前をタップすると、そのコードに記録されます（長押しで試聴）。アドリブも記録したスケールの音で弾きます。<b>すべてのスケール</b>から全${Object.keys(TH.SC).length}種を選べ、「◎ コードの音が全部入る」「△ ぶつかる音がある」の目安と、▶の試聴があります。</li>
+    <li><b>曲全体でこれを使う</b>：表示中のスケールを全部のコードに記録します（例：マイナーペンタで曲を通す）。戻すときはメニューの「スケールを全部おすすめに」。</li>
+    <li><b>選んだスケールの音だけで弾く</b>（アドリブの設定）：オンのとき、自分で選んだスケールのコードでは、経過音や「外し」を使わずスケールの音だけで弾きます。オフにすると、高度モードのジャズの経過音も混ざります。</li>
+    <li><b>和風・世界の音階</b>：平調子・都節・琉球・アラビックなどは、曲の雰囲気づくりに。マイナー系の和風音階はマイナーコード、琉球はメジャーコードの上で使うと合います。</li>
+    <li>スケール画面の下に、表示中のスケールの<b>響き・使いどころ・コツ</b>が出ます。</li></ul>`, go:[['scale', 'スケールを見る'], ['adl', 'アドリブの設定']]},
   {id:'voicing', t:'押さえ方', h:`${HF('h_voicing', '押さえ方')}<ul>
     <li>選んだコードの押さえ方を、指板の図で表示します。丸の色はスケールと同じです（R 赤・3度 黄・5度 水色・7度 紫）。</li>
     <li>図をタップすると鳴ります。ピンのボタンで、伴奏でもその押さえ方を使うよう固定できます。</li></ul>`, go:[['voicing', '押さえ方を見る']]},
@@ -4306,7 +4426,7 @@ const HELP = [
     <li><b>録音がずれる</b>：とるモードの「音の遅れの自動測定」で測り直すか、テイクの確認画面の「声のタイミング」で調整してください。</li>
     <li><b>消したものを戻したい</b>：上の ↶（元に戻す）。</li></ul>`},
 ];
-const HTOC = {start:'はじめに', modes:'モード', screen:'画面', make:'つくる', practice:'ひく', learn:'まなぶ', chord:'コード入力', lib:'曲集', scale:'スケールと色', voicing:'押さえ方', play:'再生・伴奏', adlib:'アドリブ', rec:'録音', app:'アプリ・壁紙', trouble:'困ったとき'};
+const HTOC = {start:'はじめに', modes:'モード', screen:'画面', make:'つくる', practice:'ひく', learn:'まなぶ', chord:'コード入力', lib:'曲集', scale:'スケールと色', voicing:'押さえ方', play:'再生・伴奏', adlib:'アドリブ', rec:'録音', app:'アプリ・壁紙', trouble:'困ったとき', scaleuse:'スケールの使い方'};
 function renderHelp() {
   $('#hpToc').innerHTML = HELP.map(s => `<button data-hto="${s.id}">${HTOC[s.id]}</button>`).join('');
   $('#hpBody').innerHTML = HELP.map(s => `<article class="hc" id="h-${s.id}"><h3>${s.t}</h3>${s.h}${s.go ? `<div class="hgo">${s.go.map(([k, l]) => HGO(k, l)).join('')}</div>` : ''}</article>`).join('');
@@ -5955,6 +6075,43 @@ function gdTx(text, shift, key) {
     return pre + TH.spell(pc, key);
   });
 }
+
+/* ---- すべてのスケール（一覧から選ぶ） ---- */
+function openScales() {
+  const {ch, i} = cur(), st = {rt:'chord', only:false, open:null};
+  const recs = TH.chordScales(ch, ch.lk || S.key, i >= 0 && S.chart.length > 1 ? S.chart[(i + 1) % S.chart.length] : null).map(x => x.id);
+  const draw = () => {
+    const k = ch.lk || S.key, root = st.rt === 'chord' ? ch.root : k.t, rn = TH.spell(root, k);
+    const row = id => { const f = TH.scaleFit(id, root, ch), on = i >= 0 && ch.sc === id && (ch.scr ?? ch.root) === root, X = TH.SC[id];
+      const badge = f.ok ? '<span class="fit ok">◎ コードの音が全部入る</span>' : f.core.length ? `<span class="fit ng">△ ${f.core.map(x => degName(x, ch)).join('・')}が外れる</span>` : `<span class="fit mid">○ ${f.miss.map(x => degName(x, ch)).join('・')}以外は入る</span>`;
+      if (st.only && f.core.length) return '';
+      return `<div class="scrw${on ? ' on' : ''}"><button class="scpl" data-sp="${id}" aria-label="${esc(X.n)}を鳴らす">${ICON.play}</button>
+        <button class="scnm" data-sx="${id}"><b>${esc(X.n)}${recs.includes(id) ? '<i class="rcm">おすすめ</i>' : ''}</b><small>${esc(X.e)}・${X.iv.length}音</small>${badge}<span class="scf">${esc(X.feel)}</span></button></div>`; };
+    sheetBody(`<p class="note">${i >= 0 ? `<b>${esc(nm(ch))}</b>（${i + 1}番目）に使うスケールを選びます。タップで記録、▶で試聴。アドリブもこのスケールで弾きます。` : 'コードを選ぶと、そのコードに記録できます。▶で試聴できます。'}</p>
+      <div class="chips"><span class="clb">スケールの主音</span><button data-srt="chord" aria-pressed="${st.rt === 'chord'}">コードのルート（${esc(TH.spell(ch.root, k))}）</button>${k.t !== ch.root ? `<button data-srt="key" aria-pressed="${st.rt === 'key'}">キーの主音（${esc(TH.spell(k.t, k))}）</button>` : ''}<button data-sonly aria-pressed="${st.only}">合うものだけ</button></div>
+      <details class="scuse"><summary>スケールの選び方（かんたん解説）</summary><ol>
+        <li>まずは<b>ペンタトニック</b>。5音だけなので、どこを弾いてもほぼ外れません。</li>
+        <li>慣れたら、コードごとに<b>おすすめ</b>（★）のスケールへ。3度と7度（ガイドトーン）に着地すると、コードが変わったのがはっきり聞こえます。</li>
+        <li>「◎」はコードの音が全部入るスケール。「△」はコードとぶつかる音があるので、ぶつかる音は伸ばさないのがコツ。</li>
+        <li>和風・世界の音階は、曲の雰囲気づくりに。「曲全体でこれを使う」で、1つのスケールで通すこともできます。</li></ol></details>
+      ${TH.SCCAT.map(([c, l]) => { const rows = Object.keys(TH.SC).filter(id => TH.SC[id].cat === c).map(row).join(''); return rows ? `<div class="lbl">${l}</div>${rows}` : ''; }).join('')}
+      <p class="note">主音（スケールの1度）＝${esc(rn)}。キー全体で1つのスケールを使うときは「キーの主音」にして選んでください。</p>`);
+  };
+  sheet(`すべてのスケール（${Object.keys(TH.SC).length}種）`, '', e => {
+    if (e.type !== 'click') return; const b = e.target.closest('button'); if (!b) return; const d = b.dataset, k = ch.lk || S.key, root = st.rt === 'chord' ? ch.root : k.t;
+    if (d.srt) { st.rt = d.srt; draw(); return; }
+    if (d.sonly != null) { st.only = !st.only; draw(); return; }
+    if (d.sp) { if (ac()) playScale({id:d.sp, root}, ch); return; }
+    if (d.sx) {
+      if (i >= 0) { pushUndo(); ch.sc = d.sx; ch.scr = root; ch.scAuto = false; S.scView = null; }
+      else S.scView = {id:d.sx, root};
+      closeBS(); if (S.pan !== 'scale') { if (MODES[S.mode].pans.includes('scale')) S.pan = 'scale'; else setMode('make', 'scale'); }
+      refresh(); if (!P.ui && ac()) playScale({id:d.sx, root}, ch);
+      toast(`${TH.spell(root, k)} ${TH.SC[d.sx].n} ${i >= 0 ? `を ${nm(ch)} に記録しました` : 'を表示中'}`);
+    }
+  });
+  draw();
+}
 /* ===== 起動モード（つくる・ひく・とる・まなぶ）・ホーム・マイ曲・表示と動作・体験チュートリアル・スワイプ ===== */
 Object.assign(ICON, {
   make: svgI('<path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>'),
@@ -6422,6 +6579,9 @@ pan.addEventListener('click', e => {
   if (e.target.closest('[data-iadd]')) { addChord({root:S.inp.root, q:S.inp.q, bass:null, pref:null}); return; }
   if (e.target.closest('[data-irep]') && i >= 0) { pushUndo(); touch(); Object.assign(ch, {root:S.inp.root, q:S.inp.q, bass:null, pref:null, v:null, scAuto:true}); previewChord(ch); refresh(); return; }
   // scale
+  if (e.target.closest('[data-scall2]')) { openScales(); return; }
+  if (e.target.closest('[data-schelp]')) { openHelp('scaleuse'); return; }
+  const ss = e.target.closest('[data-scsong]'); if (ss) { const [id, rt] = ss.dataset.scsong.split(':'); pushUndo(); S.chart.forEach(c => { c.sc = id; c.scr = +rt; c.scAuto = false; }); S.scView = null; refresh(); toast(`曲全体を ${TH.spell(+rt, S.key)} ${SCJ[id]} にしました`, '元に戻す', undo); return; }
   const sc = e.target.closest('[data-sc]');
   if (sc) {
     const row = SROWS[+sc.dataset.sc]; if (!row) return;
@@ -6465,6 +6625,7 @@ function renderAdl() {
   $('#adTone').innerHTML = ch([['guitar', 'ギター'], ['vibes', 'ビブラフォン']], S.solo.tone, 'data-st');
   $('#adDens').innerHTML = ch([[0, '少なめ'], [1, 'ふつう'], [2, '多め']], S.solo.dens, 'data-sd');
   $('#adVol').value = S.solo.vol; $('#adVolV').textContent = Math.round(S.solo.vol * 100);
+  $('#adStrict').setAttribute('aria-pressed', S.solo.strict !== false);
 }
 function adlDemo() {
   if (P.ui || !ac()) return;
@@ -6477,6 +6638,7 @@ $('#bsAdl').addEventListener('click', e => {
   if (b.dataset.sm) { S.solo.mode = b.dataset.sm; renderDock(); setVols(); save(); }
   if (b.dataset.st) { S.solo.tone = b.dataset.st; if (A.ctx) applyTone(); save(); adlDemo(); }
   if (b.dataset.sd != null) { S.solo.dens = +b.dataset.sd; save(); }
+  if (b.id === 'adStrict') { S.solo.strict = S.solo.strict === false; save(); if (P.ui) rebuildTL(); }
   if (b.id === 'adTry') adlDemo();
   if (b.dataset.lv) { if (S.solo.lv !== b.dataset.lv) setSoloLv(b.dataset.lv); return; }
   if (b.dataset.guide) { openGuide(b.dataset.guide); return; }
