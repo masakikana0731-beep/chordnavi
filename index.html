@@ -641,6 +641,18 @@ html.lite .bs,html.lite .scrim{transition:none}
 .gdv.now{border-color:var(--red);box-shadow:0 0 0 2px color-mix(in srgb,var(--red) 40%,transparent)}
 .gdv.tq{border-style:dashed}
 #gdTab{max-height:none}
+.tv{border:1px solid var(--line);background:var(--paper);border-radius:12px;padding:6px 6px 4px}
+.tvh{display:flex;align-items:center;gap:6px}
+.tvn{width:44px;height:44px;flex:none;border:1px solid var(--line);background:var(--card);border-radius:10px;font-size:22px;font-weight:700;color:var(--ink)}
+.tvn[disabled]{opacity:.3}
+.tvt{flex:1;display:flex;flex-wrap:wrap;align-items:baseline;gap:0 8px;justify-content:center;text-align:center}
+.tvt span{font-size:12px;color:var(--mute)}.tvt span b{font:700 22px Kalam,cursive;color:var(--mc);margin-right:2px}.tvt span i{font-style:normal;margin-left:4px}
+.tvt em{font:700 18px Kalam,"Zen Kaku Gothic New",cursive;font-style:normal;color:var(--red)}
+.tvt small{flex-basis:100%;font-size:11px;color:var(--mute)}
+.tvb{margin-top:4px;min-height:108px}.tvb .tabb{border:0;padding:2px 2px;background:none;overflow-x:auto}.tvb .tabc{display:none}
+.tvb .tabb pre,.tvb .tabw{font-size:clamp(9px, calc((100vw - 70px) / 31.5), 13px)}
+.tvf{display:flex;justify-content:center;min-height:30px;align-items:center}.tvf small{font-size:10.5px;color:var(--mute)}
+.gdia{position:relative}
 </style>
 </head>
 <body>
@@ -2643,13 +2655,13 @@ function pbuf(midi, br = A.br) {
 function pluck(m, t, dur, vel) {
   if (MC.on) { MC.ev.push({tr:'g', m, t, d:dur, v:vel}); return; }
   if (A.syn && synNote(A.syn, m, t, dur, vel)) return;
-  if (smpNote(A.gi, m, t, dur, vel * 1.5, A.gG, .07)) return;
+  if (smpNote(A.gi, m, t, dur, vel * 1.5, A.rtG || A.gG, .07)) return;
   const ctx = A.ctx, {buf, rate} = pbuf(m), s = ctx.createBufferSource(), g = ctx.createGain();
   s.buffer = buf; s.playbackRate.value = rate;
   const end = t + Math.max(.04, dur), life = buf.duration / rate;
   g.gain.setValueAtTime(vel, t);
   if (end < t + life) { g.gain.setValueAtTime(vel, end); g.gain.exponentialRampToValueAtTime(.0005, end + .09); }
-  s.connect(g); g.connect(A.gG);
+  s.connect(g); g.connect(A.rtG || A.gG);
   s.start(t); s.stop(Math.min(end + .12, t + life));
 }
 function strum(notes, t, dur, vel, sp) {
@@ -2662,7 +2674,7 @@ function strum(notes, t, dur, vel, sp) {
 function bassNote(m, t, dur, vel) {
   if (MC.on) { MC.ev.push({tr:'b', m, t, d:dur, v:vel}); return; }
   t += (Math.random() - .5) * .006;
-  if (smpNote(A.bi, m, t, dur, vel * 2.2, A.gB, .05)) return;
+  if (smpNote(A.bi, m, t, dur, vel * 2.2, A.rtB || A.gB, .05)) return;
   const ctx = A.ctx, f = 440 * 2 ** ((m - 69) / 12);
   const o = ctx.createOscillator(), o2 = ctx.createOscillator(), lp = ctx.createBiquadFilter(), g = ctx.createGain();
   o.type = 'triangle'; o.frequency.value = f; o2.type = 'sine'; o2.frequency.value = f;
@@ -2670,7 +2682,7 @@ function bassNote(m, t, dur, vel) {
   g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vel, t + .008);
   g.gain.exponentialRampToValueAtTime(vel * .45, t + Math.max(.02, dur * .7));
   g.gain.exponentialRampToValueAtTime(.0005, t + dur + .07);
-  o.connect(lp); o2.connect(lp); lp.connect(g); g.connect(A.gB);
+  o.connect(lp); o2.connect(lp); lp.connect(g); g.connect(A.rtB || A.gB);
   o.start(t); o2.start(t); o.stop(t + dur + .1); o2.stop(t + dur + .1);
 }
 function nz(t, dur, type, f, q, vel, att) {
@@ -3171,7 +3183,7 @@ function play(fromTick = 0) {
   P.lpA = lp && lp.b > lp.a ? lp.a : null; P.lpB = P.lpA != null ? lp.b : null; P.lpN = 0; P.lpPending = null;
   if (P.lpA != null && (P.tick < P.lpA || P.tick >= P.lpB)) P.tick = P.lpA;
   P.next = ctx.currentTime + (P.lead || .1) + Math.max(0, (cb ? .9 : .25) - warm); P.t0 = P.next + cb * bpb() * 60 / S.bpm; P.vis = []; P.last = 40; P.dir = 1;
-  P.on = true; P.ui = true; soloReset(); adlStart(); setVols();
+  P.on = true; P.ui = true; pvCut(); soloReset(); adlStart(); setVols();
   clockOn(true); sched();
   requestAnimationFrame(frame); renderDock();
   if (S.pan === 'scale') renderPan();
@@ -3188,13 +3200,27 @@ function stop() {
   if (S.pan === 'scale') renderPan();
 }
 function restartIfPlaying() { if (P.ui) { stop(); setTimeout(play, 520); } }
+// 試聴は専用の通り道で鳴らし、次の試聴が来たら前の音をすぐ消す（前のコードと重ならない）
+function pvCut() {
+  const p = A.pv; if (!p || !A.ctx) return; A.pv = null; const t = A.ctx.currentTime;
+  for (const g of [p.g, p.b]) { g.gain.cancelScheduledValues(t); g.gain.setValueAtTime(g.gain.value, t); g.gain.linearRampToValueAtTime(0, t + .035); }
+  setTimeout(() => { try { p.g.disconnect(); p.b.disconnect(); } catch (e) {} }, 250);
+}
+function pvRoute(fn) {
+  if (!ac()) return; pvCut();
+  const g = A.ctx.createGain(), b = A.ctx.createGain(); g.connect(A.gG); b.connect(A.gB);
+  A.pv = {g, b}; A.rtG = g; A.rtB = b;
+  try { fn(); } finally { A.rtG = null; A.rtB = null; }
+}
 function previewChord(c, v) {
   if (!ac()) return;
   applyTone();
   const vv = v || pickVoicing({...c, v:c.v}, null);
   const t = A.ctx.currentTime + .03;
-  strum(vv.midi.slice().sort((a, b) => a - b), t, 1.9, .85, .024);
-  if (!P.ui) bassNote(near(c.bass ?? c.root, 40), t, 1.4, .5);
+  pvRoute(() => {
+    strum(vv.midi.slice().sort((a, b) => a - b), t, 1.9, .85, .024);
+    if (!P.ui) bassNote(near(c.bass ?? c.root, 40), t, 1.4, .5);
+  });
 }
 function playScale(row, ch) {
   if (!ac()) return;
@@ -3203,7 +3229,7 @@ function playScale(row, ch) {
   const up = [...sc.iv.map(x => b0 + x), b0 + 12], seq = [...up, ...up.slice(0, -1).reverse()];
   const step = 60 / Math.max(110, Math.min(S.bpm, 180)) / 2;
   let t = A.ctx.currentTime + .05;
-  for (const m of seq) { pluck(m, t, step * 1.6, .75); t += step; }
+  pvRoute(() => { for (const m of seq) { pluck(m, t, step * 1.6, .75); t += step; } });
 }
 
 /* ===== engine extras: groove, sections, synth keys, drive, practice loops, MIDI capture ===== */
@@ -3273,7 +3299,7 @@ function synNote(name, m, t, dur, vel) {
   if (name === 'organ') { s.loop = true; s.loopStart = Math.round(.6 * f) / f; s.loopEnd = s.loopStart + Math.round(1.4 * f) / f; }
   const end = t + Math.max(.08, dur), rel = name === 'pad' ? .5 : name === 'organ' ? .06 : .15;
   g.gain.setValueAtTime(vel, t); g.gain.setValueAtTime(vel, end); g.gain.exponentialRampToValueAtTime(.0005, end + rel);
-  s.connect(g); g.connect(A.gG); s.start(t); s.stop(end + rel + .05);
+  s.connect(g); g.connect(A.rtG || A.gG); s.start(t); s.stop(end + rel + .05);
   return true;
 }
 const DRV = {};
@@ -4103,7 +4129,7 @@ function gdFollow() {
       if (S.loop) beat %= tot;
       let i = pc.list.findIndex(x => beat >= x.start - 1e-6 && beat < x.start + x.len - 1e-6); if (i < 0) i = GD.ci;
       const live = pc.live ? pc.list.map(x => TH.name(x.ch, pc.key) + x.start).join() : '';
-      if (i !== GD.ci || live !== GD.lastLive) { GD.ci = i; GD.lastLive = live; const c = $('#gdChart'), s = $('#gdScale'), dg = $('#gdDia'); if (c) c.innerHTML = gdChart(pc, i); if (s) s.innerHTML = gdScale(pc, i); if (dg) { dg.outerHTML = gdDiagrams(pc, i); const nw = $('#gdDia .gdv.now'); if (nw) nw.scrollIntoView({block:'nearest', inline:'center', behavior:'smooth'}); } }
+      if (i !== GD.ci || live !== GD.lastLive) { GD.ci = i; GD.lastLive = live; const c = $('#gdChart'), s = $('#gdScale'), dg = $('#gdDia'); if (c) c.innerHTML = gdChart(pc, i); if (s) s.innerHTML = gdScale(pc, i); if (dg) { const sl = dg.scrollLeft; dg.outerHTML = gdDiagrams(pc, i); const d2 = $('#gdDia'), nw = $('#gdDia .gdv.now'); if (d2) { d2.scrollLeft = sl; if (nw) d2.scrollTo({left:Math.max(0, nw.offsetLeft - (d2.clientWidth - nw.offsetWidth) / 2), behavior:'smooth'}); } } }
       gdTabFollow(beatRaw, tot);
     }
   }
@@ -4202,7 +4228,7 @@ $('#gdBody').addEventListener('click', e => {
   if (sl) { const id = sl.dataset.sel; if (DM.cur && DM.cur.gid !== id) stop(); GD.sel = id || null; GD.ci = 0; GD.cv = 'a'; renderGuide(); $('#gdBody').scrollTop = 0; return; }
   const ci = e.target.closest('[data-gci]');
   if (ci) { GD.ci = +ci.dataset.gci; const it = GIDX[GD.sel], pc = gdPieces(it, GD.cv); $('#gdChart').innerHTML = gdChart(pc, GD.ci); $('#gdScale').innerHTML = gdScale(pc, GD.ci); const dg = $('#gdDia'); if (dg) dg.outerHTML = gdDiagrams(pc, GD.ci); if (ci.classList.contains('gdv') && !P.ui && ac()) previewChord(pc.list[GD.ci].ch); return; }
-  const gtl = e.target.closest('[data-gtl]'); if (gtl && GD.take) { const it = GIDX[GD.sel]; GD.tabLoop = +gtl.dataset.gtl; GD.tabBar = -1; $('#gdTab').innerHTML = tabText(gdTabBars(GD.take, gdPieces(it, GD.cv), GD.tabLoop), GD.take.n, GD.take.sw); document.querySelectorAll('[data-gtl]').forEach(x => x.setAttribute('aria-pressed', x === gtl)); return; }
+  const gtl = e.target.closest('[data-gtl]'); if (gtl && GD.take) { const it = GIDX[GD.sel]; GD.tabLoop = +gtl.dataset.gtl; const V = TV.tvG; if (V) { V.bars = gdTabBars(GD.take, gdPieces(it, GD.cv), GD.tabLoop); V.idx = 0; tvDraw('tvG'); } document.querySelectorAll('[data-gtl]').forEach(x => x.setAttribute('aria-pressed', x === gtl)); return; }
   const gn = e.target.closest('[data-gnew]'); if (gn) { const it = GIDX[GD.sel], was = DM.cur && DM.cur.gid === it.id ? DM.cur.gv : null; if (P.ui) stop(); setTimeout(() => { gdTake(it, GD.cv, true); renderGuide(); if (was) gdPlay(it, was); }, P.ui ? 560 : 0); return; }
   const rt = e.target.closest('[data-rate]'); if (rt) { GD.rate = +rt.dataset.rate; gdReplay(); return; }
   const ks = e.target.closest('[data-kshift]'); if (ks) { GD.shift = ((GD.shift + +ks.dataset.kshift) % 12 + 12) % 12; gdReplay(); return; }
@@ -4251,8 +4277,8 @@ function gdTabHTML(it, pc) {
   const T = gdTake(it, GD.cv); if (!T) return '';
   GD.tabLoop = 0; GD.tabBar = -1;
   return `<div class="gsec"><div class="glbl">お手本のTAB譜<span class="gcv"><button data-gtl="0" aria-pressed="true">1周目</button><button data-gtl="1" aria-pressed="false">2周目</button></span></div>
-    <div id="gdTab" class="tabv">${tabText(gdTabBars(T, pc, 0), T.n, T.sw)}</div>
-    <p class="gnote">お手本で鳴るアドリブそのものです（速さを変えても同じフレーズ）。再生中は今の小節が光ります。<button class="lnk" data-gnew>別のフレーズにする</button></p></div>`;
+    <div id="gdTab">${tvHTML('tvG', gdTabBars(T, pc, 0), T.n, T.sw, 0)}</div>
+    <p class="gnote">お手本で鳴るアドリブそのものです（速さを変えても同じフレーズ）。再生中は今の小節を表示します。止まっているときは ‹ › で小節を移動。<button class="lnk" data-gnew>別のフレーズにする</button></p></div>`;
 }
 // 押さえ方：コード進行・伴奏のお手本で、鳴らしている形（わかるときはその形）を順番に
 function gdVo(x) {
@@ -4272,10 +4298,8 @@ function gdTabFollow(beat, tot) {
   const T = GD.take, el = $('#gdTab'); if (!T || !el) return;
   const loop = Math.floor(beat / tot) % T.loops, b = Math.floor((beat % tot) / T.n), fr = ((beat % tot) % T.n) / T.n;
   const it = GIDX[GD.sel];
-  if (loop !== GD.tabLoop) { GD.tabLoop = loop; GD.tabBar = -1; el.innerHTML = tabText(gdTabBars(T, gdPieces(it, GD.cv), loop), T.n, T.sw); document.querySelectorAll('[data-gtl]').forEach(x => x.setAttribute('aria-pressed', +x.dataset.gtl === loop)); }
-  const cur = el.querySelector(`.tabb[data-tb="${b}"]`);
-  if (b !== GD.tabBar) { GD.tabBar = b; el.querySelectorAll('.tabb.now').forEach(x => x.classList.remove('now')); el.querySelectorAll('.tabpos').forEach(x => x.hidden = true); if (cur) { cur.classList.add('now'); cur.scrollIntoView({block:'nearest', behavior:'smooth'}); } }
-  if (cur) { const m = cur.querySelector('.tabpos'); m.hidden = false; m.style.left = `calc(2ch + ${fr * T.n * 12}ch)`; }
+  if (loop !== GD.tabLoop) { GD.tabLoop = loop; const V = TV.tvG; if (V) { V.bars = gdTabBars(T, gdPieces(it, GD.cv), loop); tvDraw('tvG'); } document.querySelectorAll('[data-gtl]').forEach(x => x.setAttribute('aria-pressed', +x.dataset.gtl === loop)); }
+  tvFollow('tvG', b, fr);
 }
 /* ---------- wallpaper: kept only in this browser on this device (IndexedDB → localStorage fallback) ---------- */
 const WP = {k:'chordnavi-wall', st:{id:'', dim:.42, blur:0, fit:'cover', zoom:1, px:50, py:50, main:false, bfit:'cover', bpx:50, bpy:50}, img:null, iw:0, ih:0, bn:null};
@@ -4518,7 +4542,7 @@ const HELP = [
     <li><b>スピードトレーナー</b>：くり返すたびに少しずつテンポを上げ、目標のテンポで止まります。</li>
     <li><b>ミュート・ソロ</b>：M でそのパートを消す、S でそのパートだけを聴く。</li>
     <li><b>TAB</b>：再生中の自動アドリブを TAB 譜で表示。気に入った2小節は保存して、あとで ▶ で聴けます。</li>
-    <li><b>アドリブの固定</b>：ふだんは再生するたびに新しいアドリブを弾きます。気に入ったら「固定する」を押すと、いま聴いたアドリブがもう一度そのまま鳴ります。固定中は TAB に最初から最後まで先に表示され、今の小節が光るので、見ながら一緒に弾けます。テンポを落としても同じフレーズ。全体を移調すると、アドリブも同じだけ移調します（コードを変えたときは作り直し）。「新しく作り直す」で別のアドリブに。</li>
+    <li><b>アドリブの固定</b>：ふだんは再生するたびに新しいアドリブを弾きます。気に入ったら「固定する」を押すと、いま聴いたアドリブがもう一度そのまま鳴ります。TAB は今の小節だけを同じ場所に表示し、再生に合わせて切りかわります（止まっているときは ‹ › で先の小節も見られます）。テンポを落としても同じフレーズ。全体を移調すると、アドリブも同じだけ移調します（コードを変えたときは作り直し）。「新しく作り直す」で別のアドリブに。</li>
     <li><b>チューナー</b>：マイクで音程を測ります。弦のボタンで基準の音も鳴らせます。</li>
     <li><b>音色とノリ</b>：伴奏の設定で、ギターの音色（エレキ・エレピ・オルガンなど）、スウィングの量、もたり、揺れを変えられます。</li></ul>
     ${HF('h_tuner', 'チューナー')}`, go:[['m-play', 'ひくモードへ'], ['set', '伴奏・音の設定']]},
@@ -5876,31 +5900,62 @@ function takeBars() {
   return [...ADL.bars.entries()].filter(([k]) => k.startsWith(pre)).map(([k, a]) => ({t0:+k.split(':')[1], a})).sort((x, y) => x.t0 - y.t0)
     .map(({t0, a}) => ({bar:t0 / span, ch:chordsInBar(t0 / span), notes:a.map(([off, sn]) => ({pos:off / TPB, m:sn.m, d:sn.dT / TPB}))}));
 }
+// 1小節ずつ見るTAB（画面が流れて上が見えなくならないように、今の小節だけを同じ場所に出す）
+const TV = {};
+function tvHTML(id, bars, n, sw, idx = 0) { TV[id] = {bars, n, sw, idx:Math.max(0, Math.min(bars.length - 1, idx)), follow:true, ui:P.ui}; return `<div class="tv" id="${id}">${tvInner(id)}</div>`; }
+function tvInner(id) {
+  const V = TV[id], B = V.bars[V.idx], nx = V.bars[V.idx + 1];
+  return `<div class="tvh"><button class="tvn" data-tv="${id}" data-tvd="-1" aria-label="前の小節"${V.idx ? '' : ' disabled'}>‹</button>
+    <div class="tvt"><span><b>${B ? B.bar + 1 : '–'}</b>小節<i>/ ${V.bars.length}</i></span><em>${esc(B ? B.ch : '')}</em>${nx ? `<small>次：${esc(nx.ch)}</small>` : ''}</div>
+    <button class="tvn" data-tv="${id}" data-tvd="1" aria-label="次の小節"${V.idx < V.bars.length - 1 ? '' : ' disabled'}>›</button></div>
+    <div class="tvb">${B ? tabText([{ch:'', notes:B.notes}], V.n, V.sw) : ''}</div>
+    <div class="tvf">${P.ui && !V.follow ? `<button class="chipb" data-tv="${id}" data-tvf>今の小節に戻る</button>` : `<small>${P.ui ? '再生中の小節を表示しています' : '‹ › で小節を移動できます'}</small>`}</div>`;
+}
+function tvDraw(id) { const el = document.getElementById(id); if (el && TV[id]) el.innerHTML = tvInner(id); }
+function tvSet(id, bars) { const V = TV[id]; if (!V) return; const cur = V.bars[V.idx], same = cur && bars[V.idx] && cur.notes.length === bars[V.idx].notes.length; V.bars = bars; V.idx = Math.min(V.idx, Math.max(0, bars.length - 1)); if (!same) tvDraw(id); }
+function tvFollow(id, bar, fr) {
+  const V = TV[id], el = document.getElementById(id); if (!V || !el) return;
+  if (P.ui && !V.ui) V.follow = true; if (P.ui !== V.ui) { V.ui = P.ui; tvDraw(id); }
+  if (!P.ui) { el.querySelectorAll('.tabpos').forEach(x => x.hidden = true); return; }
+  const k = V.bars.findIndex(b => b.bar === bar);
+  if (V.follow && k >= 0 && k !== V.idx) { V.idx = k; tvDraw(id); }
+  const m = el.querySelector('.tabpos'); if (m) { m.hidden = !(k === V.idx); m.style.left = `calc(2ch + ${fr * V.n * 12}ch)`; }
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-tv]'); if (!b) return; const id = b.dataset.tv, V = TV[id]; if (!V) return;
+  if (b.dataset.tvd) { V.idx = Math.max(0, Math.min(V.bars.length - 1, V.idx + +b.dataset.tvd)); if (P.ui) V.follow = false; }
+  if (b.dataset.tvf != null) V.follow = true;
+  tvDraw(id);
+});
+function fullTakeBars() {
+  const tb = takeBars(); if (!tb || !tb.length) return null;
+  const map = new Map(tb.map(b => [b.bar, b]));
+  return Array.from({length:totalBars()}, (_, b) => map.get(b) || {bar:b, ch:chordsInBar(b), notes:[]});
+}
 function keepCard() {
   const nb = adlCheck() ? adlBars() : 0;
   return `<div class="keepc"><button class="chipb k" data-akeep aria-pressed="${ADL.keep}">${ADL.keep ? '固定中：同じアドリブ' : '固定する（同じアドリブをもう一度）'}</button><button class="chipb" data-anew>新しく作り直す</button>
     <small>${ADL.keep ? (nb ? `固定中のアドリブ ${nb}小節。何度再生しても同じフレーズで、TABも先まで見られます。` : '次の再生のアドリブを固定します。') : '今は再生するたびに新しいアドリブです。気に入ったら「固定する」で、いま聴いたフレーズをもう一度再生できます。'}</small></div>`;
 }
-let TABT = null, TABK = '', TABNOW = -1;
+let TABT = null, TABK = '';
 function tabTick() {
   const v = $('#tabView'); if (S.pan !== 'tab' || !v) { clearInterval(TABT); TABT = null; return; }
-  const tb = takeBars(), n = bpb(), k = tb ? 'T' + tb.length + ':' + tb.reduce((s, b) => s + b.notes.length, 0) + ':' + (P.nowLn || 0) : 'B' + TAB.buf.length;
-  if (k !== TABK) { TABK = k; TABNOW = -1; const bars = tb || tabBars(4); v.innerHTML = bars.length ? tabText(bars, n) : TABEMPTY; }
-  if (!P.ui || P.nowAbs == null) { v.querySelectorAll('.tabpos').forEach(x => x.hidden = true); return; }
-  const tot = Math.max(1, Math.ceil(S.chart.reduce((s, c) => s + c.dur, 0) / n)), bar = Math.floor(P.nowAbs / n) % tot, fr = (P.nowAbs % n) / n;
-  const el = v.querySelector(`.tabb[data-tb="${bar}"]`);
-  if (bar !== TABNOW) { TABNOW = bar; v.querySelectorAll('.tabb.now').forEach(x => x.classList.remove('now')); v.querySelectorAll('.tabpos').forEach(x => x.hidden = true); if (el) { el.classList.add('now'); el.scrollIntoView({block:'nearest', behavior:'smooth'}); } }
-  if (el) { const m = el.querySelector('.tabpos'); m.hidden = false; m.style.left = `calc(2ch + ${fr * n * 4 * 3}ch)`; }
+  const fb = fullTakeBars(), n = bpb(), k = fb ? fb.length + ':' + fb.reduce((s, b) => s + b.notes.length, 0) + ':' + (P.nowLn || 0) : '';
+  if (k !== TABK) { const had = !!TABK; TABK = k; if (!fb) v.innerHTML = TABEMPTY; else if (had && TV.tvP) tvSet('tvP', fb); else v.innerHTML = tvHTML('tvP', fb, n, undefined, 0); }
+  if (!fb) return;
+  const tot = totalBars(), bar = P.nowAbs == null ? 0 : Math.floor(P.nowAbs / n) % tot, fr = P.nowAbs == null ? 0 : (P.nowAbs % n) / n;
+  tvFollow('tvP', bar, fr);
 }
-const TABEMPTY = '<p class="note">再生すると、ここにアドリブのフレーズが TAB 譜で出ます。気に入ったら「固定する」を押すと、同じアドリブをもう一度再生でき、TAB も最初から最後まで先に見られます。</p>';
+const TABEMPTY = '<p class="note">再生すると、ここにアドリブのフレーズが TAB 譜で出ます（今の小節だけを表示）。気に入ったら「固定する」を押すと、同じアドリブをもう一度再生でき、TAB も ‹ › で先の小節まで見られます。</p>';
 function renderTab() {
-  const on = S.solo.mode !== 'off', tb = takeBars(), bars = tb || tabBars(4), n = bpb();
+  const on = S.solo.mode !== 'off', fb = fullTakeBars(), tb = fb, bars = fb || [], n = bpb();
   if (!TABT) TABT = setInterval(tabTick, 140);
-  TABK = tb ? 'T' + tb.length + ':' + tb.reduce((s, b) => s + b.notes.length, 0) + ':' + (P.nowLn || 0) : 'B' + TAB.buf.length; TABNOW = -1;
-  return `<div class="cap"><b>アドリブのTAB譜</b><span class="hint">${ADL.keep && tb ? '・固定中のアドリブ全体' : '・再生中のアドリブ'}</span><span class="gap"></span><button class="chipb" data-tbsave${bars.length ? '' : ' disabled'}>2小節を保存</button></div>
+  TABK = fb ? fb.length + ':' + fb.reduce((s, b) => s + b.notes.length, 0) + ':' + (P.nowLn || 0) : '';
+  const cb = P.ui && P.nowAbs != null ? Math.floor(P.nowAbs / n) % totalBars() : 0;
+  return `<div class="cap"><b>アドリブのTAB譜</b><span class="hint">${ADL.keep && tb ? '・固定中のアドリブ' : '・再生中のアドリブ'}</span><span class="gap"></span><button class="chipb" data-tbsave${bars.length ? '' : ' disabled'}>表示中から2小節を保存</button></div>
     ${keepCard()}
     ${on ? '' : '<p class="note">アドリブが「鳴らさない」になっています。<button class="chipb" data-tbon>アドリブをオンにする</button></p>'}
-    <div id="tabView" class="tabv">${bars.length ? tabText(bars, n) : TABEMPTY}</div>
+    <div id="tabView">${fb ? tvHTML('tvP', fb, n, undefined, cb) : TABEMPTY}</div>
     ${LICKS.length ? `<div class="lbl">保存したフレーズ（${LICKS.length}）</div>${LICKS.map((L, k) => `<details class="lick"><summary><b>${esc(L.name)}</b><small>♩=${L.bpm}・${esc(L.key || '')}</small><button class="chipb" data-lkp="${k}">▶</button><button class="chipb" data-lkd="${k}" aria-label="削除">✕</button></summary>${tabText(L.bars, L.n || 4)}</details>`).join('')}` : ''}`;
 }
 function onTab(e) {
@@ -5908,7 +5963,7 @@ function onTab(e) {
   if (d.tbon != null) { S.solo.mode = 'scale'; save(); renderPan(); renderDock(); return true; }
   if (d.akeep != null) { adlSetKeep(!ADL.keep); return true; }
   if (d.anew != null) { adlNew(); return true; }
-  if (d.tbsave != null) { const tb = takeBars(); let bars = tabBars(2); if (tb) { const cb = P.ui && P.nowAbs != null ? Math.floor(P.nowAbs / bpb()) : tb[0].bar, k = Math.max(0, tb.findIndex(x => x.bar >= cb - 1)); bars = tb.slice(k, k + 2).map(x => ({ch:x.ch, notes:x.notes})); } if (!bars.length) return true; LICKS.unshift({name:bars.map(x => x.ch).filter(Boolean).join(' → ') || 'フレーズ', bpm:S.bpm, n:bpb(), key:TH.keyName(S.key), bars}); saveLicks(); renderPan(); toast('フレーズを保存しました'); return true; }
+  if (d.tbsave != null) { const fb = fullTakeBars(); let bars = tabBars(2); if (fb && TV.tvP) { const k = TV.tvP.idx; bars = fb.slice(k, k + 2).map(x => ({ch:x.ch, notes:x.notes})); } if (!bars.length) return true; LICKS.unshift({name:bars.map(x => x.ch).filter(Boolean).join(' → ') || 'フレーズ', bpm:S.bpm, n:bpb(), key:TH.keyName(S.key), bars}); saveLicks(); renderPan(); toast('フレーズを保存しました'); return true; }
   if (d.lkp != null) { e.preventDefault(); const L = LICKS[+d.lkp]; if (!L || !ac()) return true; const spb = 60 / L.bpm, t0 = A.ctx.currentTime + .08; L.bars.forEach((B, k) => B.notes.forEach(x => lead(x.m, t0 + (k * L.n + x.pos) * spb, Math.max(.08, x.d * .95), .75))); return true; }
   if (d.lkd != null) { e.preventDefault(); LICKS.splice(+d.lkd, 1); saveLicks(); renderPan(); return true; }
   return false;
@@ -6216,7 +6271,7 @@ function quizAsk() {
 function quizPlay() {
   if (!QZ.cur || !ac()) return; if (P.ui) stop();
   if (QZ.kind === 'chord') previewChord({root:QZ.cur.r, q:QZ.cur.a, bass:null, pref:null});
-  else { const t = A.ctx.currentTime + .05, m = QZ.cur.r; pluck(m, t, .9, .8); pluck(m + QZ.cur.a, t + .7, .9, .8); pluck(m, t + 1.5, 1.2, .7); pluck(m + QZ.cur.a, t + 1.5, 1.2, .7); }
+  else pvRoute(() => { const t = A.ctx.currentTime + .05, m = QZ.cur.r; pluck(m, t, .9, .8); pluck(m + QZ.cur.a, t + .7, .9, .8); pluck(m, t + 1.5, 1.2, .7); pluck(m + QZ.cur.a, t + 1.5, 1.2, .7); });
 }
 function renderQuiz() {
   const L = (QZ.kind === 'chord' ? QCH : QIV)[QZ.lv], c = QZ.cur;
@@ -6317,7 +6372,7 @@ const PANS = {cand:{n:'次の候補'}, input:{n:'入力'}, scale:{n:'スケー�
 function onTuner(e) {
   if (e.type !== 'click') return false; const b = e.target.closest('button'); if (!b) return false;
   if (b.dataset.tn != null) { if (TN.on) { tunerOff(); renderPan(); } else tunerOn(); return true; }
-  if (b.dataset.tns != null) { if (ac()) { const t = A.ctx.currentTime + .03, m = OPEN[+b.dataset.tns]; pluck(m, t, 2.2, .85); } return true; }
+  if (b.dataset.tns != null) { if (ac()) { const t = A.ctx.currentTime + .03, m = OPEN[+b.dataset.tns]; pvRoute(() => pluck(m, t, 2.2, .85)); } return true; }
   return false;
 }
 ['click', 'change', 'input'].forEach(ty => $('#pan').addEventListener(ty, e => { const P2 = PANS[S.pan]; if (P2 && P2.h) P2.h(e); }));
