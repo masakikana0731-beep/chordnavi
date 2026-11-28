@@ -635,6 +635,12 @@ html.lite .bs,html.lite .scrim{transition:none}
 .tabb .tabn{font-size:10px;color:var(--mute);font-weight:700;margin-right:6px}
 .tabw{position:relative;display:inline-block;font:12px/1.25 ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace}
 .tabpos{position:absolute;top:0;bottom:0;width:2px;background:var(--mc);opacity:.8;pointer-events:none}
+.gdia{display:flex;gap:6px;overflow-x:auto;padding:2px 2px 6px;scroll-snap-type:x proximity}
+.gdv{flex:none;width:104px;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:4px 2px 2px;display:flex;flex-direction:column;align-items:center;scroll-snap-align:center}
+.gdv b{font:700 15px Kalam,"Zen Kaku Gothic New",cursive;line-height:1.1}.gdv svg{width:96px;height:auto}
+.gdv.now{border-color:var(--red);box-shadow:0 0 0 2px color-mix(in srgb,var(--red) 40%,transparent)}
+.gdv.tq{border-style:dashed}
+#gdTab{max-height:none}
 </style>
 </head>
 <body>
@@ -3319,6 +3325,7 @@ function adlStart() {
 function adlKey(tick0) { return (P.loopN || 0) + ':' + tick0; }
 // 小節の頭：固定中（またはMIDI書き出し）で記録があれば、それを並べて true
 function adlReplay(tick0) {
+  if (DM.cur && !MC.on) { const T = GD.take; if (!T || !DM.cur.tk || T.k !== DM.cur.tk) return false; const a = T.bars.get((P.loopN % T.loops) + ':' + tick0); if (!a) return false; for (const [off, sn] of a) P.solo.set(tick0 + off, {...sn, ex:sn.ex ? {...sn.ex} : sn.ex}); return true; }
   if (MC.on ? !MC.adl : !(ADL.on && ADL.keep)) return false;
   const a = ADL.bars.get(adlKey(tick0)); if (!a) return false;
   for (const [off, sn] of a) P.solo.set(tick0 + off, {...sn, ex:sn.ex ? {...sn.ex} : sn.ex});
@@ -3947,7 +3954,7 @@ function demoEnd() {
   Object.assign(S, DM.saved); DM.cur = null; DM.saved = null;
   renderGuideBtns(); const g = $('#gdNow'); if (g) g.textContent = '';
 }
-if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) window.__pro = {drum, drumSyn, DRB, prepDrums, sched, LOOK, A, SMP, smpNote, loadInst, pluck, ac, soloBar, rebuildTL, SP, S, P, TH, scaleInfo, segAt, segNextReal, planHarm, devBody, spanCtx, DEVS, TECH, DM, demoStart, soloBarPro, get x() { return {ADL, adlSig, takeBars, SYNB, applyTone, yin, f2m, MC, PR, TAB, MY, LS, QZ, TN, MODES, setMode, midiBuild, chartPages, pdfFrom, backupMake, analyzeChart, similarSongs, humChords, secList, gdTx, openSections, openModulate, openIntroEnd, openHum, openMy, openDisp, coach, REC, RP, play, stop, renderPan, refresh, setVols, mixGain:A.gG}; }};
+if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) window.__pro = {drum, drumSyn, DRB, prepDrums, sched, LOOK, A, SMP, smpNote, loadInst, pluck, ac, soloBar, rebuildTL, SP, S, P, TH, scaleInfo, segAt, segNextReal, planHarm, devBody, spanCtx, DEVS, TECH, DM, demoStart, soloBarPro, get x() { return {GD, GIDX, ADL, adlSig, takeBars, SYNB, applyTone, yin, f2m, MC, PR, TAB, MY, LS, QZ, TN, MODES, setMode, midiBuild, chartPages, pdfFrom, backupMake, analyzeChart, similarSongs, humChords, secList, gdTx, openSections, openModulate, openIntroEnd, openHum, openMy, openDisp, coach, REC, RP, play, stop, renderPan, refresh, setVols, mixGain:A.gG}; }};
 /* ===== 解説ページ：アドリブの技・表現・伴奏の技・コード進行の技（お手本つき） ===== */
 const GD = {open:false, tab:'solo', sel:null, ci:0, cv:'a', cache:{}, shift:0, rate:1, loop:false, live:[]};
 const S1 = (prog, solo, o = {}) => ({a:{prog, solo, cmp:'easy', bpm:o.bpm || 132, rid:o.rid || 'swing', key:o.key}});
@@ -4026,13 +4033,13 @@ function gitem(it) {
 function gdPieces(it, v) {
   const d = it.demo; if (!d) return null;
   const sp = v === 'b' && d.b ? d.b : d.a, key = DKEY(sp.key, GD.shift), ck = it.id + v + GD.shift;
-  if (DM.cur && DM.cur.gid === it.id && DM.cur.gv === v && P.hl && P.ui) return {key, live:true, list:P.hl.segs.map(s => ({ch:s.ch, start:s.start, len:s.len, tech:s.tech}))};
+  if (DM.cur && DM.cur.gid === it.id && DM.cur.gv === v && P.hl && P.ui) return {key, live:true, list:P.hl.segs.filter(s => !s.ap).map(s => ({ch:s.ch, start:s.start, len:s.len, tech:s.tech, vo:s.vo}))};
   if (GD.cache[ck]) return GD.cache[ck];
   const chart = DCH(sp.prog, GD.shift);
   let list = []; let pos = 0; chart.forEach(c => { list.push({ch:c, start:pos, len:c.dur}); pos += c.dur; });
   if (sp.cmp === 'pro' && !P.ui) {
     const keep = {cur:DM.cur, key:S.key};
-    try { DM.cur = {...sp, chart}; S.key = key; const hl = planHarm(timeline(), 1); list = hl.segs.map(s => ({ch:s.ch, start:s.start, len:s.len, tech:s.tech})); }
+    try { DM.cur = {...sp, chart}; S.key = key; const hl = planHarm(timeline(), 1); list = hl.segs.filter(s => !s.ap).map(s => ({ch:s.ch, start:s.start, len:s.len, tech:s.tech, vo:s.vo})); }
     catch (e) {} finally { DM.cur = keep.cur; S.key = keep.key; }
   }
   return (GD.cache[ck] = {key, list});
@@ -4078,6 +4085,7 @@ function gdDetail(it) {
     ${pc ? `<div class="gsec"><div class="glbl">コード譜${d.b ? `<span class="gcv"><button data-cv="b" aria-pressed="${GD.cv === 'b'}">${esc(d.bl || '元の進行')}</button><button data-cv="a" aria-pressed="${GD.cv === 'a'}">${esc(d.al || 'この技')}</button></span>` : ''}</div>
       <div id="gdChart">${gdChart(pc, GD.ci)}</div>
       <p class="gnote">${pc.list.some(x => x.tech) ? '<i class="tqm"></i>は技で入れ替わったコード。' : ''}コードをタップすると、そのスケールを表示します（再生中は自動で追いかけます）。</p></div>
+      ${gdDiaHTML(it, pc)}${gdTabHTML(it, pc)}
       <div class="gsec"><div class="glbl">スケール</div><div id="gdScale">${gdScale(pc, GD.ci)}</div></div>` : ''}
     <div class="gsec"><div class="glbl">解説</div><p class="gtext">${esc(gdTx(it.b, d ? GD.shift : 0, TK))}</p></div>
     ${it.ex ? `<p class="gx"><b>例</b>${esc(gdTx(it.ex, d ? GD.shift : 0, TK))}</p>` : ''}${GD.shift && d ? '<p class="gnote">解説の音名も、選んだキーに合わせて書きかえています。</p>' : ''}
@@ -4090,12 +4098,13 @@ function gdFollow() {
   const it = GD.sel && GIDX[GD.sel];
   if (it && DM.cur && DM.cur.gid === it.id && P.ui && A.ctx) {
     const pc = gdPieces(it, GD.cv), tot = pc.list.length ? pc.list[pc.list.length - 1].start + pc.list[pc.list.length - 1].len : 1;
-    let beat = (A.ctx.currentTime - outLat() - P.t0) * S.bpm / 60;
+    let beat = (A.ctx.currentTime - outLat() - P.t0) * S.bpm / 60; const beatRaw = beat;
     if (beat >= 0) {
       if (S.loop) beat %= tot;
       let i = pc.list.findIndex(x => beat >= x.start - 1e-6 && beat < x.start + x.len - 1e-6); if (i < 0) i = GD.ci;
       const live = pc.live ? pc.list.map(x => TH.name(x.ch, pc.key) + x.start).join() : '';
-      if (i !== GD.ci || live !== GD.lastLive) { GD.ci = i; GD.lastLive = live; const c = $('#gdChart'), s = $('#gdScale'); if (c) c.innerHTML = gdChart(pc, i); if (s) s.innerHTML = gdScale(pc, i); }
+      if (i !== GD.ci || live !== GD.lastLive) { GD.ci = i; GD.lastLive = live; const c = $('#gdChart'), s = $('#gdScale'), dg = $('#gdDia'); if (c) c.innerHTML = gdChart(pc, i); if (s) s.innerHTML = gdScale(pc, i); if (dg) { dg.outerHTML = gdDiagrams(pc, i); const nw = $('#gdDia .gdv.now'); if (nw) nw.scrollIntoView({block:'nearest', inline:'center', behavior:'smooth'}); } }
+      gdTabFollow(beatRaw, tot);
     }
   }
   requestAnimationFrame(gdFollow);
@@ -4115,13 +4124,15 @@ function gdLiveShow(e) {
 function gdPlay(it, v) {
   GD.live = []; const el = $('#gdLive'); if (el) el.innerHTML = gdLiveHTML();
   const base = v === 'b' ? it.demo.b : it.demo.a;
-  demoStart({...base, gid:it.id, gv:v, shift:GD.shift, loop:GD.loop, bpm:Math.round((base.bpm || 126) * GD.rate)});
+  const T = base.solo ? gdTake(it, v) : null;
+  demoStart({...base, gid:it.id, gv:v, shift:GD.shift, loop:GD.loop, bpm:Math.round((base.bpm || 126) * GD.rate), tk:T ? T.k : null});
 }
 // 速さ・キー・くり返しを変えたら、鳴っているお手本はその設定で鳴らし直す
 function gdReplay() {
   const it = GD.sel && GIDX[GD.sel], v = DM.cur && it && DM.cur.gid === it.id ? DM.cur.gv : null;
+  if (v && P.ui) stop();
   GD.ci = 0; renderGuide();
-  if (v) gdPlay(it, v);
+  if (v) setTimeout(() => gdPlay(it, v), 540);
 }
 function gcard(it) {
   const d = it.demo;
@@ -4190,7 +4201,9 @@ $('#gdBody').addEventListener('click', e => {
   const sl = e.target.closest('[data-sel]');
   if (sl) { const id = sl.dataset.sel; if (DM.cur && DM.cur.gid !== id) stop(); GD.sel = id || null; GD.ci = 0; GD.cv = 'a'; renderGuide(); $('#gdBody').scrollTop = 0; return; }
   const ci = e.target.closest('[data-gci]');
-  if (ci) { GD.ci = +ci.dataset.gci; const it = GIDX[GD.sel], pc = gdPieces(it, GD.cv); $('#gdChart').innerHTML = gdChart(pc, GD.ci); $('#gdScale').innerHTML = gdScale(pc, GD.ci); return; }
+  if (ci) { GD.ci = +ci.dataset.gci; const it = GIDX[GD.sel], pc = gdPieces(it, GD.cv); $('#gdChart').innerHTML = gdChart(pc, GD.ci); $('#gdScale').innerHTML = gdScale(pc, GD.ci); const dg = $('#gdDia'); if (dg) dg.outerHTML = gdDiagrams(pc, GD.ci); if (ci.classList.contains('gdv') && !P.ui && ac()) previewChord(pc.list[GD.ci].ch); return; }
+  const gtl = e.target.closest('[data-gtl]'); if (gtl && GD.take) { const it = GIDX[GD.sel]; GD.tabLoop = +gtl.dataset.gtl; GD.tabBar = -1; $('#gdTab').innerHTML = tabText(gdTabBars(GD.take, gdPieces(it, GD.cv), GD.tabLoop), GD.take.n, GD.take.sw); document.querySelectorAll('[data-gtl]').forEach(x => x.setAttribute('aria-pressed', x === gtl)); return; }
+  const gn = e.target.closest('[data-gnew]'); if (gn) { const it = GIDX[GD.sel], was = DM.cur && DM.cur.gid === it.id ? DM.cur.gv : null; if (P.ui) stop(); setTimeout(() => { gdTake(it, GD.cv, true); renderGuide(); if (was) gdPlay(it, was); }, P.ui ? 560 : 0); return; }
   const rt = e.target.closest('[data-rate]'); if (rt) { GD.rate = +rt.dataset.rate; gdReplay(); return; }
   const ks = e.target.closest('[data-kshift]'); if (ks) { GD.shift = ((GD.shift + +ks.dataset.kshift) % 12 + 12) % 12; gdReplay(); return; }
   const lp = e.target.closest('[data-gloop]'); if (lp) { GD.loop = !GD.loop; gdReplay(); return; }
@@ -4201,6 +4214,69 @@ $('#gdBody').addEventListener('click', e => {
   const cl = e.target.closest('[data-clg]'); if (cl) { setCmp(cl.dataset.clg); return; }
 });
 $('#techTick').addEventListener('click', () => openGuide($('#techTick').dataset.id || 'solo'));
+
+/* ===== お手本のTAB譜（アドリブ）と押さえ方（コード進行・伴奏） ===== */
+// アドリブのお手本は、先に2周分を作っておき（TABに出す）、再生ではそれをそのまま鳴らす
+function gdSpec(it, v) { return v === 'b' && it.demo.b ? it.demo.b : it.demo.a; }
+function gdTake(it, v, fresh) {
+  const sp = gdSpec(it, v); if (!sp || !sp.solo) return null;
+  const k = it.id + v + GD.shift;
+  if (!fresh && GD.take && GD.take.k === k) return GD.take;
+  if (P.ui || !ac()) return GD.take && GD.take.k === k ? GD.take : null;
+  const kS = {key:S.key, bpm:S.bpm, loop:S.loop, cin:S.cin, melOn:S.melOn}, kD = DM.cur;
+  const kP = {on:P.on, hl:P.hl, tl:P.tl, map:P.map, melMap:P.melMap, vis:P.vis, loopN:P.loopN, noG:P.noG, solo:P.solo, sx:P.sx, fx:P.fx};
+  const LOOPS = 2, bars = new Map(); let n = 4, sw = false;
+  GD.take = null; MC.on = true; MC.ev = []; MC.solo = true; MC.adl = false;
+  try {
+    DM.cur = {...sp, gid:it.id, gv:v, shift:GD.shift, chart:DCH(sp.prog, GD.shift)}; S.key = DKEY(sp.key, GD.shift); S.bpm = sp.bpm || 126; S.melOn = false;
+    spReset(); P.loopN = 0; P.noG = -1; rebuildTL(); P.map = compile(R()); P.melMap = buildMel(); P.vis = []; soloReset();
+    n = bpb(); sw = !!R().sw;
+    const end = P.tl.total * TPB, span = n * TPB, spt = 60 / S.bpm / TPB;
+    for (let L = 0; L < LOOPS; L++) {
+      if (L) { P.loopN = L; if (PRO.cmp()) P.hl = planHarm(P.tl, L); }
+      for (let tk = 0; tk < end; tk++) { doTick(tk, (L * end + tk) * spt); if (P.vis.length > 500) P.vis.length = 0; }
+      for (let t0 = 0; t0 < end; t0 += span) { const a = []; for (const [tt, sn] of P.solo) if (tt >= t0 && tt < t0 + span) a.push([tt - t0, {...sn, ex:sn.ex ? {...sn.ex} : sn.ex}]); a.sort((x, y) => x[0] - y[0]); bars.set(L + ':' + t0, a); }
+    }
+  } catch (e) { return null; }
+  finally { MC.on = false; Object.assign(P, kP); Object.assign(S, kS); DM.cur = kD; }
+  return (GD.take = {k, loops:LOOPS, bars, n, sw});
+}
+function gdTabBars(T, pc, loop) {
+  const span = T.n * TPB, L = pc ? pc.list : [];
+  return [...T.bars.entries()].filter(([k]) => k.startsWith(loop + ':')).map(([k, a]) => { const t0 = +k.split(':')[1], b = t0 / span, b0 = b * T.n, b1 = b0 + T.n;
+    return {bar:b, ch:L.filter(x => x.start < b1 - 1e-6 && x.start + x.len > b0 + 1e-6).map(x => TH.name(x.ch, pc.key)).join(' / '), notes:a.map(([off, sn]) => ({pos:off / TPB, m:sn.m, d:sn.dT / TPB}))}; })
+    .sort((x, y) => x.bar - y.bar);
+}
+function gdTabHTML(it, pc) {
+  const T = gdTake(it, GD.cv); if (!T) return '';
+  GD.tabLoop = 0; GD.tabBar = -1;
+  return `<div class="gsec"><div class="glbl">お手本のTAB譜<span class="gcv"><button data-gtl="0" aria-pressed="true">1周目</button><button data-gtl="1" aria-pressed="false">2周目</button></span></div>
+    <div id="gdTab" class="tabv">${tabText(gdTabBars(T, pc, 0), T.n, T.sw)}</div>
+    <p class="gnote">お手本で鳴るアドリブそのものです（速さを変えても同じフレーズ）。再生中は今の小節が光ります。<button class="lnk" data-gnew>別のフレーズにする</button></p></div>`;
+}
+// 押さえ方：コード進行・伴奏のお手本で、鳴らしている形（わかるときはその形）を順番に
+function gdVo(x) {
+  const vs = TH.voicings(x.ch.root, x.ch.q, S.style); if (!vs.length) return null;
+  if (x.vo && x.vo.length) { const key = [...x.vo].sort((a, b) => a - b).join(); const hit = vs.find(v => [...v.midi].sort((a, b) => a - b).join() === key); if (hit) return hit;
+    const pcs = new Set(x.vo.map(mod)), top = Math.max(...x.vo); let best = vs[0], bs = 1e9; for (const v of vs) { const s = v.midi.filter(m => !pcs.has(mod(m))).length * 3 + Math.abs(Math.max(...v.midi) - top) * .3; if (s < bs) { bs = s; best = v; } } return best; }
+  return vs[0];
+}
+function gdDiagrams(pc, cur) {
+  return `<div class="gdia" id="gdDia">${pc.list.map((x, i) => { const v = gdVo(x); return `<button class="gdv${i === cur ? ' now' : ''}${x.tech ? ' tq' : ''}" data-gci="${i}"><b>${esc(TH.name(x.ch, pc.key))}</b>${v ? diagram(v) : '<span class="note">押さえ方なし</span>'}</button>`; }).join('')}</div>`;
+}
+function gdDiaHTML(it, pc) {
+  if (!['prog', 'comp'].includes(it.tab) || !pc || !pc.list.length) return '';
+  return `<div class="gsec"><div class="glbl">押さえ方（コード譜）</div>${gdDiagrams(pc, GD.ci)}<p class="gnote">左から順に、お手本で弾くコードの押さえ方です。タップでそのコードのスケールへ。${pc.list.some(x => x.tech) ? '<i class="tqm"></i>は技で入れ替わったコード。' : ''}</p></div>`;
+}
+function gdTabFollow(beat, tot) {
+  const T = GD.take, el = $('#gdTab'); if (!T || !el) return;
+  const loop = Math.floor(beat / tot) % T.loops, b = Math.floor((beat % tot) / T.n), fr = ((beat % tot) % T.n) / T.n;
+  const it = GIDX[GD.sel];
+  if (loop !== GD.tabLoop) { GD.tabLoop = loop; GD.tabBar = -1; el.innerHTML = tabText(gdTabBars(T, gdPieces(it, GD.cv), loop), T.n, T.sw); document.querySelectorAll('[data-gtl]').forEach(x => x.setAttribute('aria-pressed', +x.dataset.gtl === loop)); }
+  const cur = el.querySelector(`.tabb[data-tb="${b}"]`);
+  if (b !== GD.tabBar) { GD.tabBar = b; el.querySelectorAll('.tabb.now').forEach(x => x.classList.remove('now')); el.querySelectorAll('.tabpos').forEach(x => x.hidden = true); if (cur) { cur.classList.add('now'); cur.scrollIntoView({block:'nearest', behavior:'smooth'}); } }
+  if (cur) { const m = cur.querySelector('.tabpos'); m.hidden = false; m.style.left = `calc(2ch + ${fr * T.n * 12}ch)`; }
+}
 /* ---------- wallpaper: kept only in this browser on this device (IndexedDB → localStorage fallback) ---------- */
 const WP = {k:'chordnavi-wall', st:{id:'', dim:.42, blur:0, fit:'cover', zoom:1, px:50, py:50, main:false, bfit:'cover', bpx:50, bpy:50}, img:null, iw:0, ih:0, bn:null};
 const WPRE = [
@@ -4436,7 +4512,7 @@ const HELP = [
     <li><b>コードの技のかんたん／高度</b>：高度にすると、次の候補に上級の技が並び、伴奏もテンションや裏コードを使います。</li>
     <li><b>もう一度再生したとき</b>：「毎回ちがうアドリブ」か「同じアドリブ（固定）」を選べます。固定にすると、直前に聴いたアドリブがそのまま再生され、MIDIの書き出しにも入ります。</li></ul>
     ${HF('h_guide', '音楽の技・解説', 'tall')}<ul>
-    <li><b>音楽の技・解説</b>（メニュー）：技をタップすると、その技だけの画面になり、解説・お手本・コード譜・スケールを表示します。再生中は鳴っているコードを追いかけます。</li></ul>`, go:[['adl', 'アドリブの設定'], ['guide', '音楽の技・解説']]},
+    <li><b>音楽の技・解説</b>（メニュー）：技をタップすると、その技だけの画面になり、解説・お手本・コード譜・スケールを表示します。アドリブの技には<b>お手本のTAB譜</b>（鳴るフレーズそのもの。「別のフレーズにする」で変更）、コード進行・伴奏の技には<b>押さえ方</b>が付きます。再生中は鳴っているコード・押さえ方・TABの小節を追いかけます。</li></ul>`, go:[['adl', 'アドリブの設定'], ['guide', '音楽の技・解説']]},
   {id:'practice', t:'ひく：練習の道具', h:`${HF('h_prac', '練習パネル', 'tall')}<ul>
     <li><b>区間ループ</b>：小節を決めてオンにすると、その区間だけくり返します（譜面に緑の帯）。</li>
     <li><b>スピードトレーナー</b>：くり返すたびに少しずつテンポを上げ、目標のテンポで止まります。</li>
@@ -5776,8 +5852,8 @@ function tabFrets(notes) {
     return {...n, s:best.s, f:best.f};
   });
 }
-function tabText(bars, n) {
-  const L = ['e', 'B', 'G', 'D', 'A', 'E'], sw = !!R().sw;
+function tabText(bars, n, sw0) {
+  const L = ['e', 'B', 'G', 'D', 'A', 'E'], sw = sw0 != null ? sw0 : !!R().sw;
   return bars.map(B => { const cols = n * 4, g = L.map(() => Array(cols).fill('---'));
     tabFrets(B.notes.map(x => { let pos = x.pos; const fr = pos % 1; if (sw && fr > .54 && fr < .76) pos = Math.floor(pos) + .5; return {...x, pos}; })).forEach(x => { const c = Math.max(0, Math.min(cols - 1, Math.round(x.pos * 4))); g[x.s][c] = (String(x.f) + '--').slice(0, 3); });
     return `<div class="tabb${B.now ? ' now' : ''}"${B.bar != null ? ` data-tb="${B.bar}"` : ''}><div class="tabc">${B.bar != null ? `<span class="tabn">${B.bar + 1}小節</span>` : ''}${esc(B.ch || '')}</div><div class="tabw"><pre>${L.map((l, s) => l + '|' + g[s].join('') + '|').join('\n')}</pre><i class="tabpos" hidden></i></div></div>`; }).join('');
