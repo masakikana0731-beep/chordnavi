@@ -722,6 +722,12 @@ html.v-nohd .hd #libBtn,html.v-nohd .hd #styleSeg{display:none}
 #chMenu[hidden]{display:none}
 .dkx{display:flex;gap:6px;margin:0 0 8px}.dkx button{flex:1;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-weight:700;font-size:13px}
 html:not(.v-nodock) .dkx{display:none}
+.visb{flex:none;height:36px;border-radius:18px;border:1.5px solid var(--mc);background:color-mix(in srgb,var(--mc) 14%,transparent);color:var(--ink);font-weight:700;font-size:12px;padding:0 10px 0 8px;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.visb span{display:flex;flex-direction:column;line-height:1.05;text-align:left}.visb svg{width:15px;height:15px;color:var(--mc)}.visb small{font-size:9px;color:var(--mute);font-weight:700}
+html:not(.v-nohd) .visb small{display:none}
+html.big .visb small{display:none}html.big .visb{padding:0 8px 0 6px}
+@media (max-width:380px){html.big .visb b{display:none}}
+html.huge .visb small,html.huge .visb b{display:none}
 </style>
 </head>
 <body>
@@ -729,6 +735,7 @@ html:not(.v-nodock) .dkx{display:none}
 <div class="app">
 <header class="hd">
   <button class="ib mdb" id="modeBtn" aria-label="モード"></button>
+  <button class="visb" id="visBtn" aria-label="表示の切りかえ"></button>
   <button class="ib" id="libBtn" aria-label="曲集"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19.5V5a2 2 0 0 1 2-2h14v15H6a2 2 0 0 0-2 2 2 2 0 0 0 2 2h14"/><path d="M9 7h7M9 11h5"/></svg><span>曲集</span></button>
   <button class="keyb" id="keyBtn" aria-label="キーを変更"><small>Key</small><b id="keyName">C</b></button>
   <div class="seg" id="styleSeg" role="group" aria-label="スタイル"><button data-s="pop" aria-pressed="false">ポップ</button><button data-s="jazz" aria-pressed="true">ジャズ</button></div>
@@ -6649,6 +6656,7 @@ function visV(k) { return visGet()[k]; }
 function visPreset() { const v = visGet(); return Object.keys(VISP).find(p => Object.keys(VISP[p]).every(k => VISP[p][k] === v[k])) || null; }
 function applyVis() {
   const v = visGet(), r = document.documentElement, on = (c, b) => r.classList.toggle(c, !!b);
+  const vb = $('#visBtn'), pn = visPreset(); if (vb) vb.innerHTML = `${ICON.eye}<span><small>表示</small><b>${pn ? VISN[pn] : 'カスタム'}</b></span>`;
   on('v-nosca', !v.sca); on('v-noscs', !v.scs); on('v-beat-off', v.beat === 'off'); on('v-beat-auto', v.beat === 'auto'); on('v-nosec', !v.sec);
   on('v-noroman', !v.roman); on('v-noscore', !v.score); on('v-nodesc', !v.desc); on('v-nobar', !v.bar); on('v-nomood', !v.mood);
   on('v-notbrow', !v.tbrow); on('v-nodock', !v.dock); on('v-nohd', !v.hd);
@@ -6765,6 +6773,7 @@ document.addEventListener('click', e => {
   d.addEventListener('click', e => { const b = e.target.closest('[data-dkx]'); if (!b) return; closeBS(); setTimeout(() => $('#' + b.dataset.dkx).click(), 60); }); })();
 // メニューに曲集とポップ／ジャズ
 $('#menu').addEventListener('click', e => { const b = e.target.closest('[data-m="sty"]'); if (!b) return; const o = document.querySelector(`#styleSeg [data-s="${S.style === 'pop' ? 'jazz' : 'pop'}"]`) || [...document.querySelectorAll('#styleSeg button')].find(x => x.getAttribute('aria-pressed') !== 'true'); closeBS(); if (o) o.click(); });
+$('#visBtn').addEventListener('click', openVis);
 applyDisp();
 
 /* ---------- editing ---------- */
