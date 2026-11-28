@@ -653,6 +653,67 @@ html.lite .bs,html.lite .scrim{transition:none}
 .tvb .tabb pre,.tvb .tabw{font-size:clamp(9px, calc((100vw - 70px) / 31.5), 13px)}
 .tvf{display:flex;justify-content:center;min-height:30px;align-items:center}.tvf small{font-size:10.5px;color:var(--mute)}
 .gdia{position:relative}
+
+/* ===== 画面に出すもの（v-*）・目にやさしい・フォーカス ===== */
+html.v-nosca #bars .ch:not(.sel) .scl{display:none}
+html.v-noscs #bars .ch.sel .scl{display:none}
+html.v-beat-off #bars .bt{display:none}
+html.v-beat-auto #bars .bar:not(.multi) .bt{display:none}
+html.v-nosec .bar.lab::before{display:none}html.v-nosec .bar.lab{margin-top:0}
+html.v-noroman #pan .cd .cr{display:none}
+html.v-noscore #pan .cd .cs{display:none}
+html.v-nodesc #pan .cd .cw{display:none}
+html.v-nobar #pan .cd>i{display:none}
+html.v-nodesc #pan .cd{height:auto;min-height:50px;justify-content:center;gap:2px}
+html.v-nodesc.v-noroman #pan .cd{min-height:44px}
+html.v-nomood #pan .moodc{display:none}
+html.v-notbx #tb [data-tb=play],html.v-notbx #tb [data-tb=del]{display:none}
+html.v-nohint #pan .cap .hint,html.v-nohint #pan .pcard>p.note,html.v-nohint #pan>p.note,html.v-nohint #pan .keepc small,html.v-nohint #pan .ph .sub,html.v-nohint #pan .scd .lnk{display:none}
+html.v-nohdlab .hd .ib>span,html.v-nohdlab .hd .mdb>span{display:none}
+html.v-nohdlab .hd .mdb svg{width:21px;height:21px}
+.moodc{display:flex;gap:6px;align-items:center;margin:-2px 0 6px}
+.moodc .chipb{height:28px;font-size:11.5px}.moodc .chipb.on{border-color:var(--mc);color:var(--mc)}
+.moodc .car{font-size:8px;margin-left:4px;opacity:.7}
+.chipb.fol{height:30px;font-size:11px;padding:0 8px}.chipb.fol[aria-pressed=true]{border-color:var(--mc);color:var(--mc)}
+#folBtn{display:none!important}
+.visp{margin:2px 0 6px}.visp button{flex:1;height:40px;font-size:14px}
+.mini3{display:flex;gap:4px;flex:none}.mini3 button{height:32px;padding:0 9px;font-size:12px}
+/* 長押しメニュー */
+.lpm{position:fixed;z-index:95;min-width:220px;max-width:calc(100vw - 16px);background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:8px;box-shadow:0 14px 34px #0009;display:flex;flex-direction:column;gap:4px}
+.lpm[hidden],.focx[hidden]{display:none}
+.lpm b{font-size:11px;color:var(--mute);padding:2px 6px}
+.lpm button{min-height:42px;border:0;border-radius:9px;background:var(--card);color:var(--ink);font-weight:700;font-size:14px;text-align:left;padding:0 12px}
+.lpm .lpo{background:none;color:var(--mc);font-size:12.5px}
+/* 譜面の高さのつまみ */
+.split{flex:none;height:16px;margin:-2px 10px -4px;display:flex;align-items:center;justify-content:center;cursor:ns-resize;touch-action:none;position:relative;z-index:3}
+.split i{width:44px;height:4px;border-radius:3px;background:var(--line)}
+.split.on i,.split:hover i{background:var(--mc)}
+@media (min-width:880px) and (min-height:520px){.split{display:none}}
+/* 演奏中フォーカス */
+.focx{position:absolute;right:8px;bottom:8px;z-index:4;height:32px;border-radius:16px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:12px;font-weight:700;padding:0 12px;box-shadow:0 6px 16px #0006}
+.sheet{position:relative}
+@media (max-width:879px),(max-height:519px){
+  body.focus .tb,body.focus .segbar,body.focus #pan,body.focus .split{display:none!important}
+  body.focus .sheet{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;margin-bottom:8px}
+  body.focus #bars{max-height:none!important;flex:1;grid-auto-rows:minmax(70px,auto);align-content:start}
+  body.focus #bars .ch .r{font-size:1.25em}
+}
+@media (min-width:880px) and (min-height:520px){.focx{display:none}}
+/* 強調色をモードの色1つに・補助の文字を控えめに */
+html.calm,html.calm.light{--red:var(--mc)}
+html.calm .recb i{background:#ff4d6d}
+html.calm #bars .ch .scl{opacity:.55;font-size:9px;letter-spacing:0}
+html.calm #bars .bt{opacity:.45}
+html.calm #pan .cd .cr,html.calm #pan .cd .cs,html.calm .tbn small,html.calm .dock .dk small,html.calm .cap{opacity:.85}
+html.calm #pan .cd .cr{opacity:.6}
+html.calm .tbn small{opacity:.6}
+html.calm .ib{border-color:color-mix(in srgb,var(--line) 70%,transparent)}
+/* 目にやさしい：明暗差を弱めた暗い配色 */
+html.soft{--bg:#1b2130;--paper:#20283a;--card:#252e42;--soft:#2b3448;--sel:#2f3b55;--ink:#cfd5df;--mute:#8890a1;--line:#323c50;--rule:#7a8599;--red:#e08e78;--redbg:#3b2d2d}
+html.soft .bs{background:#20283a}
+html.soft .toast{background:#2b3448;color:#e2e6ed}
+html.soft .dock{filter:saturate(.8) brightness(.92)}
+html.soft .fb,html.soft svg.fb{filter:saturate(.75) brightness(.9)}
 </style>
 </head>
 <body>
@@ -2057,7 +2118,7 @@ const S = {chart:sample(), key:{t:0, minor:false}, style:'jazz', rid:'swing', bp
   loop:true, cin:false, sample:true, sel:4, pan:'cand', page:0, vpage:0, follow:true, showSc:true, real:true, fbNames:false, scView:null,
   mel:null, melTitle:'', title:'', melOn:true, melInst:'vibes', melVol:.85,
   inp:{root:0, q:'maj7'}, solo:{mode:'scale', tone:'guitar', dens:1, vol:.8, lv:'easy', strict:true}, cmp:'easy', sb:{q:'', feel:'all', key:'all', sort:'cx'}, undo:[], cur:[],
-  mode:'make', pans:{}, inst:'auto', groove:{sw:null, lb:0, hu:0}, mix:{}, ui:{fz:1, theme:'dark', perf:'auto', home:true, swipe:true}, songId:null, mood:{b:0, c:0}, secFx:true};
+  mode:'make', pans:{}, inst:'auto', groove:{sw:null, lb:0, hu:0}, mix:{}, ui:{fz:1, theme:'dark', perf:'auto', home:true, swipe:true, vis:null, barsH:null}, songId:null, mood:{b:0, c:0}, secFx:true};
 const STORE = 'chordnavi-v1';
 try {
   const d = JSON.parse(localStorage.getItem(STORE) || 'null');
@@ -2079,7 +2140,7 @@ try {
     if (typeof d.inst === 'string') S.inst = d.inst;
     if (d.groove && typeof d.groove === 'object') { const g = d.groove; S.groove = {sw:typeof g.sw === 'number' ? Math.max(-1, Math.min(1, g.sw)) : null, lb:Math.max(0, Math.min(40, +g.lb || 0)), hu:Math.max(0, Math.min(1, +g.hu || 0))}; }
     if (d.mix && typeof d.mix === 'object') for (const k of ['g', 'b', 'd', 's', 'm']) if (d.mix[k]) S.mix[k] = {m:!!d.mix[k].m, s:!!d.mix[k].s};
-    if (d.ui && typeof d.ui === 'object') { const u = d.ui; if ([.9, 1, 1.15, 1.3].includes(u.fz)) S.ui.fz = u.fz; if (['dark', 'light'].includes(u.theme)) S.ui.theme = u.theme; if (['auto', 'light', 'full'].includes(u.perf)) S.ui.perf = u.perf; S.ui.home = u.home !== false; S.ui.swipe = u.swipe !== false; S.ui.tut = !!u.tut; }
+    if (d.ui && typeof d.ui === 'object') { const u = d.ui; if ([.9, 1, 1.15, 1.3].includes(u.fz)) S.ui.fz = u.fz; if (['dark', 'light', 'soft'].includes(u.theme)) S.ui.theme = u.theme; if (u.vis && typeof u.vis === 'object') S.ui.vis = u.vis; if (typeof u.barsH === 'number') S.ui.barsH = u.barsH; if (['auto', 'light', 'full'].includes(u.perf)) S.ui.perf = u.perf; S.ui.home = u.home !== false; S.ui.swipe = u.swipe !== false; S.ui.tut = !!u.tut; }
     if (typeof d.songId === 'string') S.songId = d.songId;
     if (d.mood && typeof d.mood === 'object') S.mood = {b:Math.max(-1, Math.min(1, +d.mood.b || 0)), c:Math.max(-1, Math.min(1, +d.mood.c || 0))};
     S.secFx = d.secFx !== false;
@@ -2228,7 +2289,8 @@ function renderChart() {
         } else { cont = i; inner += `<button class="cont${i === S.sel ? ' selc' : ''}" data-cont="${i}" style="flex:${f} 1 0" aria-label="${esc(nm(c))} の続き"></button>`; }
       });
       if (!any) inner = `<button class="sim hand${cont === S.sel ? ' selc' : ''}" data-cont="${cont}" aria-label="${esc(nm(ch[cont]))} の続き（繰り返し）">%</button>`;
-      html += `<div class="bar${b === total - 1 ? ' end' : ''}${lab ? ' lab' : ''}${P.lpA != null || PR.a != null ? lpCls(b) : ''}" data-b="${b}"${lab ? ` data-sec="${esc(lab)}"` : ''}>${inner}</div>`;
+      const multi = (inner.match(/class="ch /g) || []).length > 1;
+      html += `<div class="bar${b === total - 1 ? ' end' : ''}${multi ? ' multi' : ''}${lab ? ' lab' : ''}${P.lpA != null || PR.a != null ? lpCls(b) : ''}" data-b="${b}"${lab ? ` data-sec="${esc(lab)}"` : ''}>${inner}</div>`;
     }
   }
   $('#bars').innerHTML = html;
@@ -2290,14 +2352,14 @@ function renderCand() {
   if (S.mood && (S.mood.b || S.mood.c)) { list.forEach(c => { c.ms = c.score + moodAdj(c, K); }); list.sort((a, b) => b.ms - a.ms); }
   if (K !== S.key) list.forEach(c => { c.lk = {...K}; if (c.seq) c.seq.forEach(x => x.lk = {...K}); });
   S.cur = list;
-  const pages = Math.max(1, Math.ceil(list.length / 12));
+  const PER = visV('cn') || 12, pages = Math.max(1, Math.ceil(list.length / PER));
   S.page = Math.min(S.page, pages - 1);
-  const show = list.slice(S.page * 12, S.page * 12 + 12);
+  const show = list.slice(S.page * PER, S.page * PER + PER);
   const cap = h.length ? `<b>${esc(nm(h[h.length - 1]))}</b> の次${f ? `（${esc(nm(f))} の前）` : ''}` : '<b>最初のコード</b>';
   return `<div class="cap">${cap}<span class="hint">・タップで追加／長押しで試聴</span><span class="gap"></span>
     <span class="lvs" role="group" aria-label="コードの技"><button data-cl="easy" aria-pressed="${!pro}">かんたん</button><button data-cl="pro" aria-pressed="${pro}">高度</button></span>${pro ? '<button class="qbtn" data-guide="prog" aria-label="コードの技の解説">?</button>' : ''}
     <span class="pg"><button data-pg="-1" aria-label="前の候補"${S.page ? '' : ' disabled'}>‹</button><span>${S.page + 1}/${pages}</span><button data-pg="1" aria-label="次の候補"${S.page < pages - 1 ? '' : ' disabled'}>›</button></span></div>
-    ${moodRow()}<div class="cands">${show.map((c, k) => { const idx = S.page * 12 + k; return `<button class="cd${idx === 0 ? ' lead' : ''}${c.pro ? ' pro' : ''}" data-k="${idx}" style="--w:${c.score}%">
+    ${moodRow()}<div class="cands">${show.map((c, k) => { const idx = S.page * PER + k; return `<button class="cd${idx === 0 ? ' lead' : ''}${c.pro ? ' pro' : ''}" data-k="${idx}" style="--w:${c.score}%">
       <span class="cn hand">${chordHTML(c)}${c.seq ? `<em>＋${c.seq.length - 1}</em>` : ''}</span><span class="cs">${c.score}</span><span class="cr">${esc(c.seq ? c.seq.map(x => nm(x)).join('→') : TH.roman(c, K))}</span><span class="cw">${esc(c.why[0] || '')}</span><i></i></button>`; }).join('')}</div>`;
 }
 
@@ -2356,6 +2418,7 @@ function renderScaleP() {
   const chip = (r, k) => { const ft = TH.scaleFit(r.id, r.root, ch); return `<button data-sc="${k}" class="${same(r, rec) && i >= 0 ? 'rec' : ''}${same(r, view) ? ' view' : ''}${ft.core.length ? ' out' : ''}" title="${esc(r.why || '')}">${r.root !== ch.root ? esc(TH.spell(r.root, S.key)) + ' ' : ''}${esc(SCJ[r.id])}${k === 0 && r.grp === 'c' ? '<span class="st" title="おすすめ"></span>' : ''}</button>`; };
   const SV = TH.SC[view.id], vf = TH.scaleFit(view.id, view.root, ch);
   return `<div class="sch"><div class="t"><b>${esc(vName)}</b><small>${esc(status)}${view.why ? ' ・ ' + esc(view.why) : ''}</small></div>
+      <button class="chipb fol" data-fol aria-pressed="${S.follow}" title="再生中のコードに追従">追従${S.follow ? 'ON' : 'OFF'}</button>
       <button class="btn ghost" data-scplay aria-label="音階を鳴らす">${ICON.play}音階</button>
       <div class="seg"><button data-fb="deg" aria-pressed="${!S.fbNames}">度数</button><button data-fb="name" aria-pressed="${S.fbNames}">音名</button></div></div>
     <div class="notes">${notes.map(n => `<span class="nt f-${n.fam}${n.ct || n.rt ? ' ct' : ''}${n.av ? ' av' : ''}"><b>${esc(n.name)}</b>${esc(n.lb)}</span>`).join('')}</div>
@@ -2400,7 +2463,7 @@ function renderVoicingP() {
   S.vpage = Math.min(S.vpage, pages - 1);
   const show = vs.slice(S.vpage * 6, S.vpage * 6 + 6);
   const fixed = i >= 0 && S.chart[i].v;
-  return `<div class="cap"><b>${esc(nm(ch))}</b><span>${vs.length}種・タップで鳴らす／ピン=伴奏に固定${fixed ? '' : '（今は自動）'}</span><span class="gap"></span>
+  return `<div class="cap"><b>${esc(nm(ch))}</b><span class="hint">${vs.length}種・タップで鳴らす／ピン=伴奏に固定${fixed ? '' : '（今は自動）'}</span><span class="gap"></span><button class="chipb fol" data-fol aria-pressed="${S.follow}" title="再生中のコードに追従">追従${S.follow ? 'ON' : 'OFF'}</button>
     <span class="pg"><button data-vpg="-1" aria-label="前"${S.vpage ? '' : ' disabled'}>‹</button><span>${S.vpage + 1}/${pages}</span><button data-vpg="1" aria-label="次"${S.vpage < pages - 1 ? '' : ' disabled'}>›</button></span></div>
     <div class="vgrid">${show.map((v, k) => { const idx = S.vpage * 6 + k, use = i >= 0 && S.chart[i].v === v.id;
       return `<div class="vc${use ? ' use' : ''}"><div class="vl">${VCATS[v.cat]}${v.pos > 1 ? ` ${v.pos}fr` : ''}</div>${diagram(v)}<button class="hit" data-vp="${idx}" aria-label="鳴らす"></button>${i >= 0 ? `<button class="pin" data-vu="${idx}" aria-label="${use ? '固定を外す' : '伴奏に固定'}">${ICON.pin}</button>` : ''}</div>`; }).join('')}</div>
@@ -2411,7 +2474,7 @@ function renderVoicingP() {
 function renderPan() {
   const el = $('#pan'), p = S.pan;
   if (p !== 'tuner' && TN.on) tunerOff();
-  el.dataset.p = p;
+  el.dataset.p = p; focusUpd();
   el.innerHTML = p === 'cand' ? renderCand() : p === 'input' ? renderInputP() : p === 'scale' ? renderScaleP() : p === 'voicing' ? renderVoicingP() : PANS[p] && PANS[p].r ? PANS[p].r() : renderCand();
 }
 function renderDock() {
@@ -3184,12 +3247,13 @@ function play(fromTick = 0) {
   if (P.lpA != null && (P.tick < P.lpA || P.tick >= P.lpB)) P.tick = P.lpA;
   P.next = ctx.currentTime + (P.lead || .1) + Math.max(0, (cb ? .9 : .25) - warm); P.t0 = P.next + cb * bpb() * 60 / S.bpm; P.vis = []; P.last = 40; P.dir = 1;
   P.on = true; P.ui = true; pvCut(); soloReset(); adlStart(); setVols();
-  clockOn(true); sched();
+  clockOn(true); sched(); focusUpd();
   requestAnimationFrame(frame); renderDock();
   if (S.pan === 'scale') renderPan();
 }
 function stop() {
   if (ADL.on) { ADL.on = false; adlSave(); }
+  setTimeout(focusUpd, 0);
   P.on = false; P.ui = false; clockOn(false); P.vis = []; P.solo = new Map();
   if (A.ctx) {
     if (!REC.on && !(REC.stems && REC.stems.length)) swapBuses();
@@ -4470,13 +4534,13 @@ const HELP = [
     <li>${HN(1)}<b>上の列</b>：左端がモード（タップでホーム画面）／${HK('曲集')} 曲を読み込む／${HK('Key')} キーの変更・移調／${HK('ポップ・ジャズ')} 候補と伴奏の雰囲気（つくる）／${HK('演奏')} 大きな文字の演奏画面（ひく・とる・まなぶ）／↶ 元に戻す／… メニュー</li>
     <li>${HN(2)}<b>譜面</b>：入れたコードが並びます。タップで選ぶと音が鳴り、編集の対象になります。</li>
     <li>${HN(3)}<b>選んだコードの列</b>：‹ › で前後へ、${HK('−')}${HK('＋')}で長さ、▶| でそこから再生、ごみ箱で削除。</li>
-    <li>${HN(4)}<b>パネルの切り替え</b>：モードごとに中身が変わります（つくる：次の候補・入力・スケール・押さえ方）。${HK('追従')}をONにすると、再生中のコードに画面がついていきます。</li>
+    <li>${HN(4)}<b>パネルの切り替え</b>：モードごとに中身が変わります（つくる：次の候補・入力・スケール・押さえ方）。スケール・押さえ方の画面にある${HK('追従')}をONにすると、再生中のコードに画面がついていきます。譜面の下のつまみ（━）を上下にドラッグすると、譜面とパネルの広さを変えられます（ダブルタップで元に戻る）。</li>
     <li>${HN(5)}<b>パネル</b>：選んだ内容がここに出ます。下が空いていれば、好きなバナー画像も出せます。</li>
     <li>${HN(6)}<b>いちばん下</b>：再生・録音・テンポ・伴奏・メロディ・アドリブ。</li></ul>`},
   {id:'chord', t:'コードを入れる・直す', h:`${HF('h_cand', '次の候補')}<ul class="hnl">
-    <li>${HN(1)}<b>次の候補</b>：今のコードの次に合うコードが、相性のよい順に並びます（右上の数字が目安）。タップで追加、長押しで試聴。</li>
+    <li>${HN(1)}<b>次の候補</b>：今のコードの次に合うコードが、相性のよい順に並びます。タップで追加、長押しで試聴。相性の点数や説明は「画面に出すもの」でオンにすると表示されます。</li>
     <li>${HN(2)}<b>かんたん／高度</b>：高度にすると、上級の技（裏コードなど）も候補に出ます。</li>
-    <li><b>雰囲気スライダー</b>：「切ない↔明るい」「素直↔おしゃれ」を動かすと、候補の並び順が変わります。</li>
+    <li><b>雰囲気</b>：候補の上の「雰囲気」ボタンを押すとスライダーが開きます。「切ない↔明るい」「素直↔おしゃれ」を動かすと、候補の並び順が変わります。</li>
     <li><b>途中に入れる</b>：譜面のコードをタップして選ぶと、その後ろに入ります。</li></ul>
     ${HF('h_input', '入力パネル')}<ul>
     <li><b>入力</b>：音名と種類を選んで「追加」。選んだコードを変えるときは「置き換え」。</li>
@@ -4577,7 +4641,9 @@ const HELP = [
     <li><b>ホーム画面に追加</b>：iPhone は Safari の共有ボタン（□↑）→「ホーム画面に追加」。Android は Chrome のメニュー（︙）→「ホーム画面に追加」または「アプリをインストール」。一度開けば、電波がなくても使えます。</li></ul>
     ${HF('h_wall', '壁紙・バナー')}<ul>
     <li><b>壁紙・バナー</b>：メニューの「壁紙・バナー」で、演奏モードの背景に自分の写真や柄を選べます（ふだんの画面にも出すかは切り替え可）。<b>バナー</b>はふだんの画面の下の空いたところに好きな画像を表示します。</li>
-    <li><b>表示と動作</b>（メニュー）：文字の大きさ（4段階）、ライトテーマ、軽さ（自動／軽さ優先／音質優先）、ホーム画面を出すか、スワイプ操作、体験チュートリアル。タブレットや横向きでは、譜面と道具が左右に並びます。</li>
+    <li><b>画面に出すもの</b>（メニュー）：「シンプル／ふつう／くわしく」でまとめて切り替え、スイッチでひとつずつ表示する／しないを選べます（スケール名・拍の線・セクション名・候補の点数や説明・候補の数・ボタンの文字・ヒントなど）。画面の部品を<b>長押し</b>して「〜を隠す」でも消せます。最初は「シンプル」です。</li>
+    <li><b>演奏中フォーカス</b>：次の候補などの画面で再生すると、譜面だけを大きく表示します。「道具を表示」で戻せます（スケール・押さえ方・TAB・練習の画面では、見ながら弾けるようにそのまま）。</li>
+    <li><b>表示と動作</b>（メニュー）：文字の大きさ（4段階）、テーマ（ダーク・目にやさしい・ライト）、軽さ（自動／軽さ優先／音質優先）、ホーム画面を出すか、スワイプ操作、体験チュートリアル。タブレットや横向きでは、譜面と道具が左右に並びます。</li>
     <li><b>スワイプ</b>：譜面や演奏モードを左右になぞると、前後のコードへ移動します。</li>
     <li>壁紙や進行は<b>このスマホのこのアプリ（ブラウザ）の中だけ</b>に保存されます。同じアドレスを開いたほかの人には見えません。</li></ul>`, go:[['wall', '壁紙・バナーを設定']]},
   {id:'trouble', t:'困ったとき', h:`<ul>
@@ -5635,11 +5701,15 @@ function moodAdj(c, key) {
   const color = ((Q[c.q] || {f:[]}).f.length - 3) * .7 + (dia ? 0 : 1) + (c.seq ? 1.5 : 0) + (c.pro ? .8 : 0) - (['maj', 'm'].includes(c.q) ? .6 : 0);
   return 14 * M.b * bright + 10 * M.c * Math.max(-1, Math.min(2.5, color));
 }
+let MOODOPEN = false;
 function moodRow() {
-  const M = S.mood || {b:0, c:0};
-  return `<div class="mood"><label><span>切ない</span><input type="range" id="mdB" min="-1" max="1" step=".1" value="${M.b}" aria-label="明るい・切ない"><span>明るい</span></label>
-    <label><span>素直</span><input type="range" id="mdC" min="-1" max="1" step=".1" value="${M.c}" aria-label="素直・おしゃれ"><span>おしゃれ</span></label></div>`;
+  const M = S.mood || {b:0, c:0}, on = !!(M.b || M.c);
+  const lab = on ? '雰囲気：' + [M.b < 0 ? '切ない' : M.b > 0 ? '明るい' : '', M.c < 0 ? '素直' : M.c > 0 ? 'おしゃれ' : ''].filter(Boolean).join('・') : '雰囲気';
+  return `<div class="moodc"><button class="chipb${on ? ' on' : ''}" data-mood aria-expanded="${MOODOPEN}">${lab}<span class="car">${MOODOPEN ? '▲' : '▼'}</span></button>${on ? '<button class="chipb" data-mood0>元に戻す</button>' : ''}</div>
+    ${MOODOPEN ? `<div class="mood"><label><span>切ない</span><input type="range" id="mdB" min="-1" max="1" step=".1" value="${M.b}" aria-label="明るい・切ない"><span>明るい</span></label>
+    <label><span>素直</span><input type="range" id="mdC" min="-1" max="1" step=".1" value="${M.c}" aria-label="素直・おしゃれ"><span>おしゃれ</span></label></div>` : ''}`;
 }
+$('#pan').addEventListener('click', e => { const b = e.target.closest('[data-mood],[data-mood0]'); if (!b) return; if (b.dataset.mood0 != null) { S.mood = {b:0, c:0}; save(); } else MOODOPEN = !MOODOPEN; S.page = 0; renderPan(); });
 $('#pan').addEventListener('change', e => { if (e.target.id === 'mdB' || e.target.id === 'mdC') { S.mood = S.mood || {b:0, c:0}; S.mood[e.target.id === 'mdB' ? 'b' : 'c'] = +e.target.value; S.page = 0; renderPan(); save(); } });
 
 /* ---- 定番進行・技の検出 ---- */
@@ -6382,9 +6452,9 @@ let SEGK = '';
 function modeSeg() {
   const M = MODES[S.mode], k = S.mode + M.pans.join();
   if (SEGK !== k) { SEGK = k; $('#panSeg').innerHTML = M.pans.map(p => `<button data-p="${p}">${PANS[p].n}</button>`).join(''); }
-  document.body.dataset.mode = S.mode; document.documentElement.style.setProperty('--mc', M.c);
+  document.body.dataset.mode = S.mode; document.documentElement.style.setProperty('--mc', S.ui.theme === 'soft' ? (SOFTC[M.c] || M.c) : M.c);
   $('#modeBtn').innerHTML = `${ICON[M.ic]}<span>${M.n}</span>`; $('#modeBtn').setAttribute('aria-label', `モード：${M.n}（切りかえ）`);
-  $('#folBtn').hidden = !['scale', 'voicing'].includes(S.pan);
+  $('#folBtn').hidden = true;
 }
 function setMode(m, pan) {
   if (!MODES[m]) return;
@@ -6435,7 +6505,7 @@ $('#menu').addEventListener('click', e => {
   const b = e.target.closest('[data-m]'); if (!b) return; const k = b.dataset.m;
   if (k === 'sec') openSections(); else if (k === 'mod') openModulate(); else if (k === 'hum') openHum(); else if (k === 'ie') openIntroEnd();
   else if (k === 'ana') setMode('learn', 'analyze'); else if (k === 'my') openMy(); else if (k === 'home') { closeBS(); homeOpen(); }
-  else if (k === 'disp') openDisp(); else if (k === 'stage') { closeBS(); $('#stage').hidden = false; updateStage(); }
+  else if (k === 'disp') openDisp(); else if (k === 'vis') openVis(); else if (k === 'stage') { closeBS(); $('#stage').hidden = false; updateStage(); }
   else if (k === 'tuner') setMode('play', 'tuner'); else if (k === 'xp') setMode('rec', 'export'); else if (k === 'lesson') setMode('learn', 'lesson'); else if (k === 'quiz') setMode('learn', 'quiz');
   else if (k === 'tut') { closeBS(); setMode('make', 'cand'); setTimeout(() => coach(true), 300); }
 });
@@ -6481,13 +6551,15 @@ function openMy() {
 
 /* ---- 表示と動作 ---- */
 function applyDisp() {
-  const r = document.documentElement; r.style.setProperty('--fz', S.ui.fz); r.classList.toggle('light', S.ui.theme === 'light'); r.classList.toggle('lite', lightMode()); r.classList.toggle('big', S.ui.fz > 1); r.classList.toggle('huge', S.ui.fz > 1.2);
-  const m = document.querySelector('meta[name=theme-color]'); if (m) m.content = S.ui.theme === 'light' ? '#f4f1ea' : '#0b111c';
+  const r = document.documentElement; r.style.setProperty('--fz', S.ui.fz); r.classList.toggle('light', S.ui.theme === 'light'); r.classList.toggle('soft', S.ui.theme === 'soft'); if ($('#modeBtn').innerHTML) modeSeg(); r.classList.toggle('lite', lightMode()); r.classList.toggle('big', S.ui.fz > 1); r.classList.toggle('huge', S.ui.fz > 1.2);
+  const m = document.querySelector('meta[name=theme-color]'); if (m) m.content = S.ui.theme === 'light' ? '#f4f1ea' : S.ui.theme === 'soft' ? '#1b2130' : '#0b111c';
+  applyVis();
 }
 function openDisp() {
   const draw = () => { const U = S.ui, ch = (v, cur, a, l) => `<button data-${a}="${v}" aria-pressed="${cur === v}">${l}</button>`;
     sheetBody(`<div class="lbl">文字の大きさ</div><div class="chips">${[[.9, '小さめ'], [1, 'ふつう'], [1.15, '大きめ'], [1.3, '特大']].map(([v, l]) => ch(v, U.fz, 'fz', l)).join('')}</div>
-      <div class="lbl">テーマ</div><div class="chips">${ch('dark', U.theme, 'th', 'ダーク')}${ch('light', U.theme, 'th', 'ライト（明るい場所向け）')}</div>
+      <button class="btn red wide" data-visx>画面に出すもの（表示する／しない）</button>
+      <div class="lbl">テーマ</div><div class="chips">${ch('dark', U.theme, 'th', 'ダーク')}${ch('soft', U.theme, 'th', '目にやさしい')}${ch('light', U.theme, 'th', 'ライト（明るい場所向け）')}</div>
       <div class="lbl">軽さ（品質と安定性）</div><div class="chips">${ch('auto', U.perf, 'pf', '自動')}${ch('light', U.perf, 'pf', '軽さ優先')}${ch('full', U.perf, 'pf', '音質優先')}</div>
       <p class="note">${U.perf === 'auto' ? `この端末は「${lightMode() ? '軽さ優先' : '音質優先'}」で動いています。` : ''}軽さ優先：和音の音数をしぼり、鍵盤系の音色の下ごしらえを省き、画面の効果を減らします。古いスマホで音が途切れるときに。</p>
       <div class="tg"><span>起動したときにホーム画面を出す<small class="sub">オフにすると前回のモードですぐ始まります</small></span><button class="sw" data-hmsw aria-pressed="${U.home}"></button></div>
@@ -6498,6 +6570,7 @@ function openDisp() {
     if (d.fz) S.ui.fz = +d.fz; if (d.th) S.ui.theme = d.th; if (d.pf) { S.ui.perf = d.pf; if (A.ctx) applyTone(); }
     if (d.hmsw != null) S.ui.home = !S.ui.home; if (d.swsw != null) S.ui.swipe = !S.ui.swipe;
     if (d.tutx != null) { closeBS(); setMode('make', 'cand'); setTimeout(() => coach(true), 300); return; }
+    if (d.visx != null) { openVis(); return; }
     applyDisp(); save(); draw();
   });
   draw();
@@ -6552,6 +6625,107 @@ function swipeOn(el, fn) {
 }
 swipeOn($('#bars'), d => { const i = S.sel + d; if (i < 0 || i >= S.chart.length) return; selectChord(i, true); if (!P.ui) previewChord(S.chart[i]); });
 swipeOn($('#stage'), d => { if (P.ui) return; const i = S.sel + d; if (i < 0 || i >= S.chart.length) return; S.sel = i; refresh(); previewChord(S.chart[i]); });
+
+/* ===== 画面に出すもの（表示する／しない）・長押しで隠す・譜面の高さ・演奏中フォーカス ===== */
+const SOFTC = {'#ff6a4d':'#e08e78', '#3ccf91':'#74c39f', '#ff4d6d':'#dc7d8c', '#6aa8ff':'#8aa9d8'};
+const VISP = {
+  simple:{scs:1, sca:0, beat:'auto', sec:1, roman:1, score:0, desc:0, bar:0, mood:1, cn:9, tbx:1, hint:0, hdlab:0, focus:1, calm:1},
+  normal:{scs:1, sca:1, beat:'auto', sec:1, roman:1, score:0, desc:1, bar:0, mood:1, cn:12, tbx:1, hint:1, hdlab:1, focus:1, calm:1},
+  full:{scs:1, sca:1, beat:'on', sec:1, roman:1, score:1, desc:1, bar:1, mood:1, cn:12, tbx:1, hint:1, hdlab:1, focus:0, calm:0},
+};
+const VISN = {simple:'シンプル', normal:'ふつう', full:'くわしく'};
+function visGet() { const v = S.ui.vis; if (!v || typeof v !== 'object') return (S.ui.vis = {...VISP.simple}); for (const k in VISP.simple) if (v[k] == null) v[k] = VISP.simple[k]; return v; }
+function visV(k) { return visGet()[k]; }
+function visPreset() { const v = visGet(); return Object.keys(VISP).find(p => Object.keys(VISP[p]).every(k => VISP[p][k] === v[k])) || null; }
+function applyVis() {
+  const v = visGet(), r = document.documentElement, on = (c, b) => r.classList.toggle(c, !!b);
+  on('v-nosca', !v.sca); on('v-noscs', !v.scs); on('v-beat-off', v.beat === 'off'); on('v-beat-auto', v.beat === 'auto'); on('v-nosec', !v.sec);
+  on('v-noroman', !v.roman); on('v-noscore', !v.score); on('v-nodesc', !v.desc); on('v-nobar', !v.bar); on('v-nomood', !v.mood);
+  on('v-notbx', !v.tbx); on('v-nohint', !v.hint); on('v-nohdlab', !v.hdlab); on('calm', v.calm);
+  barsH(); focusUpd();
+}
+function visSet(k, val) { const v = visGet(); v[k] = val; applyVis(); save(); if (k === 'cn') { S.page = 0; renderPan(); } }
+const VISI = [
+  ['譜面', [['scs', 'スケール名（選んだコード）'], ['sca', 'スケール名（ほかのコード）'], ['sec', 'セクション名・転調の表示']]],
+  ['次の候補', [['roman', 'ローマ数字'], ['score', '点数'], ['desc', '説明文'], ['bar', '色の棒'], ['mood', '「雰囲気」ボタン']]],
+  ['ボタン・文字', [['tbx', '「ここから再生」「削除」ボタン'], ['hint', '説明文・ヒント'], ['hdlab', 'ヘッダーのボタンの文字']]],
+  ['動きと色', [['focus', '演奏中はフォーカス表示（譜面を大きく）'], ['calm', '強調色をモードの色1つに・補助の文字を控えめに']]],
+];
+function openVis() {
+  const draw = () => { const v = visGet(), p = visPreset(), sw = (k, l) => `<div class="tg"><span>${l}</span><button class="sw" data-vk="${k}" aria-pressed="${!!v[k]}"></button></div>`;
+    sheetBody(`<div class="seg visp">${Object.keys(VISP).map(k => `<button data-vp="${k}" aria-pressed="${p === k}">${VISN[k]}</button>`).join('')}</div>
+      <p class="note">${p ? `いまは「${VISN[p]}」。` : 'いまは自分で選んだ表示です。'}下のスイッチで、ひとつずつ表示する／しないを選べます。画面の部品を<b>長押し</b>しても隠せます。</p>
+      ${VISI.map(([g, items], gi) => `<div class="lbl">${g}</div>${items.map(([k, l]) => sw(k, l)).join('')}${gi === 0 ? `<div class="tg"><span>拍の線 ////</span><span class="chips mini3">${[['off', 'なし'], ['auto', '必要な所だけ'], ['on', '全部']].map(([x, l]) => `<button data-vbeat="${x}" aria-pressed="${v.beat === x}">${l}</button>`).join('')}</span></div>` : ''}${gi === 1 ? `<div class="tg"><span>一度に出す候補の数</span><span class="chips mini3">${[6, 9, 12].map(x => `<button data-vcn="${x}" aria-pressed="${v.cn === x}">${x}</button>`).join('')}</span></div>` : ''}`).join('')}
+      <div class="lbl">譜面の高さ</div><p class="note">譜面の下のつまみ（━）を上下にドラッグすると、譜面とパネルの広さを変えられます。ダブルタップで元に戻ります。</p>
+      <button class="btn ghost wide" data-vbh${S.ui.barsH == null ? ' disabled' : ''}>譜面の高さを元に戻す</button>`); };
+  sheet('画面に出すもの', '', e => {
+    if (e.type !== 'click') return; const b = e.target.closest('button'); if (!b) return; const d = b.dataset;
+    if (d.vp) { S.ui.vis = {...VISP[d.vp]}; applyVis(); save(); S.page = 0; refresh(); }
+    else if (d.vk) visSet(d.vk, visV(d.vk) ? 0 : 1);
+    else if (d.vbeat) visSet('beat', d.vbeat);
+    else if (d.vcn) visSet('cn', +d.vcn);
+    else if (d.vbh != null) { S.ui.barsH = null; barsH(); save(); }
+    draw();
+  });
+  draw();
+}
+
+/* 長押しで「これを隠す」 */
+const HIDEG = [
+  ['#bars .ch', [['sca', 'スケール名（ほかのコード）'], ['scs', 'スケール名（選んだコード）'], ['beat', '拍の線 ////'], ['sec', 'セクション名・転調']], 600],
+  ['#pan .cd', [['score', '点数'], ['desc', '説明文'], ['bar', '色の棒'], ['roman', 'ローマ数字']], 950],
+  ['#tb [data-tb=play], #tb [data-tb=del]', [['tbx', '「ここから再生」「削除」ボタン']], 600],
+  ['.hd .ib, .hd .mdb', [['hdlab', 'ヘッダーのボタンの文字']], 650],
+  ['.moodc', [['mood', '「雰囲気」ボタン']], 600],
+];
+const HLP = {t:0, fired:false, x:0, y:0};
+document.addEventListener('pointerdown', e => {
+  clearTimeout(HLP.t); HLP.fired = false; if (e.target.closest('#lpMenu')) return; lpClose();
+  const g = HIDEG.find(([sel]) => e.target.closest(sel)); if (!g) return;
+  HLP.x = e.clientX; HLP.y = e.clientY;
+  HLP.t = setTimeout(() => { const v = visGet(), items = g[1].filter(([k]) => k === 'beat' ? v.beat !== 'off' : v[k]); if (!items.length) return; HLP.fired = true; lpOpen(items, HLP.x, HLP.y); }, g[2]);
+}, true);
+document.addEventListener('pointermove', e => { if (HLP.t && Math.hypot(e.clientX - HLP.x, e.clientY - HLP.y) > 10) clearTimeout(HLP.t); }, true);
+['pointerup', 'pointercancel'].forEach(t => document.addEventListener(t, () => clearTimeout(HLP.t), true));
+document.addEventListener('click', e => { if (HLP.fired && !e.target.closest('#lpMenu')) { HLP.fired = false; e.stopPropagation(); e.preventDefault(); } }, true);
+function lpOpen(items, x, y) {
+  let m = $('#lpMenu'); if (!m) { m = document.createElement('div'); m.id = 'lpMenu'; m.className = 'lpm'; document.body.append(m); }
+  m.innerHTML = `<b>表示を減らす</b>${items.map(([k, l]) => `<button data-hide="${k}">${l}を隠す</button>`).join('')}<button class="lpo" data-hide="__">画面に出すものの設定…</button>`;
+  m.hidden = false; const W = m.offsetWidth, H = m.offsetHeight;
+  m.style.left = Math.max(8, Math.min(innerWidth - W - 8, x - W / 2)) + 'px'; m.style.top = Math.max(8, y - H - 14 < 8 ? y + 18 : y - H - 14) + 'px';
+  try { navigator.vibrate && navigator.vibrate(10); } catch (x2) {}
+}
+function lpClose() { const m = $('#lpMenu'); if (m) m.hidden = true; }
+document.addEventListener('click', e => {
+  const b = e.target.closest('#lpMenu [data-hide]'); if (!b) return; lpClose(); const k = b.dataset.hide;
+  if (k === '__') { openVis(); return; }
+  const prev = JSON.stringify(visGet()); visSet(k, k === 'beat' ? 'off' : 0); refresh();
+  toast('隠しました（メニュー→画面に出すもの で戻せます）', '元に戻す', () => { S.ui.vis = JSON.parse(prev); applyVis(); save(); refresh(); });
+});
+
+/* 譜面とパネルの境目：ドラッグで高さを変える */
+function barsH() { const b = $('#bars'); if (b) b.style.maxHeight = S.ui.barsH ? S.ui.barsH + 'px' : ''; }
+(() => {
+  const sp = document.createElement('div'); sp.className = 'split'; sp.id = 'split'; sp.setAttribute('role', 'separator'); sp.setAttribute('aria-label', '譜面の高さ（ドラッグ）'); sp.innerHTML = '<i></i>';
+  $('.sheet').after(sp);
+  let st = null, last = 0;
+  sp.addEventListener('pointerdown', e => { const b = $('#bars'); st = {y:e.clientY, h:b.getBoundingClientRect().height / (S.ui.fz || 1)}; sp.setPointerCapture(e.pointerId); sp.classList.add('on'); e.preventDefault(); });
+  sp.addEventListener('pointermove', e => { if (!st) return; const z = S.ui.fz || 1, max = innerHeight / z - 250; S.ui.barsH = Math.round(Math.max(64, Math.min(max, st.h + (e.clientY - st.y) / z))); barsH(); });
+  const end = () => { if (!st) return; st = null; sp.classList.remove('on'); save(); };
+  sp.addEventListener('pointerup', end); sp.addEventListener('pointercancel', end);
+  sp.addEventListener('click', () => { const n = Date.now(); if (n - last < 350) { S.ui.barsH = null; barsH(); save(); toast('譜面の高さを元に戻しました'); } last = n; });
+})();
+
+/* 演奏中フォーカス：候補・入力・レッスンなど「弾いている間は見ない」画面のとき、譜面を大きく */
+const FOCUSP = ['cand', 'input', 'lesson', 'analyze', 'quiz', 'rec', 'takes', 'export'];
+const FOC = {off:false};
+function focusUpd() {
+  if (!P.ui) FOC.off = false;
+  const on = !!(P.ui && !DM.cur && !REC.on && visV('focus') && FOCUSP.includes(S.pan) && !FOC.off);
+  document.body.classList.toggle('focus', on);
+  let b = $('#focX'); if (!b) { b = document.createElement('button'); b.id = 'focX'; b.className = 'focx'; b.textContent = '道具を表示'; $('.sheet').append(b); b.addEventListener('click', () => { FOC.off = true; focusUpd(); }); }
+  b.hidden = !on;
+}
 
 applyDisp();
 
@@ -6659,7 +6833,7 @@ const MENU = [
   ['up', ICON.up, '半音上げる'], ['down', ICON.down, '半音下げる'],
   ['showsc', ICON.eye, ''], ['scall', ICON.reset, 'スケールを全部おすすめに'],
   ['rec', ICON.mic, '録音（声・楽器）'], ['guide', ICON.bulb, '音楽の技・解説'], ['set', ICON.sliders, '伴奏・音の設定'], ['lib', ICON.book, '曲集'],
-  ['my', ICON.folder, 'マイ曲'], ['tut', ICON.spark, '体験チュートリアル'],
+  ['vis', ICON.eye, '画面に出すもの'], ['my', ICON.folder, 'マイ曲'], ['tut', ICON.spark, '体験チュートリアル'],
   ['clear', ICON.trash, '譜面をクリア'],
 ];
 function renderMenu() {
@@ -6798,6 +6972,7 @@ pan.addEventListener('click', e => {
   const {ch, i} = cur();
   const cl = e.target.closest('[data-cl]'); if (cl) { if (S.cmp !== cl.dataset.cl) setCmp(cl.dataset.cl); return; }
   const gd = e.target.closest('[data-guide]'); if (gd) { openGuide(gd.dataset.guide); return; }
+  const fo = e.target.closest('[data-fol]'); if (fo) { S.follow = !S.follow; save(); renderPan(); if (S.follow && P.ui && P.curI >= 0) setPlaying(P.curI); return; }
   const k = e.target.closest('[data-k]'); if (k) { const c = S.cur[+k.dataset.k]; if (c) addChord(c); return; }
   const pg = e.target.closest('[data-pg]'); if (pg && !pg.disabled) { S.page += +pg.dataset.pg; renderPan(); return; }
   const vpg = e.target.closest('[data-vpg]'); if (vpg && !vpg.disabled) { S.vpage += +vpg.dataset.vpg; renderPan(); return; }
